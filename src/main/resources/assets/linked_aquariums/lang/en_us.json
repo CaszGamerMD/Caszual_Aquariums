@@ -1,0 +1,10 @@
+{
+  "block.linked_aquariums.aquarium": "Aquarium",
+  "block.linked_aquariums.swim_tube": "Swim Tube",
+  "item.linked_aquariums.creature_bucket": "Aquarium Creature Bucket",
+  "block.linked_aquariums.passive_terrarium": "Passive Terrarium",
+  "block.linked_aquariums.hostile_terrarium": "Hostile Terrarium",
+  "block.linked_aquariums.passive_pipe": "Passive Terrarium Pipe",
+  "block.linked_aquariums.hostile_pipe": "Hostile Terrarium Pipe",
+  "item.linked_aquariums.mob_net": "Mob Net"
+}
