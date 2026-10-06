@@ -51,7 +51,7 @@ public final class Inhabitants {
   }
   mob.setNoAi(true);mob.setNoGravity(true);mob.setTarget(null);mob.setPersistenceRequired();mob.setAirSupply(mob.getMaxAirSupply());
   if(mob instanceof Pufferfish puff)puff.setPuffState(0);
-  if(mob.getType()==EntityTypes.SQUID||mob.getType()==EntityTypes.GLOW_SQUID||mob.getType()==EntityTypes.DROWNED){var scale=mob.getAttribute(Attributes.SCALE);if(scale!=null)scale.setBaseValue(.3);}
+
   if(mob.getType()==EntityTypes.TURTLE&&mob instanceof AgeableMob ageable)ageable.setAge(-24000);
  }
  private static double height(Mob mob){return mob.getType()==EntityTypes.DROWNED||mob.getType()==EntityTypes.TURTLE?.14:.4;}
