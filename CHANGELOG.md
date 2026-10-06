@@ -1,3 +1,11 @@
+## 0.5.0
+- Added Mobitat: portable storage for up to five mobs of one type.
+- Mob Nets can insert/extract Mobitat residents, including supported aquarium creatures.
+- Filled Mobitats retain residents when placed or picked up; sneak-use places without unloading.
+- Use a held Mobitat on compatible enclosures to transfer residents, or elsewhere to release them.
+- Added Name Tag resident naming UI for placed Mobitats.
+- Added varied aquarium/tube swim lanes and framed tank-to-tube mounts.
+
 # 0.4.2
 
 - Fixed the cause of position-dependent missing pipe water: multipart `apply` arrays were choosing glass OR water randomly. Glass, water and edging now use independent, simultaneous multipart entries for all 64 connection shapes.
