@@ -14,7 +14,14 @@ public final class AquariumMenu extends AbstractContainerMenu {
  public AquariumMenu(int id,Inventory inv,BlockPos p){this(id,inv,null,p);}
  public AquariumMenu(int id,Inventory inv,ServerLevel l,BlockPos p){super(AquariumMod.MENU,id);level=l;anchor=p.immutable();addSlot(new Slot(transfer,0,16,198));addSlot(new Slot(transfer,1,38,198){public boolean mayPlace(ItemStack s){return false;}});for(int r=0;r<3;r++)for(int c=0;c<9;c++)addSlot(new Slot(inv,c+r*9+9,82+c*18,176+r*18));for(int c=0;c<9;c++)addSlot(new Slot(inv,c,82+c*18,234));addDataSlots(data);refresh(true);}
  public int capacity(){return (data.get(4)&65535)|(data.get(5)<<16);}
- private TankBlockEntity owner(){for(var p:tanks)if(level.getBlockEntity(p) instanceof TankBlockEntity be)return be;return null;}
+ private TankBlockEntity owner(){
+  TankBlockEntity owner=null;for(var p:tanks)if(level.getBlockEntity(p) instanceof TankBlockEntity be){if(owner==null)owner=be;if(!be.decorations.isEmpty()){owner=be;break;}}
+  if(owner==null)return null;
+  for(var p:tanks)if(level.getBlockEntity(p) instanceof TankBlockEntity other&&other!=owner&&!other.decorations.isEmpty()){
+   BlockPos from=other.getBlockPos(),to=owner.getBlockPos();for(var d:new ArrayList<>(other.decorations)){d.x+=from.getX()-to.getX();d.y+=from.getY()-to.getY();d.z+=from.getZ()-to.getZ();owner.decorations.add(d);}other.decorations.clear();other.changed();owner.changed();
+  }
+  return owner;
+ }
  private void refresh(boolean force){if(level==null)return;if(!force&&refreshed==level.getGameTime())return;refreshed=level.getGameTime();var net=Network.scan(level,anchor);tanks=net.cells().stream().filter(p->Enclosures.isTank(level.getBlockState(p))).sorted(Comparator.comparingLong(BlockPos::asLong)).toList();residents=net.residents(level).stream().sorted(Comparator.comparing(m->m.getUUID().toString())).toList();var be=owner();if(be!=null)be.migrateLegacy();selectedMob=Math.clamp(selectedMob,0,Math.max(0,residents.size()-1));selectedDecor=Math.clamp(selectedDecor,0,Math.max(0,be==null?0:be.decorations.size()-1));data.set(0,Enclosures.kind(level.getBlockState(anchor)));data.set(1,residents.size());data.set(2,selectedMob);data.set(3,residents.isEmpty()?-1:BuiltInRegistries.ENTITY_TYPE.getId(residents.get(selectedMob).getType()));data.set(4,net.capacity()&65535);data.set(5,net.capacity()>>>16);data.set(6,be==null?0:be.decorations.size());data.set(7,selectedDecor);data.set(8,anchorMode);if(be!=null&&!be.decorations.isEmpty()){var d=be.decorations.get(selectedDecor);data.set(9,BuiltInRegistries.ITEM.getId(d.stack.getItem()));data.set(10,Math.round(d.x*100));data.set(11,Math.round(d.y*100));data.set(12,Math.round(d.z*100));data.set(13,Math.round(d.scale*100));data.set(14,Math.round(d.rotX));data.set(15,Math.round(d.rotY));data.set(16,Math.round(d.rotZ));data.set(17,d.anchor.ordinal());}}
  public boolean stillValid(Player p){return level==null||Enclosures.isTank(level.getBlockState(anchor))&&p.distanceToSqr(anchor.getX()+.5,anchor.getY()+.5,anchor.getZ()+.5)<=64;}
  public void broadcastChanges(){refresh(false);super.broadcastChanges();}
