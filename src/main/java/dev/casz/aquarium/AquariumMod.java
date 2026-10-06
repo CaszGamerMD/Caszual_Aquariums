@@ -51,7 +51,7 @@ public final class AquariumMod implements ModInitializer {
   });
   UseBlockCallback.EVENT.register((player,level,hand,hit)->{
    if(player.isSpectator())return InteractionResult.PASS;var held=player.getItemInHand(hand);var state=level.getBlockState(hit.getBlockPos());
-   if(held.is(MOBITAT_ITEM)&&!level.isClientSide())return useMobitat(player,(ServerLevel)level,hand,hit);
+   if(held.is(MOBITAT_ITEM)&&!player.isShiftKeyDown()&&!level.isClientSide())return useMobitat(player,(ServerLevel)level,hand,hit);
    if(state.is(MOBITAT)&&level.getBlockEntity(hit.getBlockPos()) instanceof MobitatBlockEntity mb){if(level.isClientSide())return InteractionResult.SUCCESS;if(held.is(MOB_NET)){if(Terrestrial.filled(held)){if(!mb.addNet(held))player.sendOverlayMessage(Component.literal("Mobitat holds up to 5 mobs of one type."));return InteractionResult.SUCCESS;}if(mb.empty())return InteractionResult.FAIL;player.setItemInHand(hand,mb.takeNet(mb.size()-1));return InteractionResult.SUCCESS;}if(held.isEmpty()&&player instanceof ServerPlayer sp){BlockPos mp=hit.getBlockPos();sp.openMenu(new ExtendedMenuProvider<BlockPos>(){public BlockPos getScreenOpeningData(ServerPlayer q){return mp;}public Component getDisplayName(){return Component.literal("Mobitat");}public MobitatMenu createMenu(int id,Inventory inv,Player q){return new MobitatMenu(id,inv,(ServerLevel)level,mp);}});return InteractionResult.SUCCESS;}}
    if(!AquariumBlock.isModule(state)){
     if(!Terrestrial.filled(held))return InteractionResult.PASS;
