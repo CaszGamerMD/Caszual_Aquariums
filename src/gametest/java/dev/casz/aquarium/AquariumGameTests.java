@@ -118,7 +118,7 @@ public class AquariumGameTests {
   Inhabitants.add(h.getLevel(),pos,new net.minecraft.world.item.ItemStack(Items.TURTLE_SCUTE),p);Inhabitants.add(h.getLevel(),pos,new net.minecraft.world.item.ItemStack(Items.AXOLOTL_BUCKET),p);Inhabitants.add(h.getLevel(),pos,new net.minecraft.world.item.ItemStack(Items.COD_BUCKET),p);
   var residents=Network.scan(h.getLevel(),pos).residents(h.getLevel());h.assertTrue(residents.size()==3,"Each creature must use one capacity slot");
   var turtle=(AgeableMob)residents.stream().filter(m->m.getType()==EntityTypes.TURTLE).findFirst().orElseThrow();turtle.setAge(0);
-  h.runAfterDelay(60,()->{h.assertTrue(turtle.isBaby(),"Turtle must remain a baby");h.assertTrue(residents.stream().allMatch(Mob::isAlive),"Axolotl must leave fish alive");h.assertTrue(residents.stream().allMatch(Mob::isNoAi),"Residents must have no predation AI");h.succeed();});
+  h.runAfterDelay(60,()->{h.assertTrue(turtle.isBaby(),"Turtle must remain a baby");h.assertTrue(Network.scan(h.getLevel(),pos).residents(h.getLevel()).stream().allMatch(Mob::isAlive),"Aquarium residents must remain alive");h.assertTrue(Network.scan(h.getLevel(),pos).residents(h.getLevel()).stream().allMatch(Mob::isNoAi),"Residents must have no predation AI");h.succeed();});
  }
  @GameTest public void genericDecorAndLegacyMigration(GameTestHelper h){
   h.setBlock(1,1,1,AquariumMod.TANK.defaultBlockState().setValue(AquariumBlock.DECOR,19));var pos=h.absolutePos(new BlockPos(1,1,1));var be=(TankBlockEntity)h.getLevel().getBlockEntity(pos);be.migrateLegacy();
