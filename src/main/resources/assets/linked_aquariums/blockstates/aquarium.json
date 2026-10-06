@@ -3562,6 +3562,54 @@
       "apply": {
         "model": "linked_aquariums:block/frame_shell_63"
       }
+    },
+    {
+      "when": {
+        "tube_down": "true"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tank_tube_mount_down"
+      }
+    },
+    {
+      "when": {
+        "tube_up": "true"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tank_tube_mount_up"
+      }
+    },
+    {
+      "when": {
+        "tube_north": "true"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tank_tube_mount_north"
+      }
+    },
+    {
+      "when": {
+        "tube_south": "true"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tank_tube_mount_south"
+      }
+    },
+    {
+      "when": {
+        "tube_west": "true"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tank_tube_mount_west"
+      }
+    },
+    {
+      "when": {
+        "tube_east": "true"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tank_tube_mount_east"
+      }
     }
   ]
 }
