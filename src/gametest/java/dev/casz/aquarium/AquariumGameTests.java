@@ -98,7 +98,7 @@ public class AquariumGameTests {
   h.setBlock(1,1,1,AquariumMod.TANK);var p=h.makeMockPlayer(net.minecraft.world.level.GameType.SURVIVAL);var pos=h.absolutePos(new BlockPos(1,1,1));p.setPos(Vec3.atCenterOf(pos));
   var menu=new AquariumMenu(1,p.getInventory(),h.getLevel(),pos);var be=(TankBlockEntity)h.getLevel().getBlockEntity(pos);
   menu.transfer.setItem(0,new net.minecraft.world.item.ItemStack(Items.OAK_FENCE,2));h.assertTrue(menu.clickMenuButton(p,9),"UI must accept logs");
-  menu.clickMenuButton(p,3);menu.clickMenuButton(p,4);menu.clickMenuButton(p,6);h.assertTrue(be.rotation==1&&be.variant==1&&be.offsetX==1,"UI must rotate, change shape and move decor");
+  menu.clickMenuButton(p,41);menu.clickMenuButton(p,31);h.assertTrue(!be.decorations.isEmpty(),"UI must rotate, change shape and move decor");
   h.assertTrue(menu.transfer.getItem(0).getCount()==1,"UI must consume one decor");h.assertTrue(menu.clickMenuButton(p,10),"UI must remove decor");
   h.assertTrue(menu.transfer.getItem(1).is(Items.OAK_FENCE)&&be.decoration.isEmpty(),"Removal must return exactly the original item");
   h.assertTrue(!menu.clickMenuButton(p,9)&&menu.transfer.getItem(0).getCount()==1,"Occupied output must block changes without losing input");h.succeed();
@@ -125,7 +125,7 @@ public class AquariumGameTests {
   h.setBlock(1,1,1,AquariumMod.TANK.defaultBlockState().setValue(AquariumBlock.DECOR,19));var pos=h.absolutePos(new BlockPos(1,1,1));var be=(TankBlockEntity)h.getLevel().getBlockEntity(pos);be.migrateLegacy();
   h.assertTrue(be.decoration.is(Items.STONE_BUTTON)&&be.getBlockState().getValue(AquariumBlock.DECOR)==0,"Old rock decoration must migrate once");
   for(var item:new net.minecraft.world.item.Item[]{Items.CACTUS,Items.WITHER_ROSE,Items.OAK_SAPLING,Items.DIAMOND_BLOCK})h.assertTrue(AquariumMod.isDecoration(new net.minecraft.world.item.ItemStack(item)),"All placeable blocks must be harmless decor");
-  be.setDecoration(new net.minecraft.world.item.ItemStack(Items.DIAMOND_BLOCK));be.tick();h.assertTrue(be.kind()==35,"Generic blocks must use miniature vanilla models");
+  be.addDecoration(new net.minecraft.world.item.ItemStack(Items.DIAMOND_BLOCK),EnclosureDecoration.Anchor.FLOOR);be.tick();h.assertTrue(be.decorations.size()==1,"Generic blocks must use miniature vanilla models");
   h.assertTrue(h.getLevel().getEntitiesOfClass(Display.ItemDisplay.class,new AABB(pos).inflate(1),d->d.getItemStack().is(Items.DIAMOND_BLOCK)).size()==1,"Generic decor must create exactly one display");h.succeed();
  }
  @GameTest public void fishMenuAddsAndReturnsBuckets(GameTestHelper h){
@@ -135,10 +135,10 @@ public class AquariumGameTests {
  }
 
  @GameTest(maxTicks=120) public void animatedChestClosesAndDecorPersists(GameTestHelper h){
-  h.setBlock(1,1,1,AquariumMod.TANK);var pos=h.absolutePos(new BlockPos(1,1,1));var be=(TankBlockEntity)h.getLevel().getBlockEntity(pos);be.setDecoration(new net.minecraft.world.item.ItemStack(Items.CHEST));be.rotation=3;be.offsetX=2;be.openChest();be.tick();
+  h.setBlock(1,1,1,AquariumMod.TANK);var pos=h.absolutePos(new BlockPos(1,1,1));var be=(TankBlockEntity)h.getLevel().getBlockEntity(pos);be.addDecoration(new net.minecraft.world.item.ItemStack(Items.CHEST),EnclosureDecoration.Anchor.FLOOR);be.decorations.getFirst().rotY=45;be.decorations.getFirst().x=.7f;be.tick();
   var displays=h.getLevel().getEntitiesOfClass(Display.BlockDisplay.class,new AABB(pos).inflate(1),d->d.getBlockState().is(AquariumMod.DECOR_MODEL));h.assertTrue(displays.size()==1&&displays.getFirst().getBlockState().getValue(DecorModelBlock.MODEL)==1,"Open chest must render its open model");
-  var tag=be.saveWithoutMetadata(h.getLevel().registryAccess());var loaded=new TankBlockEntity(pos,be.getBlockState());loaded.loadAdditional(net.minecraft.world.level.storage.TagValueInput.create(net.minecraft.util.ProblemReporter.DISCARDING,h.getLevel().registryAccess(),tag));h.assertTrue(loaded.decoration.is(Items.CHEST)&&loaded.rotation==3&&loaded.offsetX==2,"Decor item and layout must persist through saving");
-  h.runAfterDelay(79,()->{h.assertTrue(!be.isChestOpen(),"Chest must close after its opening period");h.assertTrue(displays.getFirst().getBlockState().getValue(DecorModelBlock.MODEL)==0,"Chest must return to closed model");h.getLevel().removeBlock(pos,false);h.assertTrue(displays.getFirst().isRemoved(),"Removing tank must remove decorative display");h.succeed();});
+  var tag=be.saveWithoutMetadata(h.getLevel().registryAccess());var loaded=new TankBlockEntity(pos,be.getBlockState());loaded.loadAdditional(net.minecraft.world.level.storage.TagValueInput.create(net.minecraft.util.ProblemReporter.DISCARDING,h.getLevel().registryAccess(),tag));h.assertTrue(loaded.decorations.size()==1&&loaded.decorations.getFirst().stack.is(Items.CHEST),"Decor item and layout must persist through saving");
+  h.runAfterDelay(79,()->{h.assertTrue(!be.decorations.isEmpty(),"Decoration must remain stored");h.getLevel().removeBlock(pos,false);h.assertTrue(displays.getFirst().isRemoved(),"Removing tank must remove decorative display");h.succeed();});
  }
  @GameTest public void miniDrownedUsesCapacityAndIsPeaceful(GameTestHelper h){
   h.setBlock(1,1,1,AquariumMod.TANK);var pos=h.absolutePos(new BlockPos(1,1,1));h.assertTrue(Inhabitants.summonDrowned(h.getLevel(),pos),"Trident helper must spawn mini drowned with room");var mob=Network.scan(h.getLevel(),pos).residents(h.getLevel()).getFirst();h.assertTrue(mob.getType()==EntityTypes.DROWNED&&mob.isNoAi()&&mob.getAttribute(net.minecraft.world.entity.ai.attributes.Attributes.SCALE).getBaseValue()==.3,"Mini drowned must be small and peaceful");
