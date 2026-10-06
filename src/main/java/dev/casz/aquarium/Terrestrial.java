@@ -22,7 +22,8 @@ public final class Terrestrial {
  public static final TagKey<EntityType<?>> FLYING=TagKey.create(Registries.ENTITY_TYPE,AquariumMod.id("flying"));
  private static final Map<Mob,BlockPos> TARGETS=new WeakHashMap<>(),PREVIOUS=new WeakHashMap<>();
  private static ServerLevel activeLevel;
- private static final Map<BlockPos,Chamber> CHAMBERS=new HashMap<>();
+ private static final Map<BlockPos,Chamber> CHAMBERS=new HashMap<>();private static final Map<BlockPos,Network> NETWORKS=new HashMap<>();
+ private static Network network(ServerLevel l,BlockPos pos){if(l==activeLevel){var cached=NETWORKS.get(pos);if(cached!=null)return cached;}var net=Network.scan(l,pos);if(l==activeLevel)for(var p:net.cells())NETWORKS.put(p,net);return net;}
  public record Chamber(Set<BlockPos> cells,int bottom,int top){public int height(){return top-bottom+1;}}
  public static boolean supported(Mob m){String id=BuiltInRegistries.ENTITY_TYPE.getKey(m.getType()).getPath();return !m.getType().getCategory().name().contains("WATER")&&!Set.of("ender_dragon","wither","cod","salmon","pufferfish","tropical_fish","squid","glow_squid","axolotl","dolphin","guardian","elder_guardian").contains(id)&&!m.entityTags().contains(AquariumMod.MANAGED);}
  public static boolean hostile(Mob m){return m.getType().getCategory()==MobCategory.MONSTER;}
@@ -78,23 +79,24 @@ public final class Terrestrial {
   if(!m.entityTags().contains(MANAGED)){if(m.isNoAi())m.addTag(MANAGED+":no_ai");if(m.isNoGravity())m.addTag(MANAGED+":no_gravity");var attr=m.getAttribute(Attributes.SCALE);if(attr!=null)m.addTag(ORIGINAL_SCALE+attr.getBaseValue());m.addTag(MANAGED);}
   m.setNoAi(true);m.setNoGravity(true);m.setTarget(null);m.setPersistenceRequired();m.setAirSupply(m.getMaxAirSupply());m.setRemainingFireTicks(0);var attr=m.getAttribute(Attributes.SCALE);if(attr!=null){double original=1;for(String tag:m.entityTags())if(tag.startsWith(ORIGINAL_SCALE))try{original=Double.parseDouble(tag.substring(ORIGINAL_SCALE.length()));}catch(NumberFormatException ignored){}attr.setBaseValue(original*.75);}
  }
- public static void tick(ServerLevel l){
-  activeLevel=l;CHAMBERS.clear();try{
-  List<Entity> all=new ArrayList<>();l.getAllEntities().forEach(all::add);Set<BlockPos> checked=new HashSet<>();
+ public static void tick(ServerLevel l){List<Entity> all=new ArrayList<>();l.getAllEntities().forEach(all::add);tick(l,all);}
+ static void tick(ServerLevel l,List<Entity> all){
+  activeLevel=l;CHAMBERS.clear();NETWORKS.clear();try{
+  Set<BlockPos> checked=new HashSet<>();
   for(Entity e:all)if(e instanceof Mob m&&m.isAlive()&&m.entityTags().contains(MANAGED)){
    var current=m.blockPosition();var state=l.getBlockState(current);
    if(!Enclosures.isLand(state)||hostile(m)!=(Enclosures.kind(state)==2)){var stack=capture(l,m);m.spawnAtLocation(l,stack);continue;}
    configure(m);
-   if(l.getGameTime()%20==0&&!checked.contains(current)){var net=Network.scan(l,current);checked.addAll(net.cells());if(net.complete()){var residents=net.residents(l);for(int i=net.capacity();i<residents.size();i++){var extra=residents.get(i);var stack=capture(l,extra);extra.spawnAtLocation(l,stack);}}}
+   if(l.getGameTime()%20==0&&!checked.contains(current)){var net=network(l,current);checked.addAll(net.cells());if(net.complete()){var residents=net.residents(l);for(int i=net.capacity();i<residents.size();i++){var extra=residents.get(i);var stack=capture(l,extra);extra.spawnAtLocation(l,stack);}}}
    if(m.isRemoved())continue;boolean air=flying(m);
-   if(Enclosures.isTank(state)&&air&&chamber(l,current).height()<=4&&Network.scan(l,current).complete()){var stack=capture(l,m);m.spawnAtLocation(l,stack);continue;}
+   if(Enclosures.isTank(state)&&air&&chamber(l,current).height()<=4&&network(l,current).complete()){var stack=capture(l,m);m.spawnAtLocation(l,stack);continue;}
    BlockPos target=TARGETS.get(m);if(target==null||!Enclosures.matches(state,l.getBlockState(target))||!target.equals(current)&&!canStep(l,current,target,air))target=current;
    Vec3 center=Vec3.atLowerCornerOf(target).add(.5,air?.5:.18,.5),delta=center.subtract(m.position());
    if(delta.lengthSqr()<.003){var neighbors=new ArrayList<BlockPos>();for(Direction d:Direction.values()){var p=target.relative(d);if(l.hasChunkAt(p)&&canStep(l,target,p,air))neighbors.add(p);}if(neighbors.size()>1)neighbors.remove(PREVIOUS.get(m));if(!neighbors.isEmpty()){PREVIOUS.put(m,target);target=neighbors.get(l.getRandom().nextInt(neighbors.size()));}center=Vec3.atLowerCornerOf(target).add(.5,air?.5:.18,.5);delta=center.subtract(m.position());}
    TARGETS.put(m,target);m.setDeltaMovement(Vec3.ZERO);if(delta.lengthSqr()>.0001){Vec3 step=delta.normalize().scale(Math.min(air?.055:.075,delta.length()));if(blocked(l,m,m.position().add(step))) {TARGETS.remove(m);continue;}boolean old=m.noPhysics;try{m.noPhysics=true;m.move(MoverType.SELF,step);}finally{m.noPhysics=old;}float yaw=(float)Math.toDegrees(Math.atan2(-step.x,step.z));m.setYRot(yaw);m.setYBodyRot(yaw);m.setYHeadRot(yaw);m.walkAnimation.update((float)(step.horizontalDistance()*12.0),1.0f,1.0f);}
   }
   TARGETS.keySet().removeIf(Entity::isRemoved);PREVIOUS.keySet().removeIf(Entity::isRemoved);
-  }finally{activeLevel=null;CHAMBERS.clear();}
+  }finally{activeLevel=null;CHAMBERS.clear();NETWORKS.clear();}
  }
- private static boolean blocked(ServerLevel l,Mob m,Vec3 next){var net=Network.scan(l,m.blockPosition());AABB moved=m.getBoundingBox().move(next.subtract(m.position()));for(var p:net.cells())if(l.getBlockEntity(p) instanceof TankBlockEntity be)for(var box:be.collisionBoxes())if(box.intersects(moved))return true;return false;}
+ private static boolean blocked(ServerLevel l,Mob m,Vec3 next){var net=network(l,m.blockPosition());AABB moved=m.getBoundingBox().move(next.subtract(m.position()));for(var p:net.cells())if(l.getBlockEntity(p) instanceof TankBlockEntity be&&be.collides(moved))return true;return false;}
 }

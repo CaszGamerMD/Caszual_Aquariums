@@ -58,7 +58,7 @@ public final class AquariumMod implements ModInitializer {
     if(level.isClientSide())return InteractionResult.SUCCESS;String error=Terrestrial.release((ServerLevel)level,hit.getBlockPos().relative(hit.getDirection()),held);if(error!=null){player.sendOverlayMessage(Component.literal(error));return InteractionResult.FAIL;}return InteractionResult.SUCCESS;
    }
    if(level.isClientSide())return InteractionResult.SUCCESS;return interact(player,(ServerLevel)level,hand,hit);
-  });ServerTickEvents.END_LEVEL_TICK.register(l->{Inhabitants.tick(l);Terrestrial.tick(l);});
+  });ServerTickEvents.END_LEVEL_TICK.register(l->{List<net.minecraft.world.entity.Entity> entities=new ArrayList<>();l.getAllEntities().forEach(entities::add);Inhabitants.tick(l,entities);Terrestrial.tick(l,entities);});
  }
  private static InteractionResult useMobitat(Player player,ServerLevel level,InteractionHand hand,BlockHitResult hit){
   ItemStack held=player.getItemInHand(hand);MobitatBlockEntity box=new MobitatBlockEntity(BlockPos.ZERO,MOBITAT.defaultBlockState());box.setLevel(level);box.fromItem(held);if(box.empty())return InteractionResult.PASS;

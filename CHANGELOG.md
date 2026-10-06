@@ -1,3 +1,15 @@
+## 0.6.2
+- Optimized enclosure network flood fills and reused network results within each server tick.
+- Aquarium and terrarium movement now share one entity snapshot per level tick instead of scanning the dimension twice.
+- Removed repeated decoration-display rebuilds; edits now reuse stable display entities.
+- Reduced unnecessary tank block-entity migration checks and render-only chunk saves.
+- Mobitat previews now sync reliably to clients, cache reconstructed preview entities, preserve stored variants, and avoid tiny nameplates.
+- Mobitat drops preserve stored residents across Creative and normal loot paths.
+- Enclosure decorations keep their existing data owner, consolidate safely, and return their items when the owner tank is broken.
+- Mobs editor now supports pagination beyond five residents, shows real resident names, refreshes controls live, and prevents output-slot overwrite item loss.
+- Decoration pages keep selection visible, drag preview rotation uses the 26.2 input API, and selected decor is shown in the preview.
+- Added regression tests for Mobitat retention, decoration ownership/display reuse, pagination, and atomic resident extraction.
+
 ## 0.6.1
 - Redesigned Mobitat with four short legs, a front door, and a 3D carry handle.
 - Placed Mobitats render their stored residents as animated 10% scale previews while preserving stored variants.
