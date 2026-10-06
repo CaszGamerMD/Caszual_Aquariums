@@ -14,9 +14,7 @@ import net.minecraft.world.phys.AABB;
 public final class TankBlockEntity extends BlockEntity {
  public ItemStack decoration=ItemStack.EMPTY; // legacy migration only
  public final List<EnclosureDecoration> decorations=new ArrayList<>();
- public int variant,rotation,offsetX,offsetZ;
- private int chestOpenTicks;
- private UUID display;
+
  private boolean dirty=true;
  public TankBlockEntity(BlockPos p,BlockState s){super(AquariumMod.TANK_ENTITY,p,s);}
  public void migrateLegacy(){
