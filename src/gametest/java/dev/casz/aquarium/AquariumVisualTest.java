@@ -24,7 +24,7 @@ public class AquariumVisualTest implements FabricClientGameTest {
      for(int x=3;x<5;x++)level.setBlock(new BlockPos(base+x,100,0),pipe.defaultBlockState(),3);
      level.setBlock(new BlockPos(base+5,100,0),tank.defaultBlockState(),3);
      for(int x=0;x<3;x++)for(int z=0;z<2;z++){var p=new BlockPos(base+x,100,z);level.setBlock(p,level.getBlockState(p).setValue(AquariumBlock.SOIL,kind==2?3:1),3);}
-     var p=new BlockPos(base+1,100,1);var be=(TankBlockEntity)level.getBlockEntity(p);be.setDecoration(new ItemStack(kind==2?Items.STONE_BUTTON:kind==1?Items.OAK_FENCE:Items.FERN));be.changed();be.tick();
+     var p=new BlockPos(base+1,100,1);var be=(TankBlockEntity)level.getBlockEntity(p);be.addDecoration(new ItemStack(kind==2?Items.STONE_BUTTON:kind==1?Items.OAK_FENCE:Items.FERN),EnclosureDecoration.Anchor.FLOOR);be.changed();be.tick();
     }
    });
    server.runCommand("gamemode spectator @a");context.getInput().pressKey(290);
@@ -34,13 +34,11 @@ public class AquariumVisualTest implements FabricClientGameTest {
    server.runCommand("tp @a 4.0 100.3 -3");connection.waitForClientboundPackets();context.getInput().lookAt(new BlockPos(4,100,0));context.waitTicks(5);connection.waitForChunksRender();context.takeScreenshot("tube-water");
    server.runCommand("gamemode creative @a");server.runCommand("tp @a 1.5 100 -2");connection.waitForClientboundPackets();context.getInput().pressKey(290);
    server.runOnServer(s->{var p=connection.getServerPlayer();p.setItemInHand(InteractionHand.MAIN_HAND,ItemStack.EMPTY);var pos=new BlockPos(1,100,0);net.fabricmc.fabric.api.event.player.UseBlockCallback.EVENT.invoker().interact(p,connection.getServerLevel(),InteractionHand.MAIN_HAND,new BlockHitResult(Vec3.atCenterOf(pos),Direction.NORTH,pos,false));});
-   context.waitForScreen(AquariumScreen.class);context.waitTicks(3);context.takeScreenshot("decor-grid");
-   double[] cursor=context.computeOnClient(mc->{var w=mc.getWindow();return new double[]{((w.getGuiScaledWidth()-336)/2+12+5*12+6)*w.getGuiScale(),((w.getGuiScaledHeight()-238)/2+44+4*12+6)*w.getGuiScale()};});
-   context.getInput().setCursorPos(cursor[0],cursor[1]);context.getInput().pressMouse(0);connection.waitForServerboundPackets();context.waitTicks(2);
-   server.runOnServer(s->{var menu=(AquariumMenu)connection.getServerPlayer().containerMenu;if(menu.data.get(3)!=1)throw new AssertionError("Grid pointer click did not select eastern tank");});
-   context.clickScreenButton("+");connection.waitForServerboundPackets();context.waitTicks(2);
-   server.runOnServer(s->{var menu=(AquariumMenu)connection.getServerPlayer().containerMenu;if(menu.data.get(23)!=1)throw new AssertionError("Layer button failed");});
-   context.clickScreenButton("Home");context.clickScreenButton("Mobs");context.waitTicks(3);context.takeScreenshot("residents");context.setScreen(IconPreview::new);context.waitTicks(3);context.takeScreenshot("inventory-icons");context.setScreen(()->null);
+   context.waitForScreen(AquariumScreen.class);context.waitTicks(3);context.takeScreenshot("editor-main");
+   context.clickScreenButton("Decorate");context.waitTicks(3);context.takeScreenshot("editor-decorate");
+   context.clickScreenButton("Back");context.clickScreenButton("Mobs");context.waitTicks(3);context.takeScreenshot("editor-mobs");
+
+   context.setScreen(IconPreview::new);context.waitTicks(3);context.takeScreenshot("inventory-icons");context.setScreen(()->null);
   }
  }
  private static class IconPreview extends Screen {
