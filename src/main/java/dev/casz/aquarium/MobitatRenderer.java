@@ -18,7 +18,7 @@ public final class MobitatRenderer implements BlockEntityRenderer<MobitatBlockEn
  private final EntityRenderDispatcher dispatcher;
  public MobitatRenderer(BlockEntityRendererProvider.Context c){dispatcher=c.entityRenderer();}
  public State createRenderState(){return new State();}
- public void extractRenderState(MobitatBlockEntity be,State state,float partial,Vec3 camera,@Nullable ModelFeatureRenderer.CrumblingOverlay breaking){
+ public void extractRenderState(MobitatBlockEntity be,State state,float partial,Vec3 camera,ModelFeatureRenderer.@Nullable CrumblingOverlay breaking){
   BlockEntityRenderer.super.extractRenderState(be,state,partial,camera,breaking);state.residents.clear();if(be.getLevel()==null)return;
   for(int i=0;i<be.size()&&i<5;i++){String raw=be.residentData(i).getString("type").orElse("");Identifier id=Identifier.tryParse(raw);if(id==null)continue;var type=BuiltInRegistries.ENTITY_TYPE.getValue(id);if(type==null)continue;Entity e=type.create(be.getLevel(),EntitySpawnReason.LOAD);if(e!=null){e.tickCount=(int)(be.getLevel().getGameTime()+i*9);state.residents.add(dispatcher.extractEntity(e,partial));}}
  }
