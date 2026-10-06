@@ -11,6 +11,8 @@ import net.minecraft.client.renderer.state.level.CameraRenderState;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.*;
+import net.minecraft.util.ProblemReporter;
+import net.minecraft.world.level.storage.TagValueInput;
 import net.minecraft.world.phys.Vec3;
 import org.jspecify.annotations.Nullable;
 public final class MobitatRenderer implements BlockEntityRenderer<MobitatBlockEntity,MobitatRenderer.State>{
@@ -20,7 +22,7 @@ public final class MobitatRenderer implements BlockEntityRenderer<MobitatBlockEn
  public State createRenderState(){return new State();}
  public void extractRenderState(MobitatBlockEntity be,State state,float partial,Vec3 camera,ModelFeatureRenderer.@Nullable CrumblingOverlay breaking){
   BlockEntityRenderer.super.extractRenderState(be,state,partial,camera,breaking);state.residents.clear();if(be.getLevel()==null)return;
-  for(int i=0;i<be.size()&&i<5;i++){String raw=be.residentData(i).getString("type").orElse("");Identifier id=Identifier.tryParse(raw);if(id==null)continue;var type=BuiltInRegistries.ENTITY_TYPE.getValue(id);if(type==null)continue;Entity e=type.create(be.getLevel(),EntitySpawnReason.LOAD);if(e!=null){e.tickCount=(int)(be.getLevel().getGameTime()+i*9);state.residents.add(dispatcher.extractEntity(e,partial));}}
+  for(int i=0;i<be.size()&&i<5;i++){String raw=be.residentData(i).getString("type").orElse("");Identifier id=Identifier.tryParse(raw);if(id==null)continue;var type=BuiltInRegistries.ENTITY_TYPE.getValue(id);if(type==null)continue;Entity e=type.create(be.getLevel(),EntitySpawnReason.LOAD);if(e!=null){var saved=be.residentData(i).getCompound("entity").orElse(null);if(saved!=null)try{e.load(TagValueInput.create(ProblemReporter.DISCARDING,be.getLevel().registryAccess(),saved));}catch(Exception ignored){}e.tickCount=(int)(be.getLevel().getGameTime()+i*9);state.residents.add(dispatcher.extractEntity(e,partial));}}
  }
  public void submit(State state,PoseStack pose,SubmitNodeCollector out,CameraRenderState camera){
   float[][] spots={{.32f,.28f},{.68f,.30f},{.50f,.52f},{.30f,.70f},{.70f,.70f}};
