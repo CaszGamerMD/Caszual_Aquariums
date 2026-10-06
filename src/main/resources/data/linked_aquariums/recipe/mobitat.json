@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "IGI",
+    "GCG",
+    "IGI"
+  ],
+  "key": {
+    "I": "minecraft:iron_nugget",
+    "G": "minecraft:glass",
+    "C": "minecraft:chest"
+  },
+  "result": {
+    "id": "linked_aquariums:mobitat",
+    "count": 1
+  }
+}
