@@ -68,8 +68,9 @@ public final class Inhabitants {
   var net=Network.scan(level,pos);if(!net.complete()||net.residents(level).size()>=net.capacity())return false;
   var mob=EntityTypes.DROWNED.create(level,EntitySpawnReason.TRIGGERED);if(mob==null)return false;configure(mob);mob.setPos(pos.getX()+.5,pos.getY()+.14,pos.getZ()+.5);return level.addFreshEntity(mob);
  }
- public static void tick(ServerLevel level){activeLevel=level;NETWORKS.clear();try{
-  Set<BlockPos> checked=new HashSet<>();List<Entity> entities=new ArrayList<>();level.getAllEntities().forEach(entities::add);
+ public static void tick(ServerLevel level){List<Entity> entities=new ArrayList<>();level.getAllEntities().forEach(entities::add);tick(level,entities);}
+ static void tick(ServerLevel level,List<Entity> entities){activeLevel=level;NETWORKS.clear();try{
+  Set<BlockPos> checked=new HashSet<>();
   for(Entity entity:entities)if(entity instanceof Mob mob&&supported(mob.getType())&&mob.isAlive()){
    BlockPos current=mob.blockPosition();if(!Enclosures.isAquatic(level.getBlockState(current))){if(mob.entityTags().contains(AquariumMod.MANAGED)){ItemStack stack=capture(level,mob);mob.spawnAtLocation(level,stack);}continue;}
    configure(mob);
