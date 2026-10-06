@@ -90,5 +90,5 @@ public final class Inhabitants {
   return new Vec3((level.getRandom().nextDouble()*2-1)*spread,(level.getRandom().nextDouble()*2-1)*(tube?.16:.28),(level.getRandom().nextDouble()*2-1)*spread);
  }
  private static Vec3 center(BlockPos target,Mob mob,Vec3 lane){return new Vec3(target.getX()+.5+lane.x,target.getY()+height(mob)+lane.y,target.getZ()+.5+lane.z);}
- private static boolean blocked(ServerLevel l,Mob m,Vec3 next){var net=network(l,m.blockPosition());AABB moved=m.getBoundingBox().move(next.subtract(m.position()));for(var p:net.cells())if(l.getBlockEntity(p) instanceof TankBlockEntity be)for(var box:be.collisionBoxes())if(box.intersects(moved))return true;return false;}
+ private static boolean blocked(ServerLevel l,Mob m,Vec3 next){var net=network(l,m.blockPosition());AABB moved=m.getBoundingBox().move(next.subtract(m.position()));for(var p:net.cells())if(l.getBlockEntity(p) instanceof TankBlockEntity be&&be.collides(moved))return true;return false;}
 }
