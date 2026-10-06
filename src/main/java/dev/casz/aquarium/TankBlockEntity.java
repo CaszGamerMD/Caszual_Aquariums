@@ -26,9 +26,7 @@ public final class TankBlockEntity extends BlockEntity {
  public void changed(){dirty=true;setChanged();}
  public EnclosureDecoration addDecoration(ItemStack stack,EnclosureDecoration.Anchor anchor){var d=new EnclosureDecoration(stack,anchor);decorations.add(d);changed();return d;}
  public ItemStack removeDecoration(int index){if(index<0||index>=decorations.size())return ItemStack.EMPTY;var out=decorations.remove(index).stack.copy();changed();return out;}
- public List<AABB> collisionBoxes(){
-  List<AABB> out=new ArrayList<>();for(var d:decorations){float half=Math.max(.08f,d.scale*.45f);double cx=worldPosition.getX()+d.x,cy=worldPosition.getY()+d.y,cz=worldPosition.getZ()+d.z;out.add(new AABB(cx-half,cy-half,cz-half,cx+half,cy+half,cz+half));}return out;
- }
+ public boolean collides(AABB box){for(var d:decorations){float half=Math.max(.08f,d.scale*.45f);double cx=worldPosition.getX()+d.x,cy=worldPosition.getY()+d.y,cz=worldPosition.getZ()+d.z;if(new AABB(cx-half,cy-half,cz-half,cx+half,cy+half,cz+half).intersects(box))return true;}return false;}
  public void tick(){migrateLegacy();if(level instanceof ServerLevel server&&dirty)updateDisplays(server);}
  private String ownerPrefix(){return AquariumMod.ID+":decor:"+worldPosition.getX()+","+worldPosition.getY()+","+worldPosition.getZ()+":";}
  private void updateDisplays(ServerLevel server){
