@@ -1,9 +1,9 @@
 {
   "schemaVersion": 1,
   "id": "linked_aquariums",
-  "version": "0.4.2",
+  "version": "0.5.0",
   "name": "Linked Aquariums",
-  "description": "Connected aquariums and passive/hostile terrariums, miniature mobs, decor and pipes.",
+  "description": "Connected aquariums and terrariums with miniature inhabitants, decor, pipes, and Mobitat transport.",
   "authors": [
     "Casz"
   ],
