@@ -233,7 +233,7 @@ write(Path('assets')/ID/'models/item/mob_net.json',{'parent':'minecraft:item/han
 write(Path('assets')/ID/'items/mob_net.json',{'model':{'type':'minecraft:model','model':ID+':item/mob_net'}})
 write(Path('data')/ID/'recipe/mob_net.json',{'type':'minecraft:crafting_shaped','pattern':[' SS',' SS','I  '],'key':{'S':'minecraft:string','I':'minecraft:stick'},'result':{'id':ID+':mob_net','count':1}})
 write(Path('data')/ID/'tags/entity_type/flying.json',{'replace':False,'values':['minecraft:'+n for n in ('parrot','bee','bat','allay','phantom','ghast','vex','blaze','happy_ghast')]})
-lang=json.loads(langpath.read_text());lang.update({'block.'+ID+'.'+n:title for n,title in [('passive_terrarium','Passive Terrarium'),('hostile_terrarium','Hostile Terrarium'),('passive_pipe','Passive Terrarium Pipe'),('hostile_pipe','Hostile Terrarium Pipe')]});lang['item.'+ID+'.mob_net']='Mob Net';langpath.write_text(json.dumps(lang,indent=2)+'\n')
+lang=json.loads(langpath.read_text());lang.update({'block.'+ID+'.'+n:title for n,title in [('passive_terrarium','Passive Terrarium'),('hostile_terrarium','Hostile Terrarium'),('passive_pipe','Passive Terrarium Pipe'),('hostile_pipe','Hostile Terrarium Pipe')]});lang['item.'+ID+'.mob_net']='Mob Net';lang['block.'+ID+'.mobitat']='Mobitat';langpath.write_text(json.dumps(lang,indent=2)+'\n')
 meta=json.loads(metapath.read_text());meta['version']='0.3.0';meta['description']='Connected aquariums and passive/hostile terrariums, miniature mobs, decor and pipes.';metapath.write_text(json.dumps(meta,indent=2)+'\n')
 
 write(Path('linked_aquariums.mixins.json'),{'required':True,'package':'dev.casz.aquarium.mixin','compatibilityLevel':'JAVA_25','mixins':['TerrariumSunMixin','TerrariumCreeperMixin'],'injectors':{'defaultRequire':1}})
