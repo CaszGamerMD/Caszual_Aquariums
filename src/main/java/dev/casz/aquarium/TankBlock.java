@@ -21,7 +21,7 @@ public class TankBlock extends AquariumBlock implements EntityBlock {
  }
  protected List<ItemStack> getDrops(BlockState state,LootParams.Builder params){
   List<ItemStack> drops=new ArrayList<>(super.getDrops(state,params));
-  if(params.getOptionalParameter(LootContextParams.BLOCK_ENTITY) instanceof TankBlockEntity be && !be.decoration.isEmpty())drops.add(be.decoration.copy());
+  if(params.getOptionalParameter(LootContextParams.BLOCK_ENTITY) instanceof TankBlockEntity be){if(!be.decoration.isEmpty())drops.add(be.decoration.copy());for(var d:be.decorations)if(!d.stack.isEmpty())drops.add(d.stack.copy());}
   return drops;
  }
 }
