@@ -43,8 +43,18 @@ for d in directions:
     else:lo[axes[edge]]=0
   e=box(lo,hi,'water');e['faces']={d:e['faces'][d]};name=f'water_{d}_{mask}';model(name,[e],water_tex)
   waterparts.append({'when':{d:'false',**{k:str(v).lower() for k,v in linked.items()}},'apply':{'model':ID+':block/'+name}})
+# Tank-to-tube links keep a visible dark mounting frame around the narrow opening.
+tube_mounts=[]
+for d in directions:
+ axis=axes[d];face=15.65 if d in positive else .35;uv=[a for a in range(3) if a!=axis];bars=[]
+ for u0,v0,u1,v1 in [(0,0,.55,16),(15.45,0,16,16),(.55,0,15.45,.55),(.55,15.45,15.45,16)]:
+  lo=[0,0,0];hi=[16,16,16];lo[axis]=max(0,face-.35);hi[axis]=min(16,face+.35);lo[uv[0]]=u0;hi[uv[0]]=u1;lo[uv[1]]=v0;hi[uv[1]]=v1
+  bars.append(box(lo,hi,'frame'))
+ model('tank_tube_mount_'+d,bars,frame_tex)
+ tube_mounts.append({'when':{'tube_'+d:'true'},'apply':{'model':ID+':block/tank_tube_mount_'+d}})
 for name in ('aquarium','passive_terrarium','hostile_terrarium'):
  p=ROOT/'assets'/ID/'blockstates'/f'{name}.json';m=json.loads(p.read_text());m['multipart']+=frames
+ if name=='aquarium':m['multipart']+=tube_mounts
  if name=='aquarium':m['multipart']=waterparts+[p for p in m['multipart'] if ':block/water_' not in p['apply']['model']]
  p.write_text(json.dumps(m,indent=2)+'\n')
 pipeframes=[]
