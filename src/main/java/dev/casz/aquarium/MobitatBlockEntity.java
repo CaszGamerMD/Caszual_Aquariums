@@ -23,7 +23,11 @@ public final class MobitatBlockEntity extends BlockEntity {
   if(t.isEmpty()||mobs.size()>=CAPACITY||!mobs.isEmpty()&&!type().equals(t))return false;
   CompoundTag e=new CompoundTag();e.putString("type",t);e.put("entity",root.getCompound("terrarium_entity").orElse(new CompoundTag()).copy());e.putString("name",net.getHoverName().getString().replace(" in Mob Net",""));mobs.add(e);net.set(DataComponents.CUSTOM_DATA,CustomData.EMPTY);net.remove(DataComponents.CUSTOM_NAME);setChanged();return true;
  }
- public ItemStack peekNet(int i){\n  if(i<0||i>=mobs.size())return ItemStack.EMPTY;CompoundTag e=mobs.get(i),root=new CompoundTag();root.putString("terrarium_type",e.getString("type").orElse(""));root.put("terrarium_entity",e.getCompound("entity").orElse(new CompoundTag()).copy());ItemStack net=new ItemStack(AquariumMod.MOB_NET);net.set(DataComponents.CUSTOM_DATA,CustomData.of(root));net.set(DataComponents.CUSTOM_NAME,Component.literal(e.getString("name").orElse("Mob")+" in Mob Net"));return net;\n }\n public void remove(int i){if(i>=0&&i<mobs.size()){mobs.remove(i);setChanged();}}\n public ItemStack takeNet(int i){
+ public ItemStack peekNet(int i){
+  if(i<0||i>=mobs.size())return ItemStack.EMPTY;CompoundTag e=mobs.get(i),root=new CompoundTag();root.putString("terrarium_type",e.getString("type").orElse(""));root.put("terrarium_entity",e.getCompound("entity").orElse(new CompoundTag()).copy());ItemStack net=new ItemStack(AquariumMod.MOB_NET);net.set(DataComponents.CUSTOM_DATA,CustomData.of(root));net.set(DataComponents.CUSTOM_NAME,Component.literal(e.getString("name").orElse("Mob")+" in Mob Net"));return net;
+ }
+ public void remove(int i){if(i>=0&&i<mobs.size()){mobs.remove(i);setChanged();}}
+ public ItemStack takeNet(int i){
   if(i<0||i>=mobs.size())return ItemStack.EMPTY;CompoundTag e=mobs.remove(i),root=new CompoundTag();root.putString("terrarium_type",e.getString("type").orElse(""));root.put("terrarium_entity",e.getCompound("entity").orElse(new CompoundTag()).copy());
   ItemStack net=new ItemStack(AquariumMod.MOB_NET);net.set(DataComponents.CUSTOM_DATA,CustomData.of(root));net.set(DataComponents.CUSTOM_NAME,Component.literal(e.getString("name").orElse("Mob")+" in Mob Net"));setChanged();return net;
  }
