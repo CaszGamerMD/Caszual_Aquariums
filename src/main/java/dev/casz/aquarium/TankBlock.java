@@ -10,7 +10,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 public class TankBlock extends AquariumBlock implements EntityBlock {
- public static final MapCodec<TankBlock> CODEC=simpleCodec(TankBlock::new);
+ public static final net.minecraft.world.level.block.state.properties.BooleanProperty[] TUBE_LINKS=java.util.Arrays.stream(new String[]{"down","up","north","south","west","east"}).map(d->net.minecraft.world.level.block.state.properties.BooleanProperty.create("tube_"+d)).toArray(net.minecraft.world.level.block.state.properties.BooleanProperty[]::new);\n public static final MapCodec<TankBlock> CODEC=simpleCodec(TankBlock::new);
  public TankBlock(Properties p){super(p);}
  protected MapCodec<? extends net.minecraft.world.level.block.Block> codec(){return CODEC;}
  public BlockEntity newBlockEntity(BlockPos p,BlockState s){return new TankBlockEntity(p,s);}
