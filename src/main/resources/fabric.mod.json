@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "linked_aquariums",
-  "version": "0.6.0",
+  "version": "0.6.1",
   "name": "Linked Aquariums",
   "description": "Connected aquariums and terrariums with miniature inhabitants, decor, pipes, and Mobitat transport.",
   "authors": [
