@@ -42,11 +42,11 @@ public final class AquariumMod implements ModInitializer {
   loadConfig();CreativeModeTabEvents.modifyOutputEvent(CreativeModeTabs.FUNCTIONAL_BLOCKS).register(out->{out.accept(TANK);out.accept(TUBE);out.accept(PASSIVE_TERRARIUM);out.accept(HOSTILE_TERRARIUM);out.accept(PASSIVE_PIPE);out.accept(HOSTILE_PIPE);out.accept(MOB_NET);out.accept(MOBITAT);});
   UseEntityCallback.EVENT.register((player,level,hand,entity,hit)->{
    var held=player.getItemInHand(hand);if(!held.is(MOB_NET)||player.isSpectator())return InteractionResult.PASS;
-   if(!(entity instanceof net.minecraft.world.entity.Mob mob)||!Terrestrial.supported(mob)||mob.isPassenger()||mob.isVehicle()||!mob.isAlive()||Terrestrial.filled(held))return InteractionResult.FAIL;
+   if(!(entity instanceof net.minecraft.world.entity.Mob mob)||!(Terrestrial.supported(mob)||Inhabitants.supported(mob.getType()))||mob.isPassenger()||mob.isVehicle()||!mob.isAlive()||Terrestrial.filled(held))return InteractionResult.FAIL;
    if(!level.isClientSide())player.setItemInHand(hand,Terrestrial.capture((ServerLevel)level,mob));return InteractionResult.SUCCESS;
   });
   UseBlockCallback.EVENT.register((player,level,hand,hit)->{
-   if(player.isSpectator())return InteractionResult.PASS;var held=player.getItemInHand(hand);var state=level.getBlockState(hit.getBlockPos());\n   if(state.is(MOBITAT)&&level.getBlockEntity(hit.getBlockPos()) instanceof MobitatBlockEntity mb){if(level.isClientSide())return InteractionResult.SUCCESS;if(held.is(MOB_NET)){if(Terrestrial.filled(held)){if(!mb.addNet(held))player.sendOverlayMessage(Component.literal("Mobitat holds up to 5 mobs of one type."));return InteractionResult.SUCCESS;}if(mb.empty())return InteractionResult.FAIL;player.setItemInHand(hand,mb.takeNet(mb.size()-1));return InteractionResult.SUCCESS;}if(held.isEmpty()&&player instanceof ServerPlayer sp){BlockPos mp=hit.getBlockPos();sp.openMenu(new ExtendedMenuProvider<BlockPos>(){public BlockPos getScreenOpeningData(ServerPlayer q){return mp;}public Component getDisplayName(){return Component.literal("Mobitat");}public MobitatMenu createMenu(int id,Inventory inv,Player q){return new MobitatMenu(id,inv,(ServerLevel)level,mp);}});return InteractionResult.SUCCESS;}}
+   if(player.isSpectator())return InteractionResult.PASS;var held=player.getItemInHand(hand);var state=level.getBlockState(hit.getBlockPos());\n   if(held.is(MOBITAT_ITEM)&&!level.isClientSide())return useMobitat(player,(ServerLevel)level,hand,hit);\n   if(state.is(MOBITAT)&&level.getBlockEntity(hit.getBlockPos()) instanceof MobitatBlockEntity mb){if(level.isClientSide())return InteractionResult.SUCCESS;if(held.is(MOB_NET)){if(Terrestrial.filled(held)){if(!mb.addNet(held))player.sendOverlayMessage(Component.literal("Mobitat holds up to 5 mobs of one type."));return InteractionResult.SUCCESS;}if(mb.empty())return InteractionResult.FAIL;player.setItemInHand(hand,mb.takeNet(mb.size()-1));return InteractionResult.SUCCESS;}if(held.isEmpty()&&player instanceof ServerPlayer sp){BlockPos mp=hit.getBlockPos();sp.openMenu(new ExtendedMenuProvider<BlockPos>(){public BlockPos getScreenOpeningData(ServerPlayer q){return mp;}public Component getDisplayName(){return Component.literal("Mobitat");}public MobitatMenu createMenu(int id,Inventory inv,Player q){return new MobitatMenu(id,inv,(ServerLevel)level,mp);}});return InteractionResult.SUCCESS;}}
    if(!AquariumBlock.isModule(state)){
     if(!Terrestrial.filled(held))return InteractionResult.PASS;
     if(level.isClientSide())return InteractionResult.SUCCESS;String error=Terrestrial.release((ServerLevel)level,hit.getBlockPos().relative(hit.getDirection()),held);if(error!=null){player.sendOverlayMessage(Component.literal(error));return InteractionResult.FAIL;}return InteractionResult.SUCCESS;
@@ -54,6 +54,20 @@ public final class AquariumMod implements ModInitializer {
    if(level.isClientSide())return InteractionResult.SUCCESS;return interact(player,(ServerLevel)level,hand,hit);
   });ServerTickEvents.END_LEVEL_TICK.register(l->{Inhabitants.tick(l);Terrestrial.tick(l);});
  }
+ private static InteractionResult useMobitat(Player player,ServerLevel level,InteractionHand hand,BlockHitResult hit){
+  ItemStack held=player.getItemInHand(hand);MobitatBlockEntity box=new MobitatBlockEntity(BlockPos.ZERO,MOBITAT.defaultBlockState());box.setLevel(level);box.fromItem(held);if(box.empty())return InteractionResult.PASS;
+  BlockPos target=hit.getBlockPos();BlockState state=level.getBlockState(target);int moved=0;
+  for(int i=box.size()-1;i>=0;i--){ItemStack net=box.peekNet(i);boolean ok=false;
+   if(AquariumBlock.isModule(state)&&Enclosures.isTank(state)){
+    if(Enclosures.isLand(state)){ok=Terrestrial.add(level,target,net)==null;}
+    else {var mob=Terrestrial.load(level,net);if(mob!=null&&Inhabitants.supported(mob.getType())){var nw=Network.scan(level,target);if(nw.complete()&&nw.residents(level).size()<nw.capacity()){Inhabitants.configure(mob);mob.setPos(target.getX()+.5,target.getY()+.4,target.getZ()+.5);ok=level.addFreshEntity(mob);}}}
+   }else{ok=Terrestrial.release(level,target.relative(hit.getDirection()),net)==null;}
+   if(ok){box.remove(i);moved++;}
+  }
+  if(moved==0){player.sendOverlayMessage(Component.literal(AquariumBlock.isModule(state)?"No stored mobs are valid here, or the enclosure is full.":"There is not enough room to release these mobs."));return InteractionResult.FAIL;}
+  player.setItemInHand(hand,box.asItem());return InteractionResult.SUCCESS;
+ }
+
  private static void loadConfig(){var path=FabricLoader.getInstance().getConfigDir().resolve("linked-aquariums.properties");try{Properties p=new Properties();if(Files.exists(path))try(var in=Files.newInputStream(path)){p.load(in);}else{p.setProperty("fish-per-tank-block","1");try(var out=Files.newOutputStream(path)){p.store(out,"Each aquarium inhabitant takes one capacity slot. Tubes add none.");}}fishPerBlock=Math.clamp(Integer.parseInt(p.getProperty("fish-per-tank-block","1")),1,16);}catch(Exception ex){LoggerFactory.getLogger(ID).warn("Cannot read aquarium configuration; using one creature per tank block",ex);fishPerBlock=1;}}
  static void give(Player p,ItemStack stack){if(!stack.isEmpty()&&!p.getInventory().add(stack))p.drop(stack,false);}
  public static boolean isDecoration(ItemStack s){return s.is(Items.TRIDENT)||(s.getItem() instanceof BlockItem b && !(b.getBlock() instanceof AquariumBlock));}
