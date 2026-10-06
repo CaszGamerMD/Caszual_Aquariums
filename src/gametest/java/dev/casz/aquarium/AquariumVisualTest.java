@@ -38,3 +38,16 @@ public class AquariumVisualTest implements FabricClientGameTest {
    context.clickScreenButton("Decorate");context.waitTicks(3);context.takeScreenshot("editor-decorate");
    context.clickScreenButton("Back");context.clickScreenButton("Mobs");context.waitTicks(3);context.takeScreenshot("editor-mobs");
 
+   context.setScreen(IconPreview::new);context.waitTicks(3);context.takeScreenshot("inventory-icons");context.setScreen(()->null);
+  }
+ }
+ private static class IconPreview extends Screen {
+  IconPreview(){super(Component.literal("Enclosure icons"));}
+  public void extractRenderState(GuiGraphicsExtractor g,int mouseX,int mouseY,float delta){
+   g.fill(0,0,width,height,0xFF202E36);g.centeredText(font,"Enclosure inventory models",width/2,22,0xFFE7F3F3);
+   var items=new net.minecraft.world.level.block.Block[]{AquariumMod.TANK,AquariumMod.PASSIVE_TERRARIUM,AquariumMod.HOSTILE_TERRARIUM,AquariumMod.TUBE,AquariumMod.PASSIVE_PIPE,AquariumMod.HOSTILE_PIPE};
+   String[] labels={"Aquarium","Passive","Hostile","Swim tube","Passive pipe","Hostile pipe"};
+   for(int i=0;i<6;i++){int x=width/2-125+(i%3)*100,y=55+(i/3)*100;g.pose().pushMatrix();g.pose().translate(x,y);g.pose().scale(3,3);g.item(new ItemStack(items[i]),0,0);g.pose().popMatrix();g.text(font,labels[i],x,y+55,0xFFE7F3F3);}
+  }
+ }
+}
