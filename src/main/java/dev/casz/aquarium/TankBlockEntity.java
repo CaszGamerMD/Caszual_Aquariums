@@ -25,35 +25,26 @@ public final class TankBlockEntity extends BlockEntity {
   if(!decoration.isEmpty()){decorations.add(new EnclosureDecoration(decoration,EnclosureDecoration.Anchor.FLOOR));decoration=ItemStack.EMPTY;changed();}
   if(old>0)level.setBlock(worldPosition,state.setValue(AquariumBlock.DECOR,0),3);
  }
- public int kind(){if(decoration.isEmpty())return 0;if(decoration.is(Items.TRIDENT))return 33;if(decoration.is(Items.CHEST)||decoration.is(Items.TRAPPED_CHEST)||decoration.is(Items.ENDER_CHEST))return 34;int k=Palette.find(Palette.DECORS,decoration.getItem());return k>0?k:35;}
  public void changed(){dirty=true;setChanged();}
- public void setDecoration(ItemStack stack){decoration=stack.copyWithCount(1);variant=rotation=offsetX=offsetZ=0;changed();}
- public void openChest(){chestOpenTicks=80;changed();}
- public boolean isChestOpen(){return chestOpenTicks>0;}
- public void tick(){
-  migrateLegacy();if(!(level instanceof ServerLevel server))return;
-  if(kind()==34){if(chestOpenTicks>0){chestOpenTicks--;if(chestOpenTicks==0)dirty=true;}else if(server.getRandom().nextInt(600)==0){openChest();server.sendParticles(net.minecraft.core.particles.ParticleTypes.BUBBLE,worldPosition.getX()+.5+offsetX*.04,worldPosition.getY()+.4,worldPosition.getZ()+.5+offsetZ*.04,8,.06,.08,.06,.015);}}
-  if(dirty||server.getGameTime()%40==0)updateDisplay(server);
+ public EnclosureDecoration addDecoration(ItemStack stack,EnclosureDecoration.Anchor anchor){var d=new EnclosureDecoration(stack,anchor);decorations.add(d);changed();return d;}
+ public ItemStack removeDecoration(int index){if(index<0||index>=decorations.size())return ItemStack.EMPTY;var out=decorations.remove(index).stack.copy();changed();return out;}
+ public List<AABB> collisionBoxes(){
+  List<AABB> out=new ArrayList<>();for(var d:decorations){float half=Math.max(.08f,d.scale*.45f);double cx=worldPosition.getX()+d.x,cy=worldPosition.getY()+d.y,cz=worldPosition.getZ()+d.z;out.add(new AABB(cx-half,cy-half,cz-half,cx+half,cy+half,cz+half));}return out;
  }
- private String ownerTag(){return AquariumMod.ID+":decor:"+worldPosition.getX()+","+worldPosition.getY()+","+worldPosition.getZ();}
- private void updateDisplay(ServerLevel server){
-  boolean generic=kind()==35;
-  Display visual=display!=null && server.getEntity(display) instanceof Display d?d:null;
-  if(visual==null){
-   var found=server.getEntitiesOfClass(Display.class,new AABB(worldPosition).inflate(1),d->d.entityTags().contains(ownerTag()));
-   if(!found.isEmpty()){visual=found.getFirst();for(int i=1;i<found.size();i++)found.get(i).discard();}
-  }
-  if(visual!=null && (generic != (visual instanceof Display.ItemDisplay))){visual.discard();visual=null;}
-  if(decoration.isEmpty()){if(visual!=null)visual.discard();display=null;dirty=false;return;}
-  if(visual==null){visual=generic?EntityTypes.ITEM_DISPLAY.create(server,EntitySpawnReason.TRIGGERED):EntityTypes.BLOCK_DISPLAY.create(server,EntitySpawnReason.TRIGGERED);if(visual==null)return;visual.addTag(ownerTag());server.addFreshEntity(visual);}
-  display=visual.getUUID();visual.setPos(worldPosition.getX(),worldPosition.getY(),worldPosition.getZ());
-  int kind=kind();
-  if(visual instanceof Display.ItemDisplay item){item.setItemStack(decoration.copy());item.setItemTransform(ItemDisplayContext.FIXED);}
-  else if(visual instanceof Display.BlockDisplay block)block.setBlockState(AquariumMod.DECOR_MODEL.defaultBlockState().setValue(DecorModelBlock.KIND,kind).setValue(DecorModelBlock.MODEL,kind==34?(variant/2)*2+(chestOpenTicks>0?1:0):variant));
-  visual.setTransformation(new Transformation(new Matrix4f().translate(.5f+offsetX*.04f,generic?.35f:.08f,.5f+offsetZ*.04f).rotateY((float)Math.toRadians(rotation*45)).scale(generic?.45f:.6f).translate(generic?0:-.5f,0,generic?0:-.5f)));
-  visual.setWidth(2);visual.setHeight(2);visual.setViewRange(1);dirty=false;setChanged();
+ public void tick(){migrateLegacy();if(level instanceof ServerLevel server&&(dirty||server.getGameTime()%40==0))updateDisplays(server);}
+ private String ownerPrefix(){return AquariumMod.ID+":decor:"+worldPosition.getX()+","+worldPosition.getY()+","+worldPosition.getZ()+":";}
+ private void updateDisplays(ServerLevel server){
+  var existing=server.getEntitiesOfClass(Display.class,new AABB(worldPosition).inflate(3),d->d.entityTags().stream().anyMatch(t->t.startsWith(ownerPrefix())));
+  for(var e:existing)e.discard();
+  for(int i=0;i<decorations.size();i++){var d=decorations.get(i);Display visual;
+   if(d.stack.getItem() instanceof BlockItem bi){var block=EntityTypes.BLOCK_DISPLAY.create(server,EntitySpawnReason.TRIGGERED);if(block==null)continue;block.setBlockState(bi.getBlock().defaultBlockState());visual=block;}
+   else {var item=EntityTypes.ITEM_DISPLAY.create(server,EntitySpawnReason.TRIGGERED);if(item==null)continue;item.setItemStack(d.stack.copy());item.setItemTransform(ItemDisplayContext.FIXED);visual=item;}
+   visual.addTag(ownerPrefix()+i);visual.setPos(worldPosition.getX(),worldPosition.getY(),worldPosition.getZ());
+   visual.setTransformation(new Transformation(new Matrix4f().translate(d.x,d.y,d.z).rotateXYZ((float)Math.toRadians(d.rotX),(float)Math.toRadians(d.rotY),(float)Math.toRadians(d.rotZ)).scale(d.scale).translate(-.5f,-.5f,-.5f)));
+   visual.setWidth(3);visual.setHeight(3);visual.setViewRange(1);server.addFreshEntity(visual);
+  }dirty=false;setChanged();
  }
- protected void saveAdditional(ValueOutput out){super.saveAdditional(out);if(!decoration.isEmpty())out.store("decoration",ItemStack.CODEC,decoration);out.putInt("variant",variant);out.putInt("rotation",rotation);out.putInt("offset_x",offsetX);out.putInt("offset_z",offsetZ);if(display!=null)out.putString("display",display.toString());}
- protected void loadAdditional(ValueInput in){super.loadAdditional(in);decoration=in.read("decoration",ItemStack.CODEC).orElse(ItemStack.EMPTY);variant=Math.floorMod(in.getIntOr("variant",0),4);rotation=Math.floorMod(in.getIntOr("rotation",0),8);offsetX=Math.clamp(in.getIntOr("offset_x",0),-3,3);offsetZ=Math.clamp(in.getIntOr("offset_z",0),-3,3);try{display=UUID.fromString(in.getStringOr("display",""));}catch(IllegalArgumentException ex){display=null;}dirty=true;}
- public void preRemoveSideEffects(BlockPos pos,BlockState state){if(level instanceof ServerLevel server && display!=null){var visual=server.getEntity(display);if(visual!=null)visual.discard();}super.preRemoveSideEffects(pos,state);}
+ protected void saveAdditional(ValueOutput out){super.saveAdditional(out);if(!decoration.isEmpty())out.store("decoration",ItemStack.CODEC,decoration);out.putInt("decor_count",decorations.size());for(int i=0;i<decorations.size();i++)decorations.get(i).save(out,"decor_"+i);}
+ protected void loadAdditional(ValueInput in){super.loadAdditional(in);decoration=in.read("decoration",ItemStack.CODEC).orElse(ItemStack.EMPTY);decorations.clear();int n=Math.max(0,in.getIntOr("decor_count",0));for(int i=0;i<n;i++){var d=EnclosureDecoration.load(in,"decor_"+i);if(!d.stack.isEmpty())decorations.add(d);}dirty=true;}
+ public void preRemoveSideEffects(BlockPos pos,BlockState state){if(level instanceof ServerLevel server)for(var visual:server.getEntitiesOfClass(Display.class,new AABB(pos).inflate(3),d->d.entityTags().stream().anyMatch(t->t.startsWith(ownerPrefix()))))visual.discard();super.preRemoveSideEffects(pos,state);}
 }
