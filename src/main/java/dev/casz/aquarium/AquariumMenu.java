@@ -28,7 +28,7 @@ public final class AquariumMenu extends AbstractContainerMenu {
  private void giveOut(ItemStack s){if(!s.isEmpty())transfer.setItem(1,s);}
  public boolean clickMenuButton(Player player,int a){if(level==null||!stillValid(player))return false;refresh(true);var be=owner();
   if(a>=100&&a<105){int index=mobPage*5+(a-100);if(index>=residents.size())return false;selectedMob=index;refresh(true);return true;}
-  if(a==23||a==24){int max=Math.max(0,(residents.size()-1)/5);mobPage=Math.clamp(mobPage+(a==23?-1:1),0,max);refresh(true);return true;}
+  if(a==23||a==24){int max=Math.max(0,(residents.size()-1)/5);mobPage=Math.clamp(mobPage+(a==23?-1:1),0,max);if(!residents.isEmpty())selectedMob=Math.min(mobPage*5,residents.size()-1);refresh(true);return true;}
   if(a>=200&&a<203){anchorMode=a-200;data.set(8,anchorMode);return true;}
   if(a>=300&&a<10000){selectedDecor=a-300;if(be==null||selectedDecor>=be.decorations.size())return false;refresh(true);return true;}
   if(a==20){if(residents.isEmpty()||!transfer.getItem(1).isEmpty())return false;var input=transfer.getItem(0);var mob=residents.get(selectedMob);ItemStack out=ItemStack.EMPTY;if(Enclosures.isLand(level.getBlockState(anchor))&&input.is(AquariumMod.MOB_NET)&&!Terrestrial.filled(input)){out=Terrestrial.capture(level,mob);if(!player.getAbilities().instabuild)input.shrink(1);}else if(Enclosures.isAquatic(level.getBlockState(anchor))&&(input.is(Items.BUCKET)||input.is(Items.WATER_BUCKET))){out=Inhabitants.capture(level,mob);if(!player.getAbilities().instabuild)input.shrink(1);}else return false;giveOut(out);refresh(true);return true;}
