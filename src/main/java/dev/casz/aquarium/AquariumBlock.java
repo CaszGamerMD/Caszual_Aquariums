@@ -31,7 +31,7 @@ public class AquariumBlock extends Block {
     public AquariumBlock(Properties properties) {
         super(properties);
         BlockState state=stateDefinition.any();
-        if (!(this instanceof TubeBlock)) {state=state.setValue(SOIL,0);if(this instanceof TerrariumBlock)state=state.setValue(TerrariumBlock.GROUND_WATER,false);else state=state.setValue(DECOR,0);}
+        if (!(this instanceof TubeBlock)) {state=state.setValue(SOIL,0);if(this instanceof TerrariumBlock)state=state.setValue(TerrariumBlock.GROUND_WATER,false);else state=state.setValue(DECOR,0);if(this instanceof TankBlock)for(BooleanProperty p:TankBlock.TUBE_LINKS)state=state.setValue(p,false);}
         else for(BooleanProperty p:TubeBlock.TANK_LINKS)state=state.setValue(p,false);
         for(BooleanProperty p:LINKS) state=state.setValue(p,false);
         registerDefaultState(state);
@@ -39,25 +39,25 @@ public class AquariumBlock extends Block {
     protected MapCodec<? extends Block> codec() { return CODEC; }
     protected void createBlockStateDefinition(StateDefinition.Builder<Block,BlockState> b) {
         b.add(LINKS);
-        if (!(this instanceof TubeBlock)) {b.add(SOIL);if(this instanceof TerrariumBlock)b.add(TerrariumBlock.GROUND_WATER);else b.add(DECOR);}else b.add(TubeBlock.TANK_LINKS);
+        if (!(this instanceof TubeBlock)) {b.add(SOIL);if(this instanceof TerrariumBlock)b.add(TerrariumBlock.GROUND_WATER);else b.add(DECOR);if(this instanceof TankBlock)b.add(TankBlock.TUBE_LINKS);}else b.add(TubeBlock.TANK_LINKS);
     }
     public static boolean isModule(BlockState s) { return s.getBlock() instanceof AquariumBlock; }
     public boolean isTube() { return this instanceof TubeBlock; }
     public BlockState getStateForPlacement(BlockPlaceContext c) {
         BlockState s=defaultBlockState();
         for(Direction d:Direction.values()) s=s.setValue(LINKS[d.ordinal()],Enclosures.matches(defaultBlockState(),c.getLevel().getBlockState(c.getClickedPos().relative(d))));
-        if(this instanceof TubeBlock)for(Direction d:Direction.values())s=s.setValue(TubeBlock.TANK_LINKS[d.ordinal()],Enclosures.isTank(c.getLevel().getBlockState(c.getClickedPos().relative(d))) && Enclosures.matches(defaultBlockState(),c.getLevel().getBlockState(c.getClickedPos().relative(d))));
+        if(this instanceof TubeBlock)for(Direction d:Direction.values())s=s.setValue(TubeBlock.TANK_LINKS[d.ordinal()],Enclosures.isTank(c.getLevel().getBlockState(c.getClickedPos().relative(d))) && Enclosures.matches(defaultBlockState(),c.getLevel().getBlockState(c.getClickedPos().relative(d))));\n        if(this instanceof TankBlock)for(Direction d:Direction.values())s=s.setValue(TankBlock.TUBE_LINKS[d.ordinal()],c.getLevel().getBlockState(c.getClickedPos().relative(d)).getBlock() instanceof TubeBlock);
         return s;
     }
     protected BlockState updateShape(BlockState s, LevelReader level, ScheduledTickAccess ticks,
        BlockPos pos, Direction d, BlockPos neighbor, BlockState neighborState, RandomSource random) {
         s=s.setValue(LINKS[d.ordinal()],Enclosures.matches(s,neighborState));
-        return this instanceof TubeBlock?s.setValue(TubeBlock.TANK_LINKS[d.ordinal()],Enclosures.isTank(neighborState) && Enclosures.matches(s,neighborState)):s;
+        if(this instanceof TubeBlock)return s.setValue(TubeBlock.TANK_LINKS[d.ordinal()],Enclosures.isTank(neighborState) && Enclosures.matches(s,neighborState));\n        if(this instanceof TankBlock)return s.setValue(TankBlock.TUBE_LINKS[d.ordinal()],neighborState.getBlock() instanceof TubeBlock);\n        return s;
     }
     protected void onPlace(BlockState s,Level level,BlockPos pos,BlockState old,boolean moved) {
         if(old.getBlock()==this)return;
         BlockState linked=s;
-        for(Direction d:Direction.values()){var neighbor=level.getBlockState(pos.relative(d));linked=linked.setValue(LINKS[d.ordinal()],Enclosures.matches(s,neighbor));if(this instanceof TubeBlock)linked=linked.setValue(TubeBlock.TANK_LINKS[d.ordinal()],Enclosures.isTank(neighbor) && Enclosures.matches(s,neighbor));}
+        for(Direction d:Direction.values()){var neighbor=level.getBlockState(pos.relative(d));linked=linked.setValue(LINKS[d.ordinal()],Enclosures.matches(s,neighbor));if(this instanceof TubeBlock)linked=linked.setValue(TubeBlock.TANK_LINKS[d.ordinal()],Enclosures.isTank(neighbor) && Enclosures.matches(s,neighbor));if(this instanceof TankBlock)linked=linked.setValue(TankBlock.TUBE_LINKS[d.ordinal()],neighbor.getBlock() instanceof TubeBlock);}
         if(linked!=s)level.setBlock(pos,linked,3);
     }
     protected FluidState getFluidState(BlockState state) { return AquariumMod.WATER.getSource(false); }
