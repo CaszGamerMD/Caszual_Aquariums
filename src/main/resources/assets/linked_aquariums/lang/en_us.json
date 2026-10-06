@@ -6,5 +6,6 @@
   "block.linked_aquariums.hostile_terrarium": "Hostile Terrarium",
   "block.linked_aquariums.passive_pipe": "Passive Terrarium Pipe",
   "block.linked_aquariums.hostile_pipe": "Hostile Terrarium Pipe",
-  "item.linked_aquariums.mob_net": "Mob Net"
+  "item.linked_aquariums.mob_net": "Mob Net",
+  "block.linked_aquariums.mobitat": "Mobitat"
 }
