@@ -56,7 +56,7 @@ public final class Terrestrial {
  public static Mob load(ServerLevel l,ItemStack net){
   var tag=net.getOrDefault(DataComponents.CUSTOM_DATA,CustomData.EMPTY).copyTag();var id=Identifier.tryParse(tag.getString("terrarium_type").orElse(""));var type=id==null?null:BuiltInRegistries.ENTITY_TYPE.getValue(id);
   if(type==null||!(type.create(l,EntitySpawnReason.TRIGGERED) instanceof Mob m))return null;
-  var data=tag.getCompound("terrarium_entity").orElse(new CompoundTag());data.remove("UUID");data.remove("uuid");m.load(TagValueInput.create(ProblemReporter.DISCARDING,l.registryAccess(),data));m.setUUID(UUID.randomUUID());return m;
+  var data=tag.getCompound("terrarium_entity").orElse(new CompoundTag());data.remove("UUID");data.remove("uuid");m.load(TagValueInput.create(ProblemReporter.DISCARDING,l.registryAccess(),data));m.setUUID(UUID.randomUUID());if(net.has(DataComponents.CUSTOM_NAME)){String n=net.getHoverName().getString().replace(" in Mob Net","");m.setCustomName(Component.literal(n));}return m;
  }
  public static String add(ServerLevel l,BlockPos tank,ItemStack net){
   if(!filled(net))return "Catch a mob with an empty net first.";var state=l.getBlockState(tank);if(!Enclosures.isLand(state)||!Enclosures.isTank(state))return "Use the net on a terrarium tank.";
