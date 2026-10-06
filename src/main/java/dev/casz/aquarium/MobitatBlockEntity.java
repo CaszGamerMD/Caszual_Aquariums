@@ -17,6 +17,7 @@ public final class MobitatBlockEntity extends BlockEntity {
  public MobitatBlockEntity(BlockPos p,BlockState s){super(AquariumMod.MOBITAT_ENTITY,p,s);}
  public int size(){return mobs.size();} public boolean empty(){return mobs.isEmpty();}
  public String type(){return mobs.isEmpty()?"":mobs.getFirst().getString("type").orElse("");}
+ public CompoundTag residentData(int i){return i<0||i>=mobs.size()?new CompoundTag():mobs.get(i).copy();}
  public Component name(int i){if(i<0||i>=mobs.size())return Component.empty();return Component.literal(mobs.get(i).getString("name").orElse("Mob"));}
  public boolean addNet(ItemStack net){
   CompoundTag root=net.getOrDefault(DataComponents.CUSTOM_DATA,CustomData.EMPTY).copyTag();String t=root.getString("terrarium_type").orElse("");
