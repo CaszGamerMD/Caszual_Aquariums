@@ -1,1 +1,6 @@
-{"replace":false,"values":["linked_aquariums:contained_water"]}
+{
+  "replace": false,
+  "values": [
+    "linked_aquariums:contained_water"
+  ]
+}

@@ -1,1 +1,14 @@
-{"replace":false,"values":["minecraft:allay","minecraft:bat","minecraft:bee","minecraft:blaze","minecraft:breeze","minecraft:ghast","minecraft:happy_ghast","minecraft:parrot","minecraft:phantom","minecraft:vex"]}
+{
+  "replace": false,
+  "values": [
+    "minecraft:parrot",
+    "minecraft:bee",
+    "minecraft:bat",
+    "minecraft:allay",
+    "minecraft:phantom",
+    "minecraft:ghast",
+    "minecraft:vex",
+    "minecraft:blaze",
+    "minecraft:happy_ghast"
+  ]
+}

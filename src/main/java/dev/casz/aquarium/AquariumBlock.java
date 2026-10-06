@@ -67,6 +67,7 @@ public class AquariumBlock extends Block {
         int mask=0; for(Direction d:Direction.values()) if(s.getValue(LINKS[d.ordinal()]))mask |= 1<<d.ordinal();
         if(WALLS[mask]!=null)return WALLS[mask];
         VoxelShape shape=Shapes.empty();
+        // Closed outer faces contain real fish. Shared faces are completely open.
         for(Direction d:Direction.values()) if(!s.getValue(LINKS[d.ordinal()])) {
             VoxelShape face=switch(d) {
                 case DOWN -> box(0,0,0,16,1,16);

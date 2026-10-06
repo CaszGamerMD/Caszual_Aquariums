@@ -1,0 +1,40 @@
+{
+  "textures": {
+    "front": {
+      "sprite": "linked_aquariums:block/glass_connected_13",
+      "force_translucent": true
+    },
+    "back": {
+      "sprite": "linked_aquariums:block/glass_connected_14",
+      "force_translucent": true
+    },
+    "glass": {
+      "sprite": "linked_aquariums:block/glass_clear",
+      "force_translucent": true
+    },
+    "particle": "linked_aquariums:block/glass_clear"
+  },
+  "elements": [
+    {
+      "from": [
+        15.5,
+        0,
+        0
+      ],
+      "to": [
+        15.92,
+        16,
+        16
+      ],
+      "faces": {
+        "east": {
+          "texture": "#front",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#back"
+        }
+      }
+    }
+  ]
+}

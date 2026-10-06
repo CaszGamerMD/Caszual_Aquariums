@@ -67,7 +67,7 @@
           "texture": "#glass"
         },
         "east": {
-          "textture": "#glass"
+          "texture": "#glass"
         }
       }
     },
@@ -80,7 +80,7 @@
       "to": [
         16,
         16,
-      0.5
+        0.5
       ],
       "faces": {
         "down": {
@@ -96,10 +96,10 @@
           "texture": "#glass"
         },
         "west": {
-          "textture": "#glass"
+          "texture": "#glass"
         },
         "east": {
-          "textture": "#glass"
+          "texture": "#glass"
         }
       }
     },
@@ -112,11 +112,11 @@
       "to": [
         16,
         16,
-      16
+        16
       ],
       "faces": {
         "down": {
-          "textture": "#glass"
+          "texture": "#glass"
         },
         "up": {
           "texture": "#glass"
@@ -128,10 +128,10 @@
           "texture": "#glass"
         },
         "west": {
-          "textture": "#glass"
+          "texture": "#glass"
         },
         "east": {
-          "textture": "#glass"
+          "texture": "#glass"
         }
       }
     },
@@ -148,7 +148,7 @@
       ],
       "faces": {
         "down": {
-          "textture": "#glass"
+          "texture": "#glass"
         },
         "up": {
           "texture": "#glass"
@@ -160,10 +160,10 @@
           "texture": "#glass"
         },
         "west": {
-          "textture": "#glass"
+          "texture": "#glass"
         },
         "east": {
-          "textture": "#glass"
+          "texture": "#glass"
         }
       }
     },
@@ -195,7 +195,7 @@
           "texture": "#glass"
         },
         "east": {
-          "textture": "#glass"
+          "texture": "#glass"
         }
       }
     }

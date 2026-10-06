@@ -1,0 +1,72 @@
+{
+  "textures": {
+    "decor": "minecraft:block/sea_pickle",
+    "particle": "minecraft:block/sea_pickle"
+  },
+  "elements": [
+    {
+      "from": [
+        5,
+        2,
+        5
+      ],
+      "to": [
+        8,
+        6,
+        8
+      ],
+      "faces": {
+        "down": {
+          "texture": "#decor"
+        },
+        "up": {
+          "texture": "#decor"
+        },
+        "north": {
+          "texture": "#decor"
+        },
+        "south": {
+          "texture": "#decor"
+        },
+        "west": {
+          "texture": "#decor"
+        },
+        "east": {
+          "texture": "#decor"
+        }
+      }
+    },
+    {
+      "from": [
+        10,
+        2,
+        9
+      ],
+      "to": [
+        12,
+        5,
+        11
+      ],
+      "faces": {
+        "down": {
+          "texture": "#decor"
+        },
+        "up": {
+          "texture": "#decor"
+        },
+        "north": {
+          "texture": "#decor"
+        },
+        "south": {
+          "texture": "#decor"
+        },
+        "west": {
+          "texture": "#decor"
+        },
+        "east": {
+          "texture": "#decor"
+        }
+      }
+    }
+  ]
+}

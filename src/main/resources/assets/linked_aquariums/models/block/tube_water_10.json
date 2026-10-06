@@ -1,0 +1,89 @@
+{
+  "textures": {
+    "water": {
+      "sprite": "linked_aquariums:block/contained_water",
+      "force_translucent": true
+    },
+    "particle": "linked_aquariums:block/contained_water"
+  },
+  "elements": [
+    {
+      "from": [
+        2.2,
+        13.8,
+        2.2
+      ],
+      "to": [
+        13.8,
+        16,
+        13.8
+      ],
+      "faces": {
+        "north": {
+          "texture": "#water"
+        },
+        "south": {
+          "texture": "#water"
+        },
+        "west": {
+          "texture": "#water"
+        },
+        "east": {
+          "texture": "#water"
+        }
+      }
+    },
+    {
+      "from": [
+        2.2,
+        2.2,
+        2.2
+      ],
+      "to": [
+        13.8,
+        13.8,
+        13.8
+      ],
+      "faces": {
+        "down": {
+          "texture": "#water"
+        },
+        "north": {
+          "texture": "#water"
+        },
+        "west": {
+          "texture": "#water"
+        },
+        "east": {
+          "texture": "#water"
+        }
+      }
+    },
+    {
+      "from": [
+        2.2,
+        2.2,
+        13.8
+      ],
+      "to": [
+        13.8,
+        13.8,
+        16
+      ],
+      "faces": {
+        "down": {
+          "texture": "#water"
+        },
+        "up": {
+          "texture": "#water"
+        },
+        "west": {
+          "texture": "#water"
+        },
+        "east": {
+          "texture": "#water"
+        }
+      }
+    }
+  ]
+}

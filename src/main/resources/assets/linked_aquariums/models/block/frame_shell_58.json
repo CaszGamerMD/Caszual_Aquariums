@@ -1,0 +1,34 @@
+{
+  "textures": {
+    "frame": "linked_aquariums:block/frame",
+    "particle": "linked_aquariums:block/frame"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        0.35,
+        0.35
+      ],
+      "faces": {
+        "down": {
+          "texture": "#frame"
+        },
+        "up": {
+          "texture": "#frame"
+        },
+        "north": {
+          "texture": "#frame"
+        },
+        "south": {
+          "texture": "#frame"
+        }
+      }
+    }
+  ]
+}

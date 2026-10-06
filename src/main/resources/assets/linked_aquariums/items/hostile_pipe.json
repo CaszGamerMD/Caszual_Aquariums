@@ -1,1 +1,6 @@
-{"model":{"type":"minecraft:model","model":"linked_aquariums:item/hostile_pipe"}}
+{
+  "model": {
+    "type": "minecraft:model",
+    "model": "linked_aquariums:item/hostile_pipe"
+  }
+}

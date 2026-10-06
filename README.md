@@ -55,19 +55,51 @@ Craft a Mob Net using four string in a 2x2 square at the upper right and a stick
 
 Mobs in the Minecraft `MONSTER` spawn category use hostile terrariums; other supported mobs use passive terrariums. This means neutral monsters such as endermen and zombified piglins still use hostile terrariums. Captured residents have their base scale set to **one third of their original size**. Their attack AI is disabled, creeper fuses are neutralized, and the enclosure controller moves them through valid cells. Right-click with an empty net to retrieve the nearest resident, or use the UI's Mobs page to select a particular resident across the network. On that page, Add uses a filled net in Input; Remove uses an empty net and puts the filled net in Output. Empty Output before the next operation.
 
-To release a mob back into the world, use the filled net on an ordinary block with enough empty space on the clicked side. Original AI, gravity, and base size are restored. Mob needs a full 2 F‛2x footprint to spawn safely.
+To release a mob back into the world, use the filled net on an ordinary block with enough empty space on the clicked side. Original AI, gravity, and base size are restored. Mob nets cannot scoop aquarium residents; use buckets for those.
+
+Right-click a lowest-level terrarium block with a water bucket to add a shallow, contained ground-water patch and receive an empty bucket. Use an empty bucket to take it back. The patch is decorative water rather than a full fluid block, keeping the land enclosure dry and preventing water from spilling when broken. The same bucket operation is available through Place on the Decor page. All existing floors, harmless block decorations, model variations, and layout controls work in terrariums.
+
+Height is measured per connected **tank chamber**, excluding pipes. The lowest tank layer is level 1. Ground mobs walk on that lowest layer and can enter horizontal pipes attached there. They cannot climb vertical pipes or enter raised connections. Flying residents require a chamber **at least five blocks tall**. They can move throughout that chamber and enter/exit pipes only at level **4 or higher**. Flying pipes can route vertically. A connected destination chamber must also be tall enough. Parrots, bees, bats, allays, phantoms, ghasts, happy ghasts, vexes, and blazes are recognized as flying residents. Flying movement controls/navigation are also recognized. Other modded flying mobs can be added through the `linked_aquariums:flying` entity-type tag; compatibility with custom entity code is unverified.
+
+If removing blocks strands a resident or leaves too little capacity, the resident becomes a dropped filled Mob Net. Birds are also returned to nets when the chamber they occupy is shortened below five blocks. Pick up these nets before normal dropped-item despawn.
+
+Terrarium recipes produce four tanks from glass in the aquarium pattern, with oak planks along the bottom for passive tanks or iron ingots for hostile tanks. Matching pipe recipes produce eight pipes from three glass across the top, three across the bottom, and one matching terrarium tank in the center.
+
+## Removing blocks
+
+External faces reseal when connections are removed. If a fish is stranded in a removed module, it becomes a dropped fish bucket. If a smaller tank or split network has too many fish, excess fish become dropped fish buckets within one second. Pick those buckets up: normal dropped-item despawn rules still apply.
+
+Floors and decorations drop with the tank in survival. Explosions use normal survival/explosion loot rules. Creative breaking uses normal Minecraft no-drop behavior.
+
+## Capacity setting
+
+After first launch, edit `config/linked-aquariums.properties`:
+
+```properties
+fish-per-tank-block=1
+```
+
+Values from 1 to 16 are accepted. Restart the game or server after changing the setting. Tubes always contribute zero. Capacity enforcement pauses for networks that reach unloaded chunks or exceed the 4096-module scan limit. New fish cannot be added until the entire network is loaded and within that limit.
 
 ## Recipes
 
-The seven craftable items are the three enclosures, three matching pipes, and the Mob Net. Aquariums use the vanilla ambient water sound. Terrariums are silent.
+Aquarium, four blocks:
 
-## Save data
+```
+Glass       Glass       Glass
+Glass       Empty       Glass
+Iron nugget Iron nugget Iron nugget
+```
 
-Aquariums use a block entity to store floors, decorations, decoration layout, chest animation state, and prior rock migration state. Real fish stay as world entities. Terrarium residents are real entities with their preserved data while they are in the world. The Mob Net and Aquarium Creature Bucket store one entity's data in the item component link%d_aquariums:entity_dat``.
+Swim Tube, six blocks: three glass across the top row and three across the bottom row, with an empty middle row.
 
-## Rendering
+## Build from source
 
-The analytic visual design uses continuous dark edging only on the outside of each connected structure. Shared walls are open. Floor tops reach the full block edges while the side faces sit inside the dark frame. Swim Tube water fills the contained interior of the pipe and the open endpoints that join tanks. The custom fluid itself has an invisible default sprite so full-block vanilla fluid faces cannot clip through the tube walls; the visible water is provided by the bounded tube meshes.
+Install JDK 25. From this folder run `gradlew.bat build` on Windows or `./gradlew build` on Linux/macOS. The output is `build/libs/linked-aquariums-0.4.2.jar`; do not install the `-sources.jar`.
+
+Run server integration tests with `./gradlew runGameTest`. Run the client smoke test and screenshots with `./gradlew runClientGameTest` on a machine with a graphical display. The test source set is separate and is not included in the distributed mod. This task runs an isolated Minecraft test server, not an existing world.
+
+Verification is recorded in TESTING.md. Compatibility with other mods still needs play-testing. Aquariums do not support custom creature types. Terrarium nets accept supported modded Mob entities, but their custom behavior and rendering need compatibility testing. Generic modded block decorations are accepted.
 
 ## Glass appearance in 0.4.2
 

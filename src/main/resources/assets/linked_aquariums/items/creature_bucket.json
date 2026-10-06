@@ -1,1 +1,6 @@
-{"model":{"type":"minecraft:model","model":"linked_aquariums:item/creature_bucket"}}
+{
+  "model": {
+    "type": "minecraft:model",
+    "model": "linked_aquariums:item/creature_bucket"
+  }
+}

@@ -1,0 +1,123 @@
+{
+  "textures": {
+    "decor": "minecraft:block/oak_planks",
+    "latch": "minecraft:block/gold_block",
+    "particle": "minecraft:block/oak_planks"
+  },
+  "elements": [
+    {
+      "from": [
+        3,
+        1,
+        3
+      ],
+      "to": [
+        13,
+        6,
+        13
+      ],
+      "faces": {
+        "down": {
+          "texture": "#decor"
+        },
+        "up": {
+          "texture": "#decor"
+        },
+        "north": {
+          "texture": "#decor"
+        },
+        "south": {
+          "texture": "#decor"
+        },
+        "west": {
+          "texture": "#decor"
+        },
+        "east": {
+          "texture": "#decor"
+        }
+      }
+    },
+    {
+      "from": [
+        3,
+        6,
+        3
+      ],
+      "to": [
+        13,
+        8,
+        13
+      ],
+      "faces": {
+        "down": {
+          "texture": "#decor"
+        },
+        "up": {
+          "texture": "#decor"
+        },
+        "north": {
+          "texture": "#decor"
+        },
+        "south": {
+          "texture": "#decor"
+        },
+        "west": {
+          "texture": "#decor"
+        },
+        "east": {
+          "texture": "#decor"
+        }
+      },
+      "rotation": {
+        "origin": [
+          8,
+          6,
+          13
+        ],
+        "axis": "x",
+        "angle": -45
+      }
+    },
+    {
+      "from": [
+        7,
+        5,
+        2.7
+      ],
+      "to": [
+        9,
+        7,
+        3.3
+      ],
+      "faces": {
+        "down": {
+          "texture": "#latch"
+        },
+        "up": {
+          "texture": "#latch"
+        },
+        "north": {
+          "texture": "#latch"
+        },
+        "south": {
+          "texture": "#latch"
+        },
+        "west": {
+          "texture": "#latch"
+        },
+        "east": {
+          "texture": "#latch"
+        }
+      },
+      "rotation": {
+        "origin": [
+          8,
+          6,
+          13
+        ],
+        "axis": "x",
+        "angle": -45
+      }
+    }
+  ]
+}

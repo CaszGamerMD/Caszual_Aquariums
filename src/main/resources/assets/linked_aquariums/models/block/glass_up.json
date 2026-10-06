@@ -1,0 +1,10 @@
+{
+  "textures": {
+    "glass": {
+      "sprite": "linked_aquariums:block/aquarium_glass",
+      "force_translucent": true
+    },
+    "particle": "linked_aquariums:block/aquarium_glass"
+  },
+  "elements": []
+}

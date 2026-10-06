@@ -1,0 +1,7 @@
+{
+  "textures": {
+    "frame": "linked_aquariums:block/frame",
+    "particle": "linked_aquariums:block/frame"
+  },
+  "elements": []
+}

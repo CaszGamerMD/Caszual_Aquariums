@@ -1,0 +1,104 @@
+{
+  "textures": {
+    "decor": "minecraft:block/bamboo_block",
+    "particle": "minecraft:block/bamboo_block"
+  },
+  "elements": [
+    {
+      "from": [
+        2,
+        2,
+        6
+      ],
+      "to": [
+        14,
+        6,
+        10
+      ],
+      "faces": {
+        "down": {
+          "texture": "#decor"
+        },
+        "up": {
+          "texture": "#decor"
+        },
+        "north": {
+          "texture": "#decor"
+        },
+        "south": {
+          "texture": "#decor"
+        },
+        "west": {
+          "texture": "#decor"
+        },
+        "east": {
+          "texture": "#decor"
+        }
+      }
+    },
+    {
+      "from": [
+        8,
+        3,
+        3
+      ],
+      "to": [
+        12,
+        7,
+        7
+      ],
+      "faces": {
+        "down": {
+          "texture": "#decor"
+        },
+        "up": {
+          "texture": "#decor"
+        },
+        "north": {
+          "texture": "#decor"
+        },
+        "south": {
+          "texture": "#decor"
+        },
+        "west": {
+          "texture": "#decor"
+        },
+        "east": {
+          "texture": "#decor"
+        }
+      }
+    },
+    {
+      "from": [
+        4,
+        3,
+        9
+      ],
+      "to": [
+        8,
+        7,
+        14
+      ],
+      "faces": {
+        "down": {
+          "texture": "#decor"
+        },
+        "up": {
+          "texture": "#decor"
+        },
+        "north": {
+          "texture": "#decor"
+        },
+        "south": {
+          "texture": "#decor"
+        },
+        "west": {
+          "texture": "#decor"
+        },
+        "east": {
+          "texture": "#decor"
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "GGG",
+    " T ",
+    "GGG"
+  ],
+  "key": {
+    "G": "minecraft:glass",
+    "T": "linked_aquariums:passive_terrarium"
+  },
+  "result": {
+    "id": "linked_aquariums:passive_pipe",
+    "count": 8
+  }
+}

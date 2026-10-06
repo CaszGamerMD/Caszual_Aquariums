@@ -1,1 +1,6 @@
-{"model":{"type":"minecraft:model","model":"linked_aquariums:item/swim_tube"}}
+{
+  "model": {
+    "type": "minecraft:model",
+    "model": "linked_aquariums:item/swim_tube"
+  }
+}

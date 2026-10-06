@@ -1,0 +1,28 @@
+{
+  "textures": {
+    "water": {
+      "sprite": "linked_aquariums:block/contained_water",
+      "force_translucent": true
+    },
+    "particle": "linked_aquariums:block/contained_water"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0.55,
+        0.55
+      ],
+      "to": [
+        16,
+        16,
+        15.45
+      ],
+      "faces": {
+        "north": {
+          "texture": "#water"
+        }
+      }
+    }
+  ]
+}

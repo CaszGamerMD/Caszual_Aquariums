@@ -1,0 +1,2596 @@
+{
+  "multipart": [
+    {
+      "when": {
+        "tank_east": "true"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tank_water_ring_east"
+      }
+    },
+    {
+      "when": {
+        "tank_west": "true"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tank_water_ring_west"
+      }
+    },
+    {
+      "when": {
+        "tank_south": "true"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tank_water_ring_south"
+      }
+    },
+    {
+      "when": {
+        "tank_north": "true"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tank_water_ring_north"
+      }
+    },
+    {
+      "when": {
+        "tank_up": "true"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tank_water_ring_up"
+      }
+    },
+    {
+      "when": {
+        "tank_down": "true"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tank_water_ring_down"
+      }
+    },
+    {
+      "when": {
+        "down": "false",
+        "up": "false",
+        "north": "false",
+        "south": "false",
+        "west": "false",
+        "east": "false"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tube_water_0"
+      }
+    },
+    {
+      "when": {
+        "down": "false",
+        "up": "false",
+        "north": "false",
+        "south": "false",
+        "west": "false",
+        "east": "false"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tube_0"
+      }
+    },
+    {
+      "when": {
+        "down": "true",
+        "up": "false",
+        "north": "false",
+        "south": "false",
+        "west": "false",
+        "east": "false"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tube_water_1"
+      }
+    },
+    {
+      "when": {
+        "down": "true",
+        "up": "false",
+        "north": "false",
+        "south": "false",
+        "west": "false",
+        "east": "false"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tube_1"
+      }
+    },
+    {
+      "when": {
+        "down": "false",
+        "up": "true",
+        "north": "false",
+        "south": "false",
+        "west": "false",
+        "east": "false"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tube_water_2"
+      }
+    },
+    {
+      "when": {
+        "down": "false",
+        "up": "true",
+        "north": "false",
+        "south": "false",
+        "west": "false",
+        "east": "false"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tube_2"
+      }
+    },
+    {
+      "when": {
+        "down": "true",
+        "up": "true",
+        "north": "false",
+        "south": "false",
+        "west": "false",
+        "east": "false"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tube_water_3"
+      }
+    },
+    {
+      "when": {
+        "down": "true",
+        "up": "true",
+        "north": "false",
+        "south": "false",
+        "west": "false",
+        "east": "false"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tube_3"
+      }
+    },
+    {
+      "when": {
+        "down": "false",
+        "up": "false",
+        "north": "true",
+        "south": "false",
+        "west": "false",
+        "east": "false"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tube_water_4"
+      }
+    },
+    {
+      "when": {
+        "down": "false",
+        "up": "false",
+        "north": "true",
+        "south": "false",
+        "west": "false",
+        "east": "false"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tube_4"
+      }
+    },
+    {
+      "when": {
+        "down": "true",
+        "up": "false",
+        "north": "true",
+        "south": "false",
+        "west": "false",
+        "east": "false"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tube_water_5"
+      }
+    },
+    {
+      "when": {
+        "down": "true",
+        "up": "false",
+        "north": "true",
+        "south": "false",
+        "west": "false",
+        "east": "false"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tube_5"
+      }
+    },
+    {
+      "when": {
+        "down": "false",
+        "up": "true",
+        "north": "true",
+        "south": "false",
+        "west": "false",
+        "east": "false"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tube_water_6"
+      }
+    },
+    {
+      "when": {
+        "down": "false",
+        "up": "true",
+        "north": "true",
+        "south": "false",
+        "west": "false",
+        "east": "false"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tube_6"
+      }
+    },
+    {
+      "when": {
+        "down": "true",
+        "up": "true",
+        "north": "true",
+        "south": "false",
+        "west": "false",
+        "east": "false"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tube_water_7"
+      }
+    },
+    {
+      "when": {
+        "down": "true",
+        "up": "true",
+        "north": "true",
+        "south": "false",
+        "west": "false",
+        "east": "false"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tube_7"
+      }
+    },
+    {
+      "when": {
+        "down": "false",
+        "up": "false",
+        "north": "false",
+        "south": "true",
+        "west": "false",
+        "east": "false"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tube_water_8"
+      }
+    },
+    {
+      "when": {
+        "down": "false",
+        "up": "false",
+        "north": "false",
+        "south": "true",
+        "west": "false",
+        "east": "false"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tube_8"
+      }
+    },
+    {
+      "when": {
+        "down": "true",
+        "up": "false",
+        "north": "false",
+        "south": "true",
+        "west": "false",
+        "east": "false"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tube_water_9"
+      }
+    },
+    {
+      "when": {
+        "down": "true",
+        "up": "false",
+        "north": "false",
+        "south": "true",
+        "west": "false",
+        "east": "false"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tube_9"
+      }
+    },
+    {
+      "when": {
+        "down": "false",
+        "up": "true",
+        "north": "false",
+        "south": "true",
+        "west": "false",
+        "east": "false"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tube_water_10"
+      }
+    },
+    {
+      "when": {
+        "down": "false",
+        "up": "true",
+        "north": "false",
+        "south": "true",
+        "west": "false",
+        "east": "false"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tube_10"
+      }
+    },
+    {
+      "when": {
+        "down": "true",
+        "up": "true",
+        "north": "false",
+        "south": "true",
+        "west": "false",
+        "east": "false"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tube_water_11"
+      }
+    },
+    {
+      "when": {
+        "down": "true",
+        "up": "true",
+        "north": "false",
+        "south": "true",
+        "west": "false",
+        "east": "false"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tube_11"
+      }
+    },
+    {
+      "when": {
+        "down": "false",
+        "up": "false",
+        "north": "true",
+        "south": "true",
+        "west": "false",
+        "east": "false"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tube_water_12"
+      }
+    },
+    {
+      "when": {
+        "down": "false",
+        "up": "false",
+        "north": "true",
+        "south": "true",
+        "west": "false",
+        "east": "false"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tube_12"
+      }
+    },
+    {
+      "when": {
+        "down": "true",
+        "up": "false",
+        "north": "true",
+        "south": "true",
+        "west": "false",
+        "east": "false"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tube_water_13"
+      }
+    },
+    {
+      "when": {
+        "down": "true",
+        "up": "false",
+        "north": "true",
+        "south": "true",
+        "west": "false",
+        "east": "false"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tube_13"
+      }
+    },
+    {
+      "when": {
+        "down": "false",
+        "up": "true",
+        "north": "true",
+        "south": "true",
+        "west": "false",
+        "east": "false"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tube_water_14"
+      }
+    },
+    {
+      "when": {
+        "down": "false",
+        "up": "true",
+        "north": "true",
+        "south": "true",
+        "west": "false",
+        "east": "false"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tube_14"
+      }
+    },
+    {
+      "when": {
+        "down": "true",
+        "up": "true",
+        "north": "true",
+        "south": "true",
+        "west": "false",
+        "east": "false"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tube_water_15"
+      }
+    },
+    {
+      "when": {
+        "down": "true",
+        "up": "true",
+        "north": "true",
+        "south": "true",
+        "west": "false",
+        "east": "false"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tube_15"
+      }
+    },
+    {
+      "when": {
+        "down": "false",
+        "up": "false",
+        "north": "false",
+        "south": "false",
+        "west": "true",
+        "east": "false"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tube_water_16"
+      }
+    },
+    {
+      "when": {
+        "down": "false",
+        "up": "false",
+        "north": "false",
+        "south": "false",
+        "west": "true",
+        "east": "false"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tube_16"
+      }
+    },
+    {
+      "when": {
+        "down": "true",
+        "up": "false",
+        "north": "false",
+        "south": "false",
+        "west": "true",
+        "east": "false"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tube_water_17"
+      }
+    },
+    {
+      "when": {
+        "down": "true",
+        "up": "false",
+        "north": "false",
+        "south": "false",
+        "west": "true",
+        "east": "false"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tube_17"
+      }
+    },
+    {
+      "when": {
+        "down": "false",
+        "up": "true",
+        "north": "false",
+        "south": "false",
+        "west": "true",
+        "east": "false"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tube_water_18"
+      }
+    },
+    {
+      "when": {
+        "down": "false",
+        "up": "true",
+        "north": "false",
+        "south": "false",
+        "west": "true",
+        "east": "false"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tube_18"
+      }
+    },
+    {
+      "when": {
+        "down": "true",
+        "up": "true",
+        "north": "false",
+        "south": "false",
+        "west": "true",
+        "east": "false"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tube_water_19"
+      }
+    },
+    {
+      "when": {
+        "down": "true",
+        "up": "true",
+        "north": "false",
+        "south": "false",
+        "west": "true",
+        "east": "false"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tube_19"
+      }
+    },
+    {
+      "when": {
+        "down": "false",
+        "up": "false",
+        "north": "true",
+        "south": "false",
+        "west": "true",
+        "east": "false"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tube_water_20"
+      }
+    },
+    {
+      "when": {
+        "down": "false",
+        "up": "false",
+        "north": "true",
+        "south": "false",
+        "west": "true",
+        "east": "false"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tube_20"
+      }
+    },
+    {
+      "when": {
+        "down": "true",
+        "up": "false",
+        "north": "true",
+        "south": "false",
+        "west": "true",
+        "east": "false"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tube_water_21"
+      }
+    },
+    {
+      "when": {
+        "down": "true",
+        "up": "false",
+        "north": "true",
+        "south": "false",
+        "west": "true",
+        "east": "false"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tube_21"
+      }
+    },
+    {
+      "when": {
+        "down": "false",
+        "up": "true",
+        "north": "true",
+        "south": "false",
+        "west": "true",
+        "east": "false"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tube_water_22"
+      }
+    },
+    {
+      "when": {
+        "down": "false",
+        "up": "true",
+        "north": "true",
+        "south": "false",
+        "west": "true",
+        "east": "false"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tube_22"
+      }
+    },
+    {
+      "when": {
+        "down": "true",
+        "up": "true",
+        "north": "true",
+        "south": "false",
+        "west": "true",
+        "east": "false"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tube_water_23"
+      }
+    },
+    {
+      "when": {
+        "down": "true",
+        "up": "true",
+        "north": "true",
+        "south": "false",
+        "west": "true",
+        "east": "false"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tube_23"
+      }
+    },
+    {
+      "when": {
+        "down": "false",
+        "up": "false",
+        "north": "false",
+        "south": "true",
+        "west": "true",
+        "east": "false"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tube_water_24"
+      }
+    },
+    {
+      "when": {
+        "down": "false",
+        "up": "false",
+        "north": "false",
+        "south": "true",
+        "west": "true",
+        "east": "false"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tube_24"
+      }
+    },
+    {
+      "when": {
+        "down": "true",
+        "up": "false",
+        "north": "false",
+        "south": "true",
+        "west": "true",
+        "east": "false"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tube_water_25"
+      }
+    },
+    {
+      "when": {
+        "down": "true",
+        "up": "false",
+        "north": "false",
+        "south": "true",
+        "west": "true",
+        "east": "false"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tube_25"
+      }
+    },
+    {
+      "when": {
+        "down": "false",
+        "up": "true",
+        "north": "false",
+        "south": "true",
+        "west": "true",
+        "east": "false"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tube_water_26"
+      }
+    },
+    {
+      "when": {
+        "down": "false",
+        "up": "true",
+        "north": "false",
+        "south": "true",
+        "west": "true",
+        "east": "false"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tube_26"
+      }
+    },
+    {
+      "when": {
+        "down": "true",
+        "up": "true",
+        "north": "false",
+        "south": "true",
+        "west": "true",
+        "east": "false"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tube_water_27"
+      }
+    },
+    {
+      "when": {
+        "down": "true",
+        "up": "true",
+        "north": "false",
+        "south": "true",
+        "west": "true",
+        "east": "false"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tube_27"
+      }
+    },
+    {
+      "when": {
+        "down": "false",
+        "up": "false",
+        "north": "true",
+        "south": "true",
+        "west": "true",
+        "east": "false"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tube_water_28"
+      }
+    },
+    {
+      "when": {
+        "down": "false",
+        "up": "false",
+        "north": "true",
+        "south": "true",
+        "west": "true",
+        "east": "false"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tube_28"
+      }
+    },
+    {
+      "when": {
+        "down": "true",
+        "up": "false",
+        "north": "true",
+        "south": "true",
+        "west": "true",
+        "east": "false"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tube_water_29"
+      }
+    },
+    {
+      "when": {
+        "down": "true",
+        "up": "false",
+        "north": "true",
+        "south": "true",
+        "west": "true",
+        "east": "false"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tube_29"
+      }
+    },
+    {
+      "when": {
+        "down": "false",
+        "up": "true",
+        "north": "true",
+        "south": "true",
+        "west": "true",
+        "east": "false"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tube_water_30"
+      }
+    },
+    {
+      "when": {
+        "down": "false",
+        "up": "true",
+        "north": "true",
+        "south": "true",
+        "west": "true",
+        "east": "false"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tube_30"
+      }
+    },
+    {
+      "when": {
+        "down": "true",
+        "up": "true",
+        "north": "true",
+        "south": "true",
+        "west": "true",
+        "east": "false"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tube_water_31"
+      }
+    },
+    {
+      "when": {
+        "down": "true",
+        "up": "true",
+        "north": "true",
+        "south": "true",
+        "west": "true",
+        "east": "false"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tube_31"
+      }
+    },
+    {
+      "when": {
+        "down": "false",
+        "up": "false",
+        "north": "false",
+        "south": "false",
+        "west": "false",
+        "east": "true"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tube_water_32"
+      }
+    },
+    {
+      "when": {
+        "down": "false",
+        "up": "false",
+        "north": "false",
+        "south": "false",
+        "west": "false",
+        "east": "true"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tube_32"
+      }
+    },
+    {
+      "when": {
+        "down": "true",
+        "up": "false",
+        "north": "false",
+        "south": "false",
+        "west": "false",
+        "east": "true"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tube_water_33"
+      }
+    },
+    {
+      "when": {
+        "down": "true",
+        "up": "false",
+        "north": "false",
+        "south": "false",
+        "west": "false",
+        "east": "true"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tube_33"
+      }
+    },
+    {
+      "when": {
+        "down": "false",
+        "up": "true",
+        "north": "false",
+        "south": "false",
+        "west": "false",
+        "east": "true"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tube_water_34"
+      }
+    },
+    {
+      "when": {
+        "down": "false",
+        "up": "true",
+        "north": "false",
+        "south": "false",
+        "west": "false",
+        "east": "true"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tube_34"
+      }
+    },
+    {
+      "when": {
+        "down": "true",
+        "up": "true",
+        "north": "false",
+        "south": "false",
+        "west": "false",
+        "east": "true"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tube_water_35"
+      }
+    },
+    {
+      "when": {
+        "down": "true",
+        "up": "true",
+        "north": "false",
+        "south": "false",
+        "west": "false",
+        "east": "true"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tube_35"
+      }
+    },
+    {
+      "when": {
+        "down": "false",
+        "up": "false",
+        "north": "true",
+        "south": "false",
+        "west": "false",
+        "east": "true"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tube_water_36"
+      }
+    },
+    {
+      "when": {
+        "down": "false",
+        "up": "false",
+        "north": "true",
+        "south": "false",
+        "west": "false",
+        "east": "true"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tube_36"
+      }
+    },
+    {
+      "when": {
+        "down": "true",
+        "up": "false",
+        "north": "true",
+        "south": "false",
+        "west": "false",
+        "east": "true"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tube_water_37"
+      }
+    },
+    {
+      "when": {
+        "down": "true",
+        "up": "false",
+        "north": "true",
+        "south": "false",
+        "west": "false",
+        "east": "true"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tube_37"
+      }
+    },
+    {
+      "when": {
+        "down": "false",
+        "up": "true",
+        "north": "true",
+        "south": "false",
+        "west": "false",
+        "east": "true"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tube_water_38"
+      }
+    },
+    {
+      "when": {
+        "down": "false",
+        "up": "true",
+        "north": "true",
+        "south": "false",
+        "west": "false",
+        "east": "true"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tube_38"
+      }
+    },
+    {
+      "when": {
+        "down": "true",
+        "up": "true",
+        "north": "true",
+        "south": "false",
+        "west": "false",
+        "east": "true"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tube_water_39"
+      }
+    },
+    {
+      "when": {
+        "down": "true",
+        "up": "true",
+        "north": "true",
+        "south": "false",
+        "west": "false",
+        "east": "true"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tube_39"
+      }
+    },
+    {
+      "when": {
+        "down": "false",
+        "up": "false",
+        "north": "false",
+        "south": "true",
+        "west": "false",
+        "east": "true"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tube_water_40"
+      }
+    },
+    {
+      "when": {
+        "down": "false",
+        "up": "false",
+        "north": "false",
+        "south": "true",
+        "west": "false",
+        "east": "true"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tube_40"
+      }
+    },
+    {
+      "when": {
+        "down": "true",
+        "up": "false",
+        "north": "false",
+        "south": "true",
+        "west": "false",
+        "east": "true"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tube_water_41"
+      }
+    },
+    {
+      "when": {
+        "down": "true",
+        "up": "false",
+        "north": "false",
+        "south": "true",
+        "west": "false",
+        "east": "true"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tube_41"
+      }
+    },
+    {
+      "when": {
+        "down": "false",
+        "up": "true",
+        "north": "false",
+        "south": "true",
+        "west": "false",
+        "east": "true"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tube_water_42"
+      }
+    },
+    {
+      "when": {
+        "down": "false",
+        "up": "true",
+        "north": "false",
+        "south": "true",
+        "west": "false",
+        "east": "true"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tube_42"
+      }
+    },
+    {
+      "when": {
+        "down": "true",
+        "up": "true",
+        "north": "false",
+        "south": "true",
+        "west": "false",
+        "east": "true"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tube_water_43"
+      }
+    },
+    {
+      "when": {
+        "down": "true",
+        "up": "true",
+        "north": "false",
+        "south": "true",
+        "west": "false",
+        "east": "true"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tube_43"
+      }
+    },
+    {
+      "when": {
+        "down": "false",
+        "up": "false",
+        "north": "true",
+        "south": "true",
+        "west": "false",
+        "east": "true"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tube_water_44"
+      }
+    },
+    {
+      "when": {
+        "down": "false",
+        "up": "false",
+        "north": "true",
+        "south": "true",
+        "west": "false",
+        "east": "true"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tube_44"
+      }
+    },
+    {
+      "when": {
+        "down": "true",
+        "up": "false",
+        "north": "true",
+        "south": "true",
+        "west": "false",
+        "east": "true"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tube_water_45"
+      }
+    },
+    {
+      "when": {
+        "down": "true",
+        "up": "false",
+        "north": "true",
+        "south": "true",
+        "west": "false",
+        "east": "true"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tube_45"
+      }
+    },
+    {
+      "when": {
+        "down": "false",
+        "up": "true",
+        "north": "true",
+        "south": "true",
+        "west": "false",
+        "east": "true"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tube_water_46"
+      }
+    },
+    {
+      "when": {
+        "down": "false",
+        "up": "true",
+        "north": "true",
+        "south": "true",
+        "west": "false",
+        "east": "true"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tube_46"
+      }
+    },
+    {
+      "when": {
+        "down": "true",
+        "up": "true",
+        "north": "true",
+        "south": "true",
+        "west": "false",
+        "east": "true"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tube_water_47"
+      }
+    },
+    {
+      "when": {
+        "down": "true",
+        "up": "true",
+        "north": "true",
+        "south": "true",
+        "west": "false",
+        "east": "true"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tube_47"
+      }
+    },
+    {
+      "when": {
+        "down": "false",
+        "up": "false",
+        "north": "false",
+        "south": "false",
+        "west": "true",
+        "east": "true"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tube_water_48"
+      }
+    },
+    {
+      "when": {
+        "down": "false",
+        "up": "false",
+        "north": "false",
+        "south": "false",
+        "west": "true",
+        "east": "true"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tube_48"
+      }
+    },
+    {
+      "when": {
+        "down": "true",
+        "up": "false",
+        "north": "false",
+        "south": "false",
+        "west": "true",
+        "east": "true"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tube_water_49"
+      }
+    },
+    {
+      "when": {
+        "down": "true",
+        "up": "false",
+        "north": "false",
+        "south": "false",
+        "west": "true",
+        "east": "true"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tube_49"
+      }
+    },
+    {
+      "when": {
+        "down": "false",
+        "up": "true",
+        "north": "false",
+        "south": "false",
+        "west": "true",
+        "east": "true"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tube_water_50"
+      }
+    },
+    {
+      "when": {
+        "down": "false",
+        "up": "true",
+        "north": "false",
+        "south": "false",
+        "west": "true",
+        "east": "true"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tube_50"
+      }
+    },
+    {
+      "when": {
+        "down": "true",
+        "up": "true",
+        "north": "false",
+        "south": "false",
+        "west": "true",
+        "east": "true"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tube_water_51"
+      }
+    },
+    {
+      "when": {
+        "down": "true",
+        "up": "true",
+        "north": "false",
+        "south": "false",
+        "west": "true",
+        "east": "true"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tube_51"
+      }
+    },
+    {
+      "when": {
+        "down": "false",
+        "up": "false",
+        "north": "true",
+        "south": "false",
+        "west": "true",
+        "east": "true"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tube_water_52"
+      }
+    },
+    {
+      "when": {
+        "down": "false",
+        "up": "false",
+        "north": "true",
+        "south": "false",
+        "west": "true",
+        "east": "true"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tube_52"
+      }
+    },
+    {
+      "when": {
+        "down": "true",
+        "up": "false",
+        "north": "true",
+        "south": "false",
+        "west": "true",
+        "east": "true"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tube_water_53"
+      }
+    },
+    {
+      "when": {
+        "down": "true",
+        "up": "false",
+        "north": "true",
+        "south": "false",
+        "west": "true",
+        "east": "true"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tube_53"
+      }
+    },
+    {
+      "when": {
+        "down": "false",
+        "up": "true",
+        "north": "true",
+        "south": "false",
+        "west": "true",
+        "east": "true"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tube_water_54"
+      }
+    },
+    {
+      "when": {
+        "down": "false",
+        "up": "true",
+        "north": "true",
+        "south": "false",
+        "west": "true",
+        "east": "true"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tube_54"
+      }
+    },
+    {
+      "when": {
+        "down": "true",
+        "up": "true",
+        "north": "true",
+        "south": "false",
+        "west": "true",
+        "east": "true"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tube_water_55"
+      }
+    },
+    {
+      "when": {
+        "down": "true",
+        "up": "true",
+        "north": "true",
+        "south": "false",
+        "west": "true",
+        "east": "true"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tube_55"
+      }
+    },
+    {
+      "when": {
+        "down": "false",
+        "up": "false",
+        "north": "false",
+        "south": "true",
+        "west": "true",
+        "east": "true"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tube_water_56"
+      }
+    },
+    {
+      "when": {
+        "down": "false",
+        "up": "false",
+        "north": "false",
+        "south": "true",
+        "west": "true",
+        "east": "true"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tube_56"
+      }
+    },
+    {
+      "when": {
+        "down": "true",
+        "up": "false",
+        "north": "false",
+        "south": "true",
+        "west": "true",
+        "east": "true"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tube_water_57"
+      }
+    },
+    {
+      "when": {
+        "down": "true",
+        "up": "false",
+        "north": "false",
+        "south": "true",
+        "west": "true",
+        "east": "true"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tube_57"
+      }
+    },
+    {
+      "when": {
+        "down": "false",
+        "up": "true",
+        "north": "false",
+        "south": "true",
+        "west": "true",
+        "east": "true"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tube_water_58"
+      }
+    },
+    {
+      "when": {
+        "down": "false",
+        "up": "true",
+        "north": "false",
+        "south": "true",
+        "west": "true",
+        "east": "true"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tube_58"
+      }
+    },
+    {
+      "when": {
+        "down": "true",
+        "up": "true",
+        "north": "false",
+        "south": "true",
+        "west": "true",
+        "east": "true"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tube_water_59"
+      }
+    },
+    {
+      "when": {
+        "down": "true",
+        "up": "true",
+        "north": "false",
+        "south": "true",
+        "west": "true",
+        "east": "true"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tube_59"
+      }
+    },
+    {
+      "when": {
+        "down": "false",
+        "up": "false",
+        "north": "true",
+        "south": "true",
+        "west": "true",
+        "east": "true"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tube_water_60"
+      }
+    },
+    {
+      "when": {
+        "down": "false",
+        "up": "false",
+        "north": "true",
+        "south": "true",
+        "west": "true",
+        "east": "true"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tube_60"
+      }
+    },
+    {
+      "when": {
+        "down": "true",
+        "up": "false",
+        "north": "true",
+        "south": "true",
+        "west": "true",
+        "east": "true"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tube_water_61"
+      }
+    },
+    {
+      "when": {
+        "down": "true",
+        "up": "false",
+        "north": "true",
+        "south": "true",
+        "west": "true",
+        "east": "true"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tube_61"
+      }
+    },
+    {
+      "when": {
+        "down": "false",
+        "up": "true",
+        "north": "true",
+        "south": "true",
+        "west": "true",
+        "east": "true"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tube_water_62"
+      }
+    },
+    {
+      "when": {
+        "down": "false",
+        "up": "true",
+        "north": "true",
+        "south": "true",
+        "west": "true",
+        "east": "true"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tube_62"
+      }
+    },
+    {
+      "when": {
+        "down": "true",
+        "up": "true",
+        "north": "true",
+        "south": "true",
+        "west": "true",
+        "east": "true"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tube_water_63"
+      }
+    },
+    {
+      "when": {
+        "down": "true",
+        "up": "true",
+        "north": "true",
+        "south": "true",
+        "west": "true",
+        "east": "true"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tube_63"
+      }
+    },
+    {
+      "when": {
+        "tank_down": "true"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tube_ring_down"
+      }
+    },
+    {
+      "when": {
+        "tank_up": "true"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tube_ring_up"
+      }
+    },
+    {
+      "when": {
+        "tank_north": "true"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tube_ring_north"
+      }
+    },
+    {
+      "when": {
+        "tank_south": "true"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tube_ring_south"
+      }
+    },
+    {
+      "when": {
+        "tank_west": "true"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tube_ring_west"
+      }
+    },
+    {
+      "when": {
+        "tank_east": "true"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tube_ring_east"
+      }
+    },
+    {
+      "when": {
+        "down": "false",
+        "up": "false",
+        "north": "false",
+        "south": "false",
+        "west": "false",
+        "east": "false"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tube_frame_0"
+      }
+    },
+    {
+      "when": {
+        "down": "true",
+        "up": "false",
+        "north": "false",
+        "south": "false",
+        "west": "false",
+        "east": "false"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tube_frame_1"
+      }
+    },
+    {
+      "when": {
+        "down": "false",
+        "up": "true",
+        "north": "false",
+        "south": "false",
+        "west": "false",
+        "east": "false"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tube_frame_2"
+      }
+    },
+    {
+      "when": {
+        "down": "true",
+        "up": "true",
+        "north": "false",
+        "south": "false",
+        "west": "false",
+        "east": "false"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tube_frame_3"
+      }
+    },
+    {
+      "when": {
+        "down": "false",
+        "up": "false",
+        "north": "true",
+        "south": "false",
+        "west": "false",
+        "east": "false"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tube_frame_4"
+      }
+    },
+    {
+      "when": {
+        "down": "true",
+        "up": "false",
+        "north": "true",
+        "south": "false",
+        "west": "false",
+        "east": "false"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tube_frame_5"
+      }
+    },
+    {
+      "when": {
+        "down": "false",
+        "up": "true",
+        "north": "true",
+        "south": "false",
+        "west": "false",
+        "east": "false"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tube_frame_6"
+      }
+    },
+    {
+      "when": {
+        "down": "true",
+        "up": "true",
+        "north": "true",
+        "south": "false",
+        "west": "false",
+        "east": "false"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tube_frame_7"
+      }
+    },
+    {
+      "when": {
+        "down": "false",
+        "up": "false",
+        "north": "false",
+        "south": "true",
+        "west": "false",
+        "east": "false"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tube_frame_8"
+      }
+    },
+    {
+      "when": {
+        "down": "true",
+        "up": "false",
+        "north": "false",
+        "south": "true",
+        "west": "false",
+        "east": "false"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tube_frame_9"
+      }
+    },
+    {
+      "when": {
+        "down": "false",
+        "up": "true",
+        "north": "false",
+        "south": "true",
+        "west": "false",
+        "east": "false"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tube_frame_10"
+      }
+    },
+    {
+      "when": {
+        "down": "true",
+        "up": "true",
+        "north": "false",
+        "south": "true",
+        "west": "false",
+        "east": "false"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tube_frame_11"
+      }
+    },
+    {
+      "when": {
+        "down": "false",
+        "up": "false",
+        "north": "true",
+        "south": "true",
+        "west": "false",
+        "east": "false"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tube_frame_12"
+      }
+    },
+    {
+      "when": {
+        "down": "true",
+        "up": "false",
+        "north": "true",
+        "south": "true",
+        "west": "false",
+        "east": "false"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tube_frame_13"
+      }
+    },
+    {
+      "when": {
+        "down": "false",
+        "up": "true",
+        "north": "true",
+        "south": "true",
+        "west": "false",
+        "east": "false"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tube_frame_14"
+      }
+    },
+    {
+      "when": {
+        "down": "true",
+        "up": "true",
+        "north": "true",
+        "south": "true",
+        "west": "false",
+        "east": "false"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tube_frame_15"
+      }
+    },
+    {
+      "when": {
+        "down": "false",
+        "up": "false",
+        "north": "false",
+        "south": "false",
+        "west": "true",
+        "east": "false"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tube_frame_16"
+      }
+    },
+    {
+      "when": {
+        "down": "true",
+        "up": "false",
+        "north": "false",
+        "south": "false",
+        "west": "true",
+        "east": "false"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tube_frame_17"
+      }
+    },
+    {
+      "when": {
+        "down": "false",
+        "up": "true",
+        "north": "false",
+        "south": "false",
+        "west": "true",
+        "east": "false"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tube_frame_18"
+      }
+    },
+    {
+      "when": {
+        "down": "true",
+        "up": "true",
+        "north": "false",
+        "south": "false",
+        "west": "true",
+        "east": "false"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tube_frame_19"
+      }
+    },
+    {
+      "when": {
+        "down": "false",
+        "up": "false",
+        "north": "true",
+        "south": "false",
+        "west": "true",
+        "east": "false"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tube_frame_20"
+      }
+    },
+    {
+      "when": {
+        "down": "true",
+        "up": "false",
+        "north": "true",
+        "south": "false",
+        "west": "true",
+        "east": "false"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tube_frame_21"
+      }
+    },
+    {
+      "when": {
+        "down": "false",
+        "up": "true",
+        "north": "true",
+        "south": "false",
+        "west": "true",
+        "east": "false"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tube_frame_22"
+      }
+    },
+    {
+      "when": {
+        "down": "true",
+        "up": "true",
+        "north": "true",
+        "south": "false",
+        "west": "true",
+        "east": "false"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tube_frame_23"
+      }
+    },
+    {
+      "when": {
+        "down": "false",
+        "up": "false",
+        "north": "false",
+        "south": "true",
+        "west": "true",
+        "east": "false"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tube_frame_24"
+      }
+    },
+    {
+      "when": {
+        "down": "true",
+        "up": "false",
+        "north": "false",
+        "south": "true",
+        "west": "true",
+        "east": "false"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tube_frame_25"
+      }
+    },
+    {
+      "when": {
+        "down": "false",
+        "up": "true",
+        "north": "false",
+        "south": "true",
+        "west": "true",
+        "east": "false"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tube_frame_26"
+      }
+    },
+    {
+      "when": {
+        "down": "true",
+        "up": "true",
+        "north": "false",
+        "south": "true",
+        "west": "true",
+        "east": "false"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tube_frame_27"
+      }
+    },
+    {
+      "when": {
+        "down": "false",
+        "up": "false",
+        "north": "true",
+        "south": "true",
+        "west": "true",
+        "east": "false"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tube_frame_28"
+      }
+    },
+    {
+      "when": {
+        "down": "true",
+        "up": "false",
+        "north": "true",
+        "south": "true",
+        "west": "true",
+        "east": "false"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tube_frame_29"
+      }
+    },
+    {
+      "when": {
+        "down": "false",
+        "up": "true",
+        "north": "true",
+        "south": "true",
+        "west": "true",
+        "east": "false"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tube_frame_30"
+      }
+    },
+    {
+      "when": {
+        "down": "true",
+        "up": "true",
+        "north": "true",
+        "south": "true",
+        "west": "true",
+        "east": "false"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tube_frame_31"
+      }
+    },
+    {
+      "when": {
+        "down": "false",
+        "up": "false",
+        "north": "false",
+        "south": "false",
+        "west": "false",
+        "east": "true"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tube_frame_32"
+      }
+    },
+    {
+      "when": {
+        "down": "true",
+        "up": "false",
+        "north": "false",
+        "south": "false",
+        "west": "false",
+        "east": "true"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tube_frame_33"
+      }
+    },
+    {
+      "when": {
+        "down": "false",
+        "up": "true",
+        "north": "false",
+        "south": "false",
+        "west": "false",
+        "east": "true"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tube_frame_34"
+      }
+    },
+    {
+      "when": {
+        "down": "true",
+        "up": "true",
+        "north": "false",
+        "south": "false",
+        "west": "false",
+        "east": "true"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tube_frame_35"
+      }
+    },
+    {
+      "when": {
+        "down": "false",
+        "up": "false",
+        "north": "true",
+        "south": "false",
+        "west": "false",
+        "east": "true"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tube_frame_36"
+      }
+    },
+    {
+      "when": {
+        "down": "true",
+        "up": "false",
+        "north": "true",
+        "south": "false",
+        "west": "false",
+        "east": "true"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tube_frame_37"
+      }
+    },
+    {
+      "when": {
+        "down": "false",
+        "up": "true",
+        "north": "true",
+        "south": "false",
+        "west": "false",
+        "east": "true"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tube_frame_38"
+      }
+    },
+    {
+      "when": {
+        "down": "true",
+        "up": "true",
+        "north": "true",
+        "south": "false",
+        "west": "false",
+        "east": "true"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tube_frame_39"
+      }
+    },
+    {
+      "when": {
+        "down": "false",
+        "up": "false",
+        "north": "false",
+        "south": "true",
+        "west": "false",
+        "east": "true"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tube_frame_40"
+      }
+    },
+    {
+      "when": {
+        "down": "true",
+        "up": "false",
+        "north": "false",
+        "south": "true",
+        "west": "false",
+        "east": "true"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tube_frame_41"
+      }
+    },
+    {
+      "when": {
+        "down": "false",
+        "up": "true",
+        "north": "false",
+        "south": "true",
+        "west": "false",
+        "east": "true"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tube_frame_42"
+      }
+    },
+    {
+      "when": {
+        "down": "true",
+        "up": "true",
+        "north": "false",
+        "south": "true",
+        "west": "false",
+        "east": "true"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tube_frame_43"
+      }
+    },
+    {
+      "when": {
+        "down": "false",
+        "up": "false",
+        "north": "true",
+        "south": "true",
+        "west": "false",
+        "east": "true"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tube_frame_44"
+      }
+    },
+    {
+      "when": {
+        "down": "true",
+        "up": "false",
+        "north": "true",
+        "south": "true",
+        "west": "false",
+        "east": "true"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tube_frame_45"
+      }
+    },
+    {
+      "when": {
+        "down": "false",
+        "up": "true",
+        "north": "true",
+        "south": "true",
+        "west": "false",
+        "east": "true"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tube_frame_46"
+      }
+    },
+    {
+      "when": {
+        "down": "true",
+        "up": "true",
+        "north": "true",
+        "south": "true",
+        "west": "false",
+        "east": "true"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tube_frame_47"
+      }
+    },
+    {
+      "when": {
+        "down": "false",
+        "up": "false",
+        "north": "false",
+        "south": "false",
+        "west": "true",
+        "east": "true"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tube_frame_48"
+      }
+    },
+    {
+      "when": {
+        "down": "true",
+        "up": "false",
+        "north": "false",
+        "south": "false",
+        "west": "true",
+        "east": "true"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tube_frame_49"
+      }
+    },
+    {
+      "when": {
+        "down": "false",
+        "up": "true",
+        "north": "false",
+        "south": "false",
+        "west": "true",
+        "east": "true"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tube_frame_50"
+      }
+    },
+    {
+      "when": {
+        "down": "true",
+        "up": "true",
+        "north": "false",
+        "south": "false",
+        "west": "true",
+        "east": "true"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tube_frame_51"
+      }
+    },
+    {
+      "when": {
+        "down": "false",
+        "up": "false",
+        "north": "true",
+        "south": "false",
+        "west": "true",
+        "east": "true"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tube_frame_52"
+      }
+    },
+    {
+      "when": {
+        "down": "true",
+        "up": "false",
+        "north": "true",
+        "south": "false",
+        "west": "true",
+        "east": "true"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tube_frame_53"
+      }
+    },
+    {
+      "when": {
+        "down": "false",
+        "up": "true",
+        "north": "true",
+        "south": "false",
+        "west": "true",
+        "east": "true"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tube_frame_54"
+      }
+    },
+    {
+      "when": {
+        "down": "true",
+        "up": "true",
+        "north": "true",
+        "south": "false",
+        "west": "true",
+        "east": "true"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tube_frame_55"
+      }
+    },
+    {
+      "when": {
+        "down": "false",
+        "up": "false",
+        "north": "false",
+        "south": "true",
+        "west": "true",
+        "east": "true"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tube_frame_56"
+      }
+    },
+    {
+      "when": {
+        "down": "true",
+        "up": "false",
+        "north": "false",
+        "south": "true",
+        "west": "true",
+        "east": "true"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tube_frame_57"
+      }
+    },
+    {
+      "when": {
+        "down": "false",
+        "up": "true",
+        "north": "false",
+        "south": "true",
+        "west": "true",
+        "east": "true"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tube_frame_58"
+      }
+    },
+    {
+      "when": {
+        "down": "true",
+        "up": "true",
+        "north": "false",
+        "south": "true",
+        "west": "true",
+        "east": "true"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tube_frame_59"
+      }
+    },
+    {
+      "when": {
+        "down": "false",
+        "up": "false",
+        "north": "true",
+        "south": "true",
+        "west": "true",
+        "east": "true"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tube_frame_60"
+      }
+    },
+    {
+      "when": {
+        "down": "true",
+        "up": "false",
+        "north": "true",
+        "south": "true",
+        "west": "true",
+        "east": "true"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tube_frame_61"
+      }
+    },
+    {
+      "when": {
+        "down": "false",
+        "up": "true",
+        "north": "true",
+        "south": "true",
+        "west": "true",
+        "east": "true"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tube_frame_62"
+      }
+    },
+    {
+      "when": {
+        "down": "true",
+        "up": "true",
+        "north": "true",
+        "south": "true",
+        "west": "true",
+        "east": "true"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tube_frame_63"
+      }
+    }
+  ]
+}

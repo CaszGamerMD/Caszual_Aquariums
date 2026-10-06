@@ -1,1 +1,16 @@
-{"type":"minecraft:crafting_shaped","pattern":[" SS"," TS","T  "],"key":{"S":"minecraft:string","T":"minecraft:stick"},"result":{"id":"linked_aquariums:mob_net","count":1}}
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " SS",
+    " SS",
+    "I  "
+  ],
+  "key": {
+    "S": "minecraft:string",
+    "I": "minecraft:stick"
+  },
+  "result": {
+    "id": "linked_aquariums:mob_net",
+    "count": 1
+  }
+}

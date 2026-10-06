@@ -78,7 +78,7 @@
           ]
         },
         "south": {
-          "textture": "#decor",
+          "texture": "#decor",
           "uv": [
             0,
             0,

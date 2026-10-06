@@ -1,1 +1,6 @@
-{"model":{"type":"minecraft:model","model":"linked_aquariums:item/mob_net"}}
+{
+  "model": {
+    "type": "minecraft:model",
+    "model": "linked_aquariums:item/mob_net"
+  }
+}

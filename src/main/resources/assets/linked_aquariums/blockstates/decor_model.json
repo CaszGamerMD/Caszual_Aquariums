@@ -1,0 +1,424 @@
+{
+  "variants": {
+    "kind=0,model=0": {
+      "model": "linked_aquariums:block/display_decor_0_0"
+    },
+    "kind=0,model=1": {
+      "model": "linked_aquariums:block/display_decor_0_1"
+    },
+    "kind=0,model=2": {
+      "model": "linked_aquariums:block/display_decor_0_2"
+    },
+    "kind=0,model=3": {
+      "model": "linked_aquariums:block/display_decor_0_3"
+    },
+    "kind=1,model=0": {
+      "model": "linked_aquariums:block/display_decor_1_0"
+    },
+    "kind=1,model=1": {
+      "model": "linked_aquariums:block/display_decor_1_1"
+    },
+    "kind=1,model=2": {
+      "model": "linked_aquariums:block/display_decor_1_2"
+    },
+    "kind=1,model=3": {
+      "model": "linked_aquariums:block/display_decor_1_3"
+    },
+    "kind=2,model=0": {
+      "model": "linked_aquariums:block/display_decor_2_0"
+    },
+    "kind=2,model=1": {
+      "model": "linked_aquariums:block/display_decor_2_1"
+    },
+    "kind=2,model=2": {
+      "model": "linked_aquariums:block/display_decor_2_2"
+    },
+    "kind=2,model=3": {
+      "model": "linked_aquariums:block/display_decor_2_3"
+    },
+    "kind=3,model=0": {
+      "model": "linked_aquariums:block/display_decor_3_0"
+    },
+    "kind=3,model=1": {
+      "model": "linked_aquariums:block/display_decor_3_1"
+    },
+    "kind=3,model=2": {
+      "model": "linked_aquariums:block/display_decor_3_2"
+    },
+    "kind=3,model=3": {
+      "model": "linked_aquariums:block/display_decor_3_3"
+    },
+    "kind=4,model=0": {
+      "model": "linked_aquariums:block/display_decor_4_0"
+    },
+    "kind=4,model=1": {
+      "model": "linked_aquariums:block/display_decor_4_1"
+    },
+    "kind=4,model=2": {
+      "model": "linked_aquariums:block/display_decor_4_2"
+    },
+    "kind=4,model=3": {
+      "model": "linked_aquariums:block/display_decor_4_3"
+    },
+    "kind=5,model=0": {
+      "model": "linked_aquariums:block/display_decor_5_0"
+    },
+    "kind=5,model=1": {
+      "model": "linked_aquariums:block/display_decor_5_1"
+    },
+    "kind=5,model=2": {
+      "model": "linked_aquariums:block/display_decor_5_2"
+    },
+    "kind=5,model=3": {
+      "model": "linked_aquariums:block/display_decor_5_3"
+    },
+    "kind=6,model=0": {
+      "model": "linked_aquariums:block/display_decor_6_0"
+    },
+    "kind=6,model=1": {
+      "model": "linked_aquariums:block/display_decor_6_1"
+    },
+    "kind=6,model=2": {
+      "model": "linked_aquariums:block/display_decor_6_2"
+    },
+    "kind=6,model=3": {
+      "model": "linked_aquariums:block/display_decor_6_3"
+    },
+    "kind=7,model=0": {
+      "model": "linked_aquariums:block/display_decor_7_0"
+    },
+    "kind=7,model=1": {
+      "model": "linked_aquariums:block/display_decor_7_1"
+    },
+    "kind=7,model=2": {
+      "model": "linked_aquariums:block/display_decor_7_2"
+    },
+    "kind=7,model=3": {
+      "model": "linked_aquariums:block/display_decor_7_3"
+    },
+    "kind=8,model=0": {
+      "model": "linked_aquariums:block/display_decor_8_0"
+    },
+    "kind=8,model=1": {
+      "model": "linked_aquariums:block/display_decor_8_1"
+    },
+    "kind=8,model=2": {
+      "model": "linked_aquariums:block/display_decor_8_2"
+    },
+    "kind=8,model=3": {
+      "model": "linked_aquariums:block/display_decor_8_3"
+    },
+    "kind=9,model=0": {
+      "model": "linked_aquariums:block/display_decor_9_0"
+    },
+    "kind=9,model=1": {
+      "model": "linked_aquariums:block/display_decor_9_1"
+    },
+    "kind=9,model=2": {
+      "model": "linked_aquariums:block/display_decor_9_2"
+    },
+    "kind=9,model=3": {
+      "model": "linked_aquariums:block/display_decor_9_3"
+    },
+    "kind=10,model=0": {
+      "model": "linked_aquariums:block/display_decor_10_0"
+    },
+    "kind=10,model=1": {
+      "model": "linked_aquariums:block/display_decor_10_1"
+    },
+    "kind=10,model=2": {
+      "model": "linked_aquariums:block/display_decor_10_2"
+    },
+    "kind=10,model=3": {
+      "model": "linked_aquariums:block/display_decor_10_3"
+    },
+    "kind=11,model=0": {
+      "model": "linked_aquariums:block/display_decor_11_0"
+    },
+    "kind=11,model=1": {
+      "model": "linked_aquariums:block/display_decor_11_1"
+    },
+    "kind=11,model=2": {
+      "model": "linked_aquariums:block/display_decor_11_2"
+    },
+    "kind=11,model=3": {
+      "model": "linked_aquariums:block/display_decor_11_3"
+    },
+    "kind=12,model=0": {
+      "model": "linked_aquariums:block/display_decor_12_0"
+    },
+    "kind=12,model=1": {
+      "model": "linked_aquariums:block/display_decor_12_1"
+    },
+    "kind=12,model=2": {
+      "model": "linked_aquariums:block/display_decor_12_2"
+    },
+    "kind=12,model=3": {
+      "model": "linked_aquariums:block/display_decor_12_3"
+    },
+    "kind=13,model=0": {
+      "model": "linked_aquariums:block/display_decor_13_0"
+    },
+    "kind=13,model=1": {
+      "model": "linked_aquariums:block/display_decor_13_1"
+    },
+    "kind=13,model=2": {
+      "model": "linked_aquariums:block/display_decor_13_2"
+    },
+    "kind=13,model=3": {
+      "model": "linked_aquariums:block/display_decor_13_3"
+    },
+    "kind=14,model=0": {
+      "model": "linked_aquariums:block/display_decor_14_0"
+    },
+    "kind=14,model=1": {
+      "model": "linked_aquariums:block/display_decor_14_1"
+    },
+    "kind=14,model=2": {
+      "model": "linked_aquariums:block/display_decor_14_2"
+    },
+    "kind=14,model=3": {
+      "model": "linked_aquariums:block/display_decor_14_3"
+    },
+    "kind=15,model=0": {
+      "model": "linked_aquariums:block/display_decor_15_0"
+    },
+    "kind=15,model=1": {
+      "model": "linked_aquariums:block/display_decor_15_1"
+    },
+    "kind=15,model=2": {
+      "model": "linked_aquariums:block/display_decor_15_2"
+    },
+    "kind=15,model=3": {
+      "model": "linked_aquariums:block/display_decor_15_3"
+    },
+    "kind=16,model=0": {
+      "model": "linked_aquariums:block/display_decor_16_0"
+    },
+    "kind=16,model=1": {
+      "model": "linked_aquariums:block/display_decor_16_1"
+    },
+    "kind=16,model=2": {
+      "model": "linked_aquariums:block/display_decor_16_2"
+    },
+    "kind=16,model=3": {
+      "model": "linked_aquariums:block/display_decor_16_3"
+    },
+    "kind=17,model=0": {
+      "model": "linked_aquariums:block/display_decor_17_0"
+    },
+    "kind=17,model=1": {
+      "model": "linked_aquariums:block/display_decor_17_1"
+    },
+    "kind=17,model=2": {
+      "model": "linked_aquariums:block/display_decor_17_2"
+    },
+    "kind=17,model=3": {
+      "model": "linked_aquariums:block/display_decor_17_3"
+    },
+    "kind=18,model=0": {
+      "model": "linked_aquariums:block/display_decor_18_0"
+    },
+    "kind=18,model=1": {
+      "model": "linked_aquariums:block/display_decor_18_1"
+    },
+    "kind=18,model=2": {
+      "model": "linked_aquariums:block/display_decor_18_2"
+    },
+    "kind=18,model=3": {
+      "model": "linked_aquariums:block/display_decor_18_3"
+    },
+    "kind=19,model=0": {
+      "model": "linked_aquariums:block/display_decor_19_0"
+    },
+    "kind=19,model=1": {
+      "model": "linked_aquariums:block/display_decor_19_1"
+    },
+    "kind=19,model=2": {
+      "model": "linked_aquariums:block/display_decor_19_2"
+    },
+    "kind=19,model=3": {
+      "model": "linked_aquariums:block/display_decor_19_3"
+    },
+    "kind=20,model=0": {
+      "model": "linked_aquariums:block/display_decor_20_0"
+    },
+    "kind=20,model=1": {
+      "model": "linked_aquariums:block/display_decor_20_1"
+    },
+    "kind=20,model=2": {
+      "model": "linked_aquariums:block/display_decor_20_2"
+    },
+    "kind=20,model=3": {
+      "model": "linked_aquariums:block/display_decor_20_3"
+    },
+    "kind=21,model=0": {
+      "model": "linked_aquariums:block/display_decor_21_0"
+    },
+    "kind=21,model=1": {
+      "model": "linked_aquariums:block/display_decor_21_1"
+    },
+    "kind=21,model=2": {
+      "model": "linked_aquariums:block/display_decor_21_2"
+    },
+    "kind=21,model=3": {
+      "model": "linked_aquariums:block/display_decor_21_3"
+    },
+    "kind=22,model=0": {
+      "model": "linked_aquariums:block/display_decor_22_0"
+    },
+    "kind=22,model=1": {
+      "model": "linked_aquariums:block/display_decor_22_1"
+    },
+    "kind=22,model=2": {
+      "model": "linked_aquariums:block/display_decor_22_2"
+    },
+    "kind=22,model=3": {
+      "model": "linked_aquariums:block/display_decor_22_3"
+    },
+    "kind=23,model=0": {
+      "model": "linked_aquariums:block/display_decor_23_0"
+    },
+    "kind=23,model=1": {
+      "model": "linked_aquariums:block/display_decor_23_1"
+    },
+    "kind=23,model=2": {
+      "model": "linked_aquariums:block/display_decor_23_2"
+    },
+    "kind=23,model=3": {
+      "model": "linked_aquariums:block/display_decor_23_3"
+    },
+    "kind=24,model=0": {
+      "model": "linked_aquariums:block/display_decor_24_0"
+    },
+    "kind=24,model=1": {
+      "model": "linked_aquariums:block/display_decor_24_1"
+    },
+    "kind=24,model=2": {
+      "model": "linked_aquariums:block/display_decor_24_2"
+    },
+    "kind=24,model=3": {
+      "model": "linked_aquariums:block/display_decor_24_3"
+    },
+    "kind=25,model=0": {
+      "model": "linked_aquariums:block/display_decor_25_0"
+    },
+    "kind=25,model=1": {
+      "model": "linked_aquariums:block/display_decor_25_1"
+    },
+    "kind=25,model=2": {
+      "model": "linked_aquariums:block/display_decor_25_2"
+    },
+    "kind=25,model=3": {
+      "model": "linked_aquariums:block/display_decor_25_3"
+    },
+    "kind=26,model=0": {
+      "model": "linked_aquariums:block/display_decor_26_0"
+    },
+    "kind=26,model=1": {
+      "model": "linked_aquariums:block/display_decor_26_1"
+    },
+    "kind=26,model=2": {
+      "model": "linked_aquariums:block/display_decor_26_2"
+    },
+    "kind=26,model=3": {
+      "model": "linked_aquariums:block/display_decor_26_3"
+    },
+    "kind=27,model=0": {
+      "model": "linked_aquariums:block/display_decor_27_0"
+    },
+    "kind=27,model=1": {
+      "model": "linked_aquariums:block/display_decor_27_1"
+    },
+    "kind=27,model=2": {
+      "model": "linked_aquariums:block/display_decor_27_2"
+    },
+    "kind=27,model=3": {
+      "model": "linked_aquariums:block/display_decor_27_3"
+    },
+    "kind=28,model=0": {
+      "model": "linked_aquariums:block/display_decor_28_0"
+    },
+    "kind=28,model=1": {
+      "model": "linked_aquariums:block/display_decor_28_1"
+    },
+    "kind=28,model=2": {
+      "model": "linked_aquariums:block/display_decor_28_2"
+    },
+    "kind=28,model=3": {
+      "model": "linked_aquariums:block/display_decor_28_3"
+    },
+    "kind=29,model=0": {
+      "model": "linked_aquariums:block/display_decor_29_0"
+    },
+    "kind=29,model=1": {
+      "model": "linked_aquariums:block/display_decor_29_1"
+    },
+    "kind=29,model=2": {
+      "model": "linked_aquariums:block/display_decor_29_2"
+    },
+    "kind=29,model=3": {
+      "model": "linked_aquariums:block/display_decor_29_3"
+    },
+    "kind=30,model=0": {
+      "model": "linked_aquariums:block/display_decor_30_0"
+    },
+    "kind=30,model=1": {
+      "model": "linked_aquariums:block/display_decor_30_1"
+    },
+    "kind=30,model=2": {
+      "model": "linked_aquariums:block/display_decor_30_2"
+    },
+    "kind=30,model=3": {
+      "model": "linked_aquariums:block/display_decor_30_3"
+    },
+    "kind=31,model=0": {
+      "model": "linked_aquariums:block/display_decor_31_0"
+    },
+    "kind=31,model=1": {
+      "model": "linked_aquariums:block/display_decor_31_1"
+    },
+    "kind=31,model=2": {
+      "model": "linked_aquariums:block/display_decor_31_2"
+    },
+    "kind=31,model=3": {
+      "model": "linked_aquariums:block/display_decor_31_3"
+    },
+    "kind=32,model=0": {
+      "model": "linked_aquariums:block/display_decor_32_0"
+    },
+    "kind=32,model=1": {
+      "model": "linked_aquariums:block/display_decor_32_1"
+    },
+    "kind=32,model=2": {
+      "model": "linked_aquariums:block/display_decor_32_2"
+    },
+    "kind=32,model=3": {
+      "model": "linked_aquariums:block/display_decor_32_3"
+    },
+    "kind=33,model=0": {
+      "model": "linked_aquariums:block/display_decor_33_0"
+    },
+    "kind=33,model=1": {
+      "model": "linked_aquariums:block/display_decor_33_1"
+    },
+    "kind=33,model=2": {
+      "model": "linked_aquariums:block/display_decor_33_2"
+    },
+    "kind=33,model=3": {
+      "model": "linked_aquariums:block/display_decor_33_3"
+    },
+    "kind=34,model=0": {
+      "model": "linked_aquariums:block/display_decor_34_0"
+    },
+    "kind=34,model=1": {
+      "model": "linked_aquariums:block/display_decor_34_1"
+    },
+    "kind=34,model=2": {
+      "model": "linked_aquariums:block/display_decor_34_2"
+    },
+    "kind=34,model=3": {
+      "model": "linked_aquariums:block/display_decor_34_3"
+    }
+  }
+}
