@@ -4,11 +4,17 @@
   "version": "0.4.2",
   "name": "Linked Aquariums",
   "description": "Connected aquariums and passive/hostile terrariums, miniature mobs, decor and pipes.",
-  "authors": ["Casz"],
+  "authors": [
+    "Casz"
+  ],
   "environment": "*",
   "entrypoints": {
-    "main": ["dev.casz.aquarium.AquariumMod"],
-    "client": ["dev.casz.aquarium.AquariumClient"]
+    "main": [
+      "dev.casz.aquarium.AquariumMod"
+    ],
+    "client": [
+      "dev.casz.aquarium.AquariumClient"
+    ]
   },
   "depends": {
     "fabricloader": ">=0.19.5",
@@ -16,5 +22,7 @@
     "java": ">=25",
     "fabric-api": ">=0.158.0"
   },
-  "mixins": ["linked_aquariums.mixins.json"]
+  "mixins": [
+    "linked_aquariums.mixins.json"
+  ]
 }
