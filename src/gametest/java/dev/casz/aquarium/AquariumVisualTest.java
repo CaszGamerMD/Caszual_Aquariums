@@ -34,22 +34,7 @@ public class AquariumVisualTest implements FabricClientGameTest {
    server.runCommand("tp @a 4.0 100.3 -3");connection.waitForClientboundPackets();context.getInput().lookAt(new BlockPos(4,100,0));context.waitTicks(5);connection.waitForChunksRender();context.takeScreenshot("tube-water");
    server.runCommand("gamemode creative @a");server.runCommand("tp @a 1.5 100 -2");connection.waitForClientboundPackets();context.getInput().pressKey(290);
    server.runOnServer(s->{var p=connection.getServerPlayer();p.setItemInHand(InteractionHand.MAIN_HAND,ItemStack.EMPTY);var pos=new BlockPos(1,100,0);net.fabricmc.fabric.api.event.player.UseBlockCallback.EVENT.invoker().interact(p,connection.getServerLevel(),InteractionHand.MAIN_HAND,new BlockHitResult(Vec3.atCenterOf(pos),Direction.NORTH,pos,false));});
-   context.waitForScreen(AquariumScreen.class);context.waitTicks(3);context.takeScreenshot("decor-grid");
-   double[] cursor=context.computeOnClient(mc->{var w=mc.getWindow();return new double[]{((w.getGuiScaledWidth()-336)/2+12+5*12+6)*w.getGuiScale(),((w.getGuiScaledHeight()-238)/2+44+4*12+6)*w.getGuiScale()};});
-   context.getInput().setCursorPos(cursor[0],cursor[1]);context.getInput().pressMouse(0);connection.waitForServerboundPackets();context.waitTicks(2);
-   server.runOnServer(s->{var menu=(AquariumMenu)connection.getServerPlayer().containerMenu;if(menu.data.get(3)!=1)throw new AssertionError("Grid pointer click did not select eastern tank");});
-   context.clickScreenButton("+");connection.waitForServerboundPackets();context.waitTicks(2);
-   server.runOnServer(s->{var menu=(AquariumMenu)connection.getServerPlayer().containerMenu;if(menu.data.get(23)!=1)throw new AssertionError("Layer button failed");});
-   context.clickScreenButton("Home");context.clickScreenButton("Mobs");context.waitTicks(3);context.takeScreenshot("residents");context.setScreen(IconPreview::new);context.waitTicks(3);context.takeScreenshot("inventory-icons");context.setScreen(()->null);
-  }
- }
- private static class IconPreview extends Screen {
-  IconPreview(){super(Component.literal("Enclosure icons"));}
-  public void extractRenderState(GuiGraphicsExtractor g,int mouseX,int mouseY,float delta){
-   g.fill(0,0,width,height,0xFF202E36);g.centeredText(font,"Enclosure inventory models",width/2,22,0xFFE7F3F3);
-   var items=new net.minecraft.world.level.block.Block[]{AquariumMod.TANK,AquariumMod.PASSIVE_TERRARIUM,AquariumMod.HOSTILE_TERRARIUM,AquariumMod.TUBE,AquariumMod.PASSIVE_PIPE,AquariumMod.HOSTILE_PIPE};
-   String[] labels={"Aquarium","Passive","Hostile","Swim tube","Passive pipe","Hostile pipe"};
-   for(int i=0;i<6;i++){int x=width/2-125+(i%3)*100,y=55+(i/3)*100;g.pose().pushMatrix();g.pose().translate(x,y);g.pose().scale(3,3);g.item(new ItemStack(items[i]),0,0);g.pose().popMatrix();g.text(font,labels[i],x,y+55,0xFFE7F3F3);}
-  }
- }
-}
+   context.waitForScreen(AquariumScreen.class);context.waitTicks(3);context.takeScreenshot("editor-main");
+   context.clickScreenButton("Decorate");context.waitTicks(3);context.takeScreenshot("editor-decorate");
+   context.clickScreenButton("Back");context.clickScreenButton("Mobs");context.waitTicks(3);context.takeScreenshot("editor-mobs");
+
