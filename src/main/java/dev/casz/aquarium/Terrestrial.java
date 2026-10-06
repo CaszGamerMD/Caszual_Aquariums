@@ -79,9 +79,10 @@ public final class Terrestrial {
   if(!m.entityTags().contains(MANAGED)){if(m.isNoAi())m.addTag(MANAGED+":no_ai");if(m.isNoGravity())m.addTag(MANAGED+":no_gravity");var attr=m.getAttribute(Attributes.SCALE);if(attr!=null)m.addTag(ORIGINAL_SCALE+attr.getBaseValue());m.addTag(MANAGED);}
   m.setNoAi(true);m.setNoGravity(true);m.setTarget(null);m.setPersistenceRequired();m.setAirSupply(m.getMaxAirSupply());m.setRemainingFireTicks(0);var attr=m.getAttribute(Attributes.SCALE);if(attr!=null){double original=1;for(String tag:m.entityTags())if(tag.startsWith(ORIGINAL_SCALE))try{original=Double.parseDouble(tag.substring(ORIGINAL_SCALE.length()));}catch(NumberFormatException ignored){}attr.setBaseValue(original*.75);}
  }
- public static void tick(ServerLevel l){
+ public static void tick(ServerLevel l){List<Entity> all=new ArrayList<>();l.getAllEntities().forEach(all::add);tick(l,all);}
+ static void tick(ServerLevel l,List<Entity> all){
   activeLevel=l;CHAMBERS.clear();NETWORKS.clear();try{
-  List<Entity> all=new ArrayList<>();l.getAllEntities().forEach(all::add);Set<BlockPos> checked=new HashSet<>();
+  Set<BlockPos> checked=new HashSet<>();
   for(Entity e:all)if(e instanceof Mob m&&m.isAlive()&&m.entityTags().contains(MANAGED)){
    var current=m.blockPosition();var state=l.getBlockState(current);
    if(!Enclosures.isLand(state)||hostile(m)!=(Enclosures.kind(state)==2)){var stack=capture(l,m);m.spawnAtLocation(l,stack);continue;}
