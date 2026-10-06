@@ -54,7 +54,7 @@ for d in directions:
  tube_mounts.append({'when':{'tube_'+d:'true'},'apply':{'model':ID+':block/tank_tube_mount_'+d}})
 for name in ('aquarium','passive_terrarium','hostile_terrarium'):
  p=ROOT/'assets'/ID/'blockstates'/f'{name}.json';m=json.loads(p.read_text());m['multipart']+=frames
- if name=='aquarium':m['multipart']+=tube_mounts
+ if name in ('aquarium','passive_terrarium','hostile_terrarium'):m['multipart']+=tube_mounts
  if name=='aquarium':m['multipart']=waterparts+[p for p in m['multipart'] if ':block/water_' not in p['apply']['model']]
  p.write_text(json.dumps(m,indent=2)+'\n')
 pipeframes=[]
