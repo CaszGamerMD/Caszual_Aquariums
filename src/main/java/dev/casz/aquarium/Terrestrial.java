@@ -53,14 +53,14 @@ public final class Terrestrial {
   CompoundTag tag=new CompoundTag();tag.putString("terrarium_type",BuiltInRegistries.ENTITY_TYPE.getKey(m.getType()).toString());tag.put("terrarium_entity",out.buildResult());
   var stack=new ItemStack(AquariumMod.MOB_NET);stack.set(DataComponents.CUSTOM_DATA,CustomData.of(tag));stack.set(DataComponents.CUSTOM_NAME,Component.literal(m.getName().getString()+" in Mob Net"));m.discard();TARGETS.remove(m);PREVIOUS.remove(m);return stack;
  }
- private static Mob load(ServerLevel l,ItemStack net){
+ public static Mob load(ServerLevel l,ItemStack net){
   var tag=net.getOrDefault(DataComponents.CUSTOM_DATA,CustomData.EMPTY).copyTag();var id=Identifier.tryParse(tag.getString("terrarium_type").orElse(""));var type=id==null?null:BuiltInRegistries.ENTITY_TYPE.getValue(id);
   if(type==null||!(type.create(l,EntitySpawnReason.TRIGGERED) instanceof Mob m))return null;
-  var data=tag.getCompound("terrarium_entity").orElse(new CompoundTag());data.remove("UUID");data.remove("uuid");m.load(TagValueInput.create(ProblemReporter.DISCARDING,l.registryAccess(),data));m.setUUID(UUID.randomUUID());return supported(m)?m:null;
+  var data=tag.getCompound("terrarium_entity").orElse(new CompoundTag());data.remove("UUID");data.remove("uuid");m.load(TagValueInput.create(ProblemReporter.DISCARDING,l.registryAccess(),data));m.setUUID(UUID.randomUUID());return m;
  }
  public static String add(ServerLevel l,BlockPos tank,ItemStack net){
   if(!filled(net))return "Catch a mob with an empty net first.";var state=l.getBlockState(tank);if(!Enclosures.isLand(state)||!Enclosures.isTank(state))return "Use the net on a terrarium tank.";
-  var m=load(l,net);if(m==null)return "This mob cannot live in a terrarium.";
+  var m=load(l,net);if(m==null||!supported(m))return "This mob cannot live in a terrarium.";
   if(hostile(m)!=(Enclosures.kind(state)==2))return "This mob needs a matching passive or hostile terrarium.";
   var network=Network.scan(l,tank);if(!network.complete()||network.residents(l).size()>=network.capacity())return "No room, or terrarium network not fully loaded.";
   var c=chamber(l,tank);if(flying(m)&&c.height()<=4)return "Flying mobs need a cage at least five blocks tall.";
