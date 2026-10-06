@@ -24,7 +24,7 @@ public class AquariumVisualTest implements FabricClientGameTest {
      for(int x=3;x<5;x++)level.setBlock(new BlockPos(base+x,100,0),pipe.defaultBlockState(),3);
      level.setBlock(new BlockPos(base+5,100,0),tank.defaultBlockState(),3);
      for(int x=0;x<3;x++)for(int z=0;z<2;z++){var p=new BlockPos(base+x,100,z);level.setBlock(p,level.getBlockState(p).setValue(AquariumBlock.SOIL,kind==2?3:1),3);}
-     var p=new BlockPos(base+1,100,1);var be=(TankBlockEntity)level.getBlockEntity(p);be.setDecoration(new ItemStack(kind==2?Items.STONE_BUTTON:kind==1?Items.OAK_FENCE:Items.FERN));be.changed();be.tick();
+     var p=new BlockPos(base+1,100,1);var be=(TankBlockEntity)level.getBlockEntity(p);be.addDecoration(new ItemStack(kind==2?Items.STONE_BUTTON:kind==1?Items.OAK_FENCE:Items.FERN),EnclosureDecoration.Anchor.FLOOR);be.changed();be.tick();
     }
    });
    server.runCommand("gamemode spectator @a");context.getInput().pressKey(290);
