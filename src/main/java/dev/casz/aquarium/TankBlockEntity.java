@@ -12,7 +12,8 @@ import net.minecraft.world.level.storage.*;
 import net.minecraft.world.phys.AABB;
 
 public final class TankBlockEntity extends BlockEntity {
- public ItemStack decoration=ItemStack.EMPTY;
+ public ItemStack decoration=ItemStack.EMPTY; // legacy migration only
+ public final List<EnclosureDecoration> decorations=new ArrayList<>();
  public int variant,rotation,offsetX,offsetZ;
  private int chestOpenTicks;
  private UUID display;
@@ -20,7 +21,9 @@ public final class TankBlockEntity extends BlockEntity {
  public TankBlockEntity(BlockPos p,BlockState s){super(AquariumMod.TANK_ENTITY,p,s);}
  public void migrateLegacy(){
   if(level==null)return;var state=getBlockState();int old=state.hasProperty(AquariumBlock.DECOR)?state.getValue(AquariumBlock.DECOR):0;
-  if(old>0){if(decoration.isEmpty())decoration=new ItemStack(Palette.item(Palette.DECORS.get(old)));level.setBlock(worldPosition,state.setValue(AquariumBlock.DECOR,0),3);changed();}
+  if(old>0&&decoration.isEmpty())decoration=new ItemStack(Palette.item(Palette.DECORS.get(old)));
+  if(!decoration.isEmpty()){decorations.add(new EnclosureDecoration(decoration,EnclosureDecoration.Anchor.FLOOR));decoration=ItemStack.EMPTY;changed();}
+  if(old>0)level.setBlock(worldPosition,state.setValue(AquariumBlock.DECOR,0),3);
  }
  public int kind(){if(decoration.isEmpty())return 0;if(decoration.is(Items.TRIDENT))return 33;if(decoration.is(Items.CHEST)||decoration.is(Items.TRAPPED_CHEST)||decoration.is(Items.ENDER_CHEST))return 34;int k=Palette.find(Palette.DECORS,decoration.getItem());return k>0?k:35;}
  public void changed(){dirty=true;setChanged();}
