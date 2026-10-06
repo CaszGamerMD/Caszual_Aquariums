@@ -46,13 +46,16 @@ public class AquariumBlock extends Block {
     public BlockState getStateForPlacement(BlockPlaceContext c) {
         BlockState s=defaultBlockState();
         for(Direction d:Direction.values()) s=s.setValue(LINKS[d.ordinal()],Enclosures.matches(defaultBlockState(),c.getLevel().getBlockState(c.getClickedPos().relative(d))));
-        if(this instanceof TubeBlock)for(Direction d:Direction.values())s=s.setValue(TubeBlock.TANK_LINKS[d.ordinal()],Enclosures.isTank(c.getLevel().getBlockState(c.getClickedPos().relative(d))) && Enclosures.matches(defaultBlockState(),c.getLevel().getBlockState(c.getClickedPos().relative(d))));\n        if(this instanceof TankBlock)for(Direction d:Direction.values())s=s.setValue(TankBlock.TUBE_LINKS[d.ordinal()],c.getLevel().getBlockState(c.getClickedPos().relative(d)).getBlock() instanceof TubeBlock);
+        if(this instanceof TubeBlock)for(Direction d:Direction.values())s=s.setValue(TubeBlock.TANK_LINKS[d.ordinal()],Enclosures.isTank(c.getLevel().getBlockState(c.getClickedPos().relative(d))) && Enclosures.matches(defaultBlockState(),c.getLevel().getBlockState(c.getClickedPos().relative(d))));
+        if(this instanceof TankBlock)for(Direction d:Direction.values())s=s.setValue(TankBlock.TUBE_LINKS[d.ordinal()],c.getLevel().getBlockState(c.getClickedPos().relative(d)).getBlock() instanceof TubeBlock);
         return s;
     }
     protected BlockState updateShape(BlockState s, LevelReader level, ScheduledTickAccess ticks,
        BlockPos pos, Direction d, BlockPos neighbor, BlockState neighborState, RandomSource random) {
         s=s.setValue(LINKS[d.ordinal()],Enclosures.matches(s,neighborState));
-        if(this instanceof TubeBlock)return s.setValue(TubeBlock.TANK_LINKS[d.ordinal()],Enclosures.isTank(neighborState) && Enclosures.matches(s,neighborState));\n        if(this instanceof TankBlock)return s.setValue(TankBlock.TUBE_LINKS[d.ordinal()],neighborState.getBlock() instanceof TubeBlock);\n        return s;
+        if(this instanceof TubeBlock)return s.setValue(TubeBlock.TANK_LINKS[d.ordinal()],Enclosures.isTank(neighborState) && Enclosures.matches(s,neighborState));
+        if(this instanceof TankBlock)return s.setValue(TankBlock.TUBE_LINKS[d.ordinal()],neighborState.getBlock() instanceof TubeBlock);
+        return s;
     }
     protected void onPlace(BlockState s,Level level,BlockPos pos,BlockState old,boolean moved) {
         if(old.getBlock()==this)return;
