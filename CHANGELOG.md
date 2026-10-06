@@ -1,3 +1,12 @@
+## 0.6.0
+- Unified Aquarium/Terrarium editor with Mobs and Decorate pages.
+- Removed the legacy custom-model decoration workflow.
+- Added unlimited item/block decorations with Ceiling, Body, and Floor anchors.
+- Added per-decoration movement, XYZ rotation, scaling, and one-block-outside enclosure bounds.
+- Decorations use vanilla placed block models when possible and act as movement obstacles for residents.
+- Aquarium residents remain 100% scale; terrarium residents use 75% scale with faster natural walking animation.
+- Mobs page supports selecting residents and retrieving them with the appropriate container.
+
 ## 0.5.0
 - Added Mobitat: portable storage for up to five mobs of one type.
 - Mob Nets can insert/extract Mobitat residents, including supported aquarium creatures.
