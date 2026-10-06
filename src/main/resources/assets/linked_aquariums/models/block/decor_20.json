@@ -1,0 +1,72 @@
+{
+  "textures": {
+    "decor": "minecraft:block/polished_blackstone",
+    "particle": "minecraft:block/polished_blackstone"
+  },
+  "elements": [
+    {
+      "from": [
+        3,
+        2,
+        4
+      ],
+      "to": [
+        7,
+        4,
+        8
+      ],
+      "faces": {
+        "down": {
+          "texture": "#decor"
+        },
+        "up": {
+          "texture": "#decor"
+        },
+        "north": {
+          "texture": "#decor"
+        },
+        "south": {
+          "texture": "#decor"
+        },
+        "west": {
+          "textture": "#decor"
+        },
+        "east": {
+          "textture": "#decor"
+        }
+      }
+    },
+    {
+      "from": [
+        9,
+        2,
+        9
+      ],
+      "to": [
+        13,
+        3.5,
+        12
+      ],
+      "faces": {
+        "down": {
+          "textture": "#decor"
+        },
+        "up": {
+          "texture": "#decor"
+        },
+        "north": {
+          "texture": "#decor"
+        },
+        "south": {
+          "texture": "#decor"
+        },
+        "west": {
+          "textture": "#decor"
+        },
+        "east": {
+          "textture": "#decor"
+        }
+      }
+    }
+  ]
+}
