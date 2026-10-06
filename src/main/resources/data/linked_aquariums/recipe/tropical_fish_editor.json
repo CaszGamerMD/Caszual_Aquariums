@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "GIG",
+    "GBG",
+    "GIG"
+  ],
+  "key": {
+    "G": "minecraft:glass",
+    "I": "minecraft:iron_ingot",
+    "B": "minecraft:bucket"
+  },
+  "result": {
+    "id": "linked_aquariums:tropical_fish_editor",
+    "count": 1
+  }
+}
