@@ -1,47 +1,26 @@
 package dev.casz.aquarium;
+import java.util.*;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
-import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.core.registries.BuiltInRegistries;
-import java.util.*;
-public final class AquariumScreen extends AbstractContainerScreen<AquariumMenu> {
- private final List<Button> decorButtons=new ArrayList<>(),fishButtons=new ArrayList<>();private final List<GridButton> cells=new ArrayList<>();private Button tab,add,lower,higher;
- public AquariumScreen(AquariumMenu menu,Inventory inv,Component title){super(menu,inv,title,336,238);}
- private void send(int action){if(minecraft.gameMode!=null)minecraft.gameMode.handleInventoryButtonClick(menu.containerId,action);}
- private Button button(String text,int x,int y,int w,int action){return addRenderableWidget(Button.builder(Component.literal(text),b->send(action)).bounds(leftPos+x,topPos+y,w,18).build());}
- private Button decor(String text,int x,int y,int w,int action){Button b=button(text,x,y,w,action);decorButtons.add(b);return b;}
- protected void init(){super.init();decorButtons.clear();fishButtons.clear();cells.clear();tab=button("Mobs",264,7,62,0);
-  fishButtons.add(button("<",14,34,22,1));fishButtons.add(button(">",300,34,22,2));
-  lower=decor("-",12,23,20,12);higher=decor("+",35,23,20,13);
-  decor("<",12,154,20,14);decor(">",35,154,20,15);decor("^",58,154,20,16);decor("v",12,176,20,17);decor("Home",35,176,43,18);
-  for(int i=0;i<81;i++)cells.add(addRenderableWidget(new GridButton(i)));
-  decor("Rotate 45°",222,60,100,3);decor("Model",222,81,48,4);decor("Reset",274,81,48,11);
-  decor("Left",146,101,40,5);decor("Right",191,101,40,6);decor("Back",236,101,40,7);decor("Front",281,101,41,8);
-  add=button("Place",146,132,60,9);button("Remove",210,132,62,10);updateControls();
+public final class AquariumScreen extends AbstractContainerScreen<AquariumMenu>{
+ private enum Page{MAIN,MOBS,DECOR}private Page page=Page.MAIN;private final List<Button> pageButtons=new ArrayList<>();private int decorPage;private float previewYaw=25,previewPitch=20;private boolean dragging;private double dragX,dragY;
+ public AquariumScreen(AquariumMenu m,Inventory i,Component t){super(m,i,t,320,258);}
+ private void send(int a){if(minecraft.gameMode!=null)minecraft.gameMode.handleInventoryButtonClick(menu.containerId,a);}
+ private Button b(String t,int x,int y,int w,Runnable r){var q=addRenderableWidget(Button.builder(Component.literal(t),z->r.run()).bounds(leftPos+x,topPos+y,w,18).build());pageButtons.add(q);return q;}
+ protected void init(){super.init();rebuild();}
+ private void rebuild(){for(var b:pageButtons)removeWidget(b);pageButtons.clear();if(page==Page.MAIN){b("Mobs",52,72,96,32,()->{page=Page.MOBS;rebuild();});b("Decorate",172,72,96,32,()->{page=Page.DECOR;rebuild();});return;}b("Back",8,8,46,18,()->{page=Page.MAIN;rebuild();});
+  if(page==Page.MOBS){for(int i=0;i<Math.min(5,menu.data.get(1));i++){final int n=i;b("Mob "+(i+1),18,42+i*25,116,21,()->send(100+n));}b("Pick up selected",18,174,116,20,()->send(20));}
+  else {b("Ceiling",8,32,70,18,()->send(200));b("Body",82,32,70,18,()->send(201));b("Floor",156,32,70,18,()->send(202));b("Add item",230,32,70,18,()->send(21));for(int i=0;i<Math.min(8,menu.data.get(6));i++){final int n=i;b("#"+(i+1),8,58+i*20,54,18,()->send(300+n));}b("Remove",66,218,58,18,()->send(22));String[] names={"X-","X+","Y-","Y+","Z-","Z+","Scale-","Scale+","RX-","RX+","RY-","RY+","RZ-","RZ+","Reset"};for(int i=0;i<names.length;i++){final int a=30+i;b(names[i],190+(i%3)*38,58+(i/3)*20,36,18,()->send(a));}}
  }
- private void updateControls(){boolean fish=menu.data.get(0)==1;tab.setMessage(Component.literal(fish?"Decor":"Mobs"));add.setMessage(Component.literal(fish?"Add":"Place"));for(Button b:decorButtons)b.visible=!fish;for(Button b:fishButtons)b.visible=fish;lower.active=menu.data.get(23)>menu.data.get(24);higher.active=menu.data.get(23)<menu.data.get(25);
-  for(GridButton b:cells){int bits=menu.data.get(AquariumMenu.GRID_START+b.cell);b.visible=!fish;b.active=(bits&1)!=0;int x=menu.anchor.getX()+menu.data.get(21)+b.cell%9,y=menu.anchor.getY()+menu.data.get(23),z=menu.anchor.getZ()+menu.data.get(22)+b.cell/9;b.setTooltip(Tooltip.create(Component.literal((bits&1)!=0?"Block "+x+", "+y+", "+z+((bits&8)!=0?" · Decor":"")+((bits&64)!=0?" · Opened here":""):(bits&2)!=0?"Connecting pipe":"Empty space")));}
- }
- protected void containerTick(){super.containerTick();updateControls();}
- public void extractBackground(GuiGraphicsExtractor g,int mouseX,int mouseY,float a){super.extractBackground(g,mouseX,mouseY,a);g.fill(leftPos,topPos,leftPos+imageWidth,topPos+imageHeight,0xFF162C38);g.fill(leftPos+137,topPos+28,leftPos+329,topPos+151,0xFF243E49);for(var slot:menu.slots){g.fill(leftPos+slot.x-1,topPos+slot.y-1,leftPos+slot.x+17,topPos+slot.y+17,0xFF172D36);g.fill(leftPos+slot.x,topPos+slot.y,leftPos+slot.x+16,topPos+slot.y+16,0xFF92ADB2);}}
- protected void extractLabels(GuiGraphicsExtractor g,int mouseX,int mouseY){g.text(font,menu.data.get(19)>0?"Linked Terrarium":"Linked Aquarium",8,10,0xFFE7F3F3);g.text(font,"In",287,121,0xFFC2D8DD);g.text(font,"Out",309,121,0xFFC2D8DD);
-  if(menu.data.get(0)==1){g.text(font,"Creature "+(menu.data.get(11)==0?0:menu.data.get(14)+1)+" / "+menu.data.get(11),44,39,0xFFE7F3F3);int id=menu.data.get(15);var type=id<0?null:BuiltInRegistries.ENTITY_TYPE.byId(id);g.text(font,type==null?"No inhabitants":Component.translatable(type.getDescriptionId()).getString(),14,65,0xFFE7F3F3);g.text(font,"Capacity: "+menu.data.get(11)+" / "+menu.capacity(),14,84,0xFFC2D8DD);g.text(font,menu.data.get(19)>0?"Add: filled net in In. Remove: empty net.":"Add: fish bucket/egg in In. Remove: bucket.",14,103,0xFFC2D8DD);return;}
-  g.text(font,"Layer "+(menu.data.get(23)-menu.data.get(24)+1),61,25,0xFFE7F3F3);g.text(font,"North ^",69,35,0xFFC2D8DD);g.text(font,"Gold: chosen",12,201,0xFFFFD778);g.text(font,"White: open",12,212,0xFFE7F3F3);
-  g.text(font,"Selected block",146,34,0xFFE7F3F3);var item=BuiltInRegistries.ITEM.byId(menu.data.get(18));String name=menu.data.get(6)>0&&item!=null?new ItemStack(item).getHoverName().getString():"No decoration";g.text(font,font.plainSubstrByWidth(name,176),146,47,0xFFC2D8DD);
-  g.fill(146,61,214,98,0xFF58808B);int cx=180+menu.data.get(9)*7,cy=80+menu.data.get(10)*4;
-  if(menu.data.get(6)>0){g.fill(cx-5,cy-3,cx+5,cy+3,0xFFEBDAB7);double angle=Math.toRadians(menu.data.get(8)*45);for(int i=0;i<12;i++){int x=cx+(int)(Math.cos(angle)*i),y=cy+(int)(Math.sin(angle)*i);g.fill(x,y,x+2,y+2,0xFFFFE8A2);}}
- }
- private final class GridButton extends Button {
-  final int cell;
-  GridButton(int cell){super(leftPos+12+(cell%9)*12,topPos+44+(cell/9)*12,12,12,Component.literal("Select enclosure block"),b->send(32+cell),DEFAULT_NARRATION);this.cell=cell;}
-  protected void extractContents(GuiGraphicsExtractor g,int mouseX,int mouseY,float delta){int x=getX(),y=getY(),bits=menu.data.get(AquariumMenu.GRID_START+cell);g.fill(x,y,x+12,y+12,0xFF13262E);
-   if((bits&1)!=0){int color=menu.data.get(19)==0?0xFF3B8EA8:menu.data.get(19)==1?0xFF5B8C55:0xFF8667A5;g.fill(x+1,y+1,x+11,y+11,color);if((bits&4)!=0)g.fill(x+2,y+9,x+10,y+11,0xFFD6BC80);if((bits&8)!=0)g.fill(x+4,y+4,x+8,y+8,0xFFEBDAB7);if((bits&16)!=0)g.fill(x+2,y+7,x+10,y+9,0xFF4E9EDD);}
-   else if((bits&2)!=0){int links=bits>>>8;g.fill(x+4,y+4,x+8,y+8,0xFF91ADB7);if((links&4)!=0)g.fill(x+4,y,x+8,y+6,0xFF91ADB7);if((links&8)!=0)g.fill(x+4,y+6,x+8,y+12,0xFF91ADB7);if((links&16)!=0)g.fill(x,y+4,x+6,y+8,0xFF91ADB7);if((links&32)!=0)g.fill(x+6,y+4,x+12,y+8,0xFF91ADB7);}
-   if((bits&64)!=0)g.outline(x+2,y+2,8,8,0xFFF0F5F5);if((bits&32)!=0)g.outline(x,y,12,12,0xFFFFD778);else if(isHovered()&&active)g.outline(x,y,12,12,0xFFBDDDE7);
-  }
- }
+ protected void containerTick(){super.containerTick();if(page==Page.MOBS||page==Page.DECOR){}}
+ public boolean mouseClicked(double x,double y,int button){if(page==Page.DECOR&&button==0&&x>=leftPos+68&&x<leftPos+184&&y>=topPos+58&&y<topPos+202){dragging=true;dragX=x;dragY=y;return true;}return super.mouseClicked(x,y,button);}
+ public boolean mouseDragged(double x,double y,int button,double dx,double dy){if(dragging&&page==Page.DECOR){previewYaw+=(float)(x-dragX);previewPitch=Math.clamp(previewPitch+(float)(y-dragY),-80,80);dragX=x;dragY=y;return true;}return super.mouseDragged(x,y,button,dx,dy);}
+ public boolean mouseReleased(double x,double y,int button){dragging=false;return super.mouseReleased(x,y,button);}
+ public void extractBackground(GuiGraphicsExtractor g,int mx,int my,float a){super.extractBackground(g,mx,my,a);int kind=menu.data.get(0),bg=kind==0?0xFF163846:kind==1?0xFF29452C:0xFF40283F;g.fill(leftPos,topPos,leftPos+imageWidth,topPos+imageHeight,bg);if(page==Page.DECOR){g.fill(leftPos+68,topPos+58,leftPos+184,topPos+202,0xFF102127);g.outline(leftPos+68,topPos+58,116,144,0xFF9CBAC0);int cx=leftPos+126,cy=topPos+130;double yaw=Math.toRadians(previewYaw),pitch=Math.toRadians(previewPitch);for(int i=-35;i<=35;i+=7){int ox=(int)(Math.cos(yaw)*i),oy=(int)(Math.sin(pitch)*i*.35);g.fill(cx+ox,cy+oy,cx+ox+2,cy+oy+2,0xFFB7D4D9);}}for(var slot:menu.slots){g.fill(leftPos+slot.x-1,topPos+slot.y-1,leftPos+slot.x+17,topPos+slot.y+17,0xFF102127);g.fill(leftPos+slot.x,topPos+slot.y,leftPos+slot.x+16,topPos+slot.y+16,0xFF91AEB4);}}
+ protected void extractLabels(GuiGraphicsExtractor g,int mx,int my){String title=menu.data.get(0)==0?"Aquarium Editor":menu.data.get(0)==1?"Terrarium Editor":"Hostile Terrarium Editor";g.text(font,title,8,8,0xFFF1FAFA);if(page==Page.MAIN){g.text(font,"Choose what to edit",105,45,0xFFD7E7E8);return;}if(page==Page.MOBS){g.text(font,"Mobs  "+menu.data.get(1)+" / "+menu.capacity(),18,28,0xFFEAF4F4);int id=menu.data.get(3);var type=id<0?null:BuiltInRegistries.ENTITY_TYPE.byId(id);g.text(font,type==null?"No inhabitants":Component.translatable(type.getDescriptionId()).getString(),150,46,0xFFEAF4F4);g.text(font,"Put the correct empty container in the input slot,",150,70,0xFFC9DCDD);g.text(font,"then right-click/select the resident to pick it up.",150,82,0xFFC9DCDD);return;}g.text(font,"Decorate · "+(menu.data.get(6)==0?"no items":"item "+(menu.data.get(7)+1)+" / "+menu.data.get(6)),68,44,0xFFEAF4F4);var item=BuiltInRegistries.ITEM.byId(menu.data.get(9));if(item!=null&&menu.data.get(6)>0)g.text(font,font.plainSubstrByWidth(new ItemStack(item).getHoverName().getString(),110),68,207,0xFFEAF4F4);g.text(font,"Drag preview to rotate",68,220,0xFFC9DCDD);g.text(font,"Input",14,188,0xFFC9DCDD);g.text(font,"Out",39,188,0xFFC9DCDD);}
 }
