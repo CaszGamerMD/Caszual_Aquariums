@@ -9,7 +9,7 @@ import net.minecraft.client.resources.model.sprite.Material;
 import net.minecraft.resources.Identifier;
 public final class AquariumClient implements ClientModInitializer {
  public void onInitializeClient(){
-  net.minecraft.client.gui.screens.MenuScreens.register(AquariumMod.MENU,AquariumScreen::new);
+  net.minecraft.client.gui.screens.MenuScreens.register(AquariumMod.MENU,AquariumScreen::new);\n  net.minecraft.client.gui.screens.MenuScreens.register(AquariumMod.MOBITAT_MENU,MobitatScreen::new);
   BlockColorRegistry.register(List.of(BlockTintSources.constant(0xFF78AD42)),AquariumMod.TANK,AquariumMod.PASSIVE_TERRARIUM,AquariumMod.HOSTILE_TERRARIUM,AquariumMod.DECOR_MODEL);
   Material invisible=new Material(Identifier.fromNamespaceAndPath(AquariumMod.ID,"block/invisible_water"));
   FluidRenderingRegistry.register(AquariumMod.WATER,new FluidModel.Unbaked(invisible,invisible,invisible,BlockTintSources.constant(-1)),
