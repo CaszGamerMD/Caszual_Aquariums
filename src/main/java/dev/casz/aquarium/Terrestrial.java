@@ -76,7 +76,7 @@ public final class Terrestrial {
  }
  public static void configure(Mob m){
   if(!m.entityTags().contains(MANAGED)){if(m.isNoAi())m.addTag(MANAGED+":no_ai");if(m.isNoGravity())m.addTag(MANAGED+":no_gravity");var attr=m.getAttribute(Attributes.SCALE);if(attr!=null)m.addTag(ORIGINAL_SCALE+attr.getBaseValue());m.addTag(MANAGED);}
-  m.setNoAi(true);m.setNoGravity(true);m.setTarget(null);m.setPersistenceRequired();m.setAirSupply(m.getMaxAirSupply());m.setRemainingFireTicks(0);var attr=m.getAttribute(Attributes.SCALE);if(attr!=null){double original=1;for(String tag:m.entityTags())if(tag.startsWith(ORIGINAL_SCALE))try{original=Double.parseDouble(tag.substring(ORIGINAL_SCALE.length()));}catch(NumberFormatException ignored){}attr.setBaseValue(original/3.0);}
+  m.setNoAi(true);m.setNoGravity(true);m.setTarget(null);m.setPersistenceRequired();m.setAirSupply(m.getMaxAirSupply());m.setRemainingFireTicks(0);var attr=m.getAttribute(Attributes.SCALE);if(attr!=null){double original=1;for(String tag:m.entityTags())if(tag.startsWith(ORIGINAL_SCALE))try{original=Double.parseDouble(tag.substring(ORIGINAL_SCALE.length()));}catch(NumberFormatException ignored){}attr.setBaseValue(original*.75);}
  }
  public static void tick(ServerLevel l){
   activeLevel=l;CHAMBERS.clear();try{
@@ -91,7 +91,7 @@ public final class Terrestrial {
    BlockPos target=TARGETS.get(m);if(target==null||!Enclosures.matches(state,l.getBlockState(target))||!target.equals(current)&&!canStep(l,current,target,air))target=current;
    Vec3 center=Vec3.atLowerCornerOf(target).add(.5,air?.5:.18,.5),delta=center.subtract(m.position());
    if(delta.lengthSqr()<.003){var neighbors=new ArrayList<BlockPos>();for(Direction d:Direction.values()){var p=target.relative(d);if(l.hasChunkAt(p)&&canStep(l,target,p,air))neighbors.add(p);}if(neighbors.size()>1)neighbors.remove(PREVIOUS.get(m));if(!neighbors.isEmpty()){PREVIOUS.put(m,target);target=neighbors.get(l.getRandom().nextInt(neighbors.size()));}center=Vec3.atLowerCornerOf(target).add(.5,air?.5:.18,.5);delta=center.subtract(m.position());}
-   TARGETS.put(m,target);m.setDeltaMovement(Vec3.ZERO);if(delta.lengthSqr()>.0001){Vec3 step=delta.normalize().scale(Math.min(air?.035:.025,delta.length()));boolean old=m.noPhysics;try{m.noPhysics=true;m.move(MoverType.SELF,step);}finally{m.noPhysics=old;}float yaw=(float)Math.toDegrees(Math.atan2(-step.x,step.z));m.setYRot(yaw);m.setYBodyRot(yaw);m.setYHeadRot(yaw);}
+   TARGETS.put(m,target);m.setDeltaMovement(Vec3.ZERO);if(delta.lengthSqr()>.0001){Vec3 step=delta.normalize().scale(Math.min(air?.055:.075,delta.length()));boolean old=m.noPhysics;try{m.noPhysics=true;m.move(MoverType.SELF,step);}finally{m.noPhysics=old;}float yaw=(float)Math.toDegrees(Math.atan2(-step.x,step.z));m.setYRot(yaw);m.setYBodyRot(yaw);m.setYHeadRot(yaw);m.walkAnimation.update((float)(step.horizontalDistance()*12.0),1.0f);}
   }
   TARGETS.keySet().removeIf(Entity::isRemoved);PREVIOUS.keySet().removeIf(Entity::isRemoved);
   }finally{activeLevel=null;CHAMBERS.clear();}
