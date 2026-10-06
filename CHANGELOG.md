@@ -1,3 +1,8 @@
+## 0.6.1
+- Redesigned Mobitat with four short legs, a front door, and a 3D carry handle.
+- Placed Mobitats render their stored residents as animated 10% scale previews while preserving stored variants.
+- Breaking a Mobitat in Creative now drops the Mobitat with its stored residents intact.
+
 ## 0.6.0
 - Unified Aquarium/Terrarium editor with Mobs and Decorate pages.
 - Removed the legacy custom-model decoration workflow.
