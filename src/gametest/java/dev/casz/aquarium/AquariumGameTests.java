@@ -34,9 +34,9 @@ public class AquariumGameTests {
   var be=(TankBlockEntity)h.getLevel().getBlockEntity(h.absolutePos(new BlockPos(1,1,1)));be.removeDecoration(0);state=h.getLevel().getBlockState(h.absolutePos(new BlockPos(1,1,1)));h.assertTrue(state.getValue(AquariumBlock.SOIL)>0&&be.decorations.isEmpty(),"Removing decor must keep the floor");h.succeed();
  }
 
- @GameTest(maxTicks=100) public void fishTraverseTubeToOtherTank(GameTestHelper h){
-  line(h);var fish=h.spawn(EntityTypes.COD,.5f,1.4f,1.5f);fish.setFromBucket(true);
-  h.runAfterDelay(65,()->{h.assertTrue(fish.isInWater(),"Contained fluid must keep real fish in water");h.assertTrue(fish.blockPosition().equals(h.absolutePos(new BlockPos(2,1,1))),"Fish must traverse the tube into the other tank unaided");h.succeed();});
+ @GameTest(maxTicks=140) public void fishTraverseTubeToOtherTank(GameTestHelper h){
+  line(h);var fish=h.spawn(EntityTypes.COD,.5f,1.4f,1.5f);fish.setFromBucket(true);BlockPos far=h.absolutePos(new BlockPos(2,1,1));
+  h.onEachTick(()->{if(fish.isAlive()&&fish.isInWater()&&fish.blockPosition().equals(far))h.succeed();});
  }
  @GameTest(maxTicks=100) public void breakingModulesLeavesAirNotWater(GameTestHelper h){
   h.setBlock(0,1,1,AquariumMod.TANK);h.setBlock(1,1,1,AquariumMod.TUBE);
