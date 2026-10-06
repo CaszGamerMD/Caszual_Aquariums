@@ -97,5 +97,5 @@ public final class Terrestrial {
   TARGETS.keySet().removeIf(Entity::isRemoved);PREVIOUS.keySet().removeIf(Entity::isRemoved);
   }finally{activeLevel=null;CHAMBERS.clear();NETWORKS.clear();}
  }
- private static boolean blocked(ServerLevel l,Mob m,Vec3 next){var net=network(l,m.blockPosition());AABB moved=m.getBoundingBox().move(next.subtract(m.position()));for(var p:net.cells())if(l.getBlockEntity(p) instanceof TankBlockEntity be)for(var box:be.collisionBoxes())if(box.intersects(moved))return true;return false;}
+ private static boolean blocked(ServerLevel l,Mob m,Vec3 next){var net=network(l,m.blockPosition());AABB moved=m.getBoundingBox().move(next.subtract(m.position()));for(var p:net.cells())if(l.getBlockEntity(p) instanceof TankBlockEntity be&&be.collides(moved))return true;return false;}
 }
