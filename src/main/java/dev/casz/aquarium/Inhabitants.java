@@ -18,7 +18,8 @@ import net.minecraft.world.phys.*;
 import net.minecraft.network.chat.Component;
 
 public final class Inhabitants {
- private static final Map<Mob,BlockPos> TARGETS=new WeakHashMap<>(),PREVIOUS=new WeakHashMap<>();\n private static final Map<Mob,Vec3> LANES=new WeakHashMap<>();
+ private static final Map<Mob,BlockPos> TARGETS=new WeakHashMap<>(),PREVIOUS=new WeakHashMap<>();
+ private static final Map<Mob,Vec3> LANES=new WeakHashMap<>();
  public record AddResult(boolean success,ItemStack returned){}
  public static boolean supported(EntityType<?> t){return t==EntityTypes.COD||t==EntityTypes.SALMON||t==EntityTypes.TROPICAL_FISH||t==EntityTypes.PUFFERFISH||t==EntityTypes.AXOLOTL||t==EntityTypes.SQUID||t==EntityTypes.GLOW_SQUID||t==EntityTypes.TURTLE||t==EntityTypes.DROWNED;}
  private static EntityType<?> sourceType(ItemStack s){
@@ -73,7 +74,8 @@ public final class Inhabitants {
    if(level.getGameTime()%20==0&&!checked.contains(current)){var net=Network.scan(level,current);checked.addAll(net.cells());if(net.complete()){var residents=net.residents(level);for(int i=net.capacity();i<residents.size();i++){var excess=residents.get(i);ItemStack stack=capture(level,excess);excess.spawnAtLocation(level,stack);}}}
    if(!mob.isAlive())continue;
    BlockPos target=TARGETS.get(mob);if(target==null||!level.hasChunkAt(target)||!Enclosures.isAquatic(level.getBlockState(target)))target=current;
-   Vec3 lane=LANES.get(mob);if(lane==null){lane=laneOffset(level,target);LANES.put(mob,lane);}\n   Vec3 center=center(target,mob,lane),delta=center.subtract(mob.position());
+   Vec3 lane=LANES.get(mob);if(lane==null){lane=laneOffset(level,target);LANES.put(mob,lane);}
+   Vec3 center=center(target,mob,lane),delta=center.subtract(mob.position());
    if(delta.lengthSqr()<.004){ArrayList<BlockPos> neighbors=new ArrayList<>();for(Direction d:Direction.values()){BlockPos n=target.relative(d);if(level.hasChunkAt(n)&&Enclosures.isAquatic(level.getBlockState(n)))neighbors.add(n);}if(neighbors.size()>1)neighbors.remove(PREVIOUS.get(mob));if(!neighbors.isEmpty()){PREVIOUS.put(mob,target);target=neighbors.get(level.getRandom().nextInt(neighbors.size()));LANES.put(mob,laneOffset(level,target));}lane=LANES.getOrDefault(mob,Vec3.ZERO);center=center(target,mob,lane);delta=center.subtract(mob.position());}
    TARGETS.put(mob,target);mob.setDeltaMovement(Vec3.ZERO);
    if(delta.lengthSqr()>.0001){Vec3 step=delta.normalize().scale(Math.min(mob.getType()==EntityTypes.DROWNED?.015:.035,delta.length()));boolean previous=mob.noPhysics;try{mob.noPhysics=true;mob.move(MoverType.SELF,step);}finally{mob.noPhysics=previous;}float yaw=(float)Math.toDegrees(Math.atan2(-step.x,step.z));mob.setYRot(yaw);mob.setYBodyRot(yaw);mob.setYHeadRot(yaw);}
