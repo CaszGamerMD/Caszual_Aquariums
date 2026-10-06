@@ -16,13 +16,14 @@ import net.minecraft.world.level.storage.TagValueInput;
 import net.minecraft.world.phys.Vec3;
 import org.jspecify.annotations.Nullable;
 public final class MobitatRenderer implements BlockEntityRenderer<MobitatBlockEntity,MobitatRenderer.State>{
- public static final class State extends BlockEntityRenderState{final List<EntityRenderState> residents=new ArrayList<>();}
+ public static final class State extends BlockEntityRenderState{int revision=-1;final List<Entity> entities=new ArrayList<>();final List<EntityRenderState> residents=new ArrayList<>();}
  private final EntityRenderDispatcher dispatcher;
  public MobitatRenderer(BlockEntityRendererProvider.Context c){dispatcher=c.entityRenderer();}
  public State createRenderState(){return new State();}
  public void extractRenderState(MobitatBlockEntity be,State state,float partial,Vec3 camera,ModelFeatureRenderer.@Nullable CrumblingOverlay breaking){
   BlockEntityRenderer.super.extractRenderState(be,state,partial,camera,breaking);state.residents.clear();if(be.getLevel()==null)return;
-  for(int i=0;i<be.size()&&i<5;i++){String raw=be.residentData(i).getString("type").orElse("");Identifier id=Identifier.tryParse(raw);if(id==null)continue;var type=BuiltInRegistries.ENTITY_TYPE.getValue(id);if(type==null)continue;Entity e=type.create(be.getLevel(),EntitySpawnReason.LOAD);if(e!=null){var saved=be.residentData(i).getCompound("entity").orElse(null);if(saved!=null)try{e.load(TagValueInput.create(ProblemReporter.DISCARDING,be.getLevel().registryAccess(),saved));}catch(Exception ignored){}e.tickCount=(int)(be.getLevel().getGameTime()+i*9);state.residents.add(dispatcher.extractEntity(e,partial));}}
+  if(state.revision!=be.revision()){state.revision=be.revision();state.entities.clear();for(int i=0;i<be.size()&&i<5;i++){var resident=be.residentData(i);String raw=resident.getString("type").orElse("");Identifier id=Identifier.tryParse(raw);if(id==null)continue;var type=BuiltInRegistries.ENTITY_TYPE.getValue(id);if(type==null)continue;Entity e=type.create(be.getLevel(),EntitySpawnReason.LOAD);if(e!=null){var saved=resident.getCompound("entity").orElse(null);if(saved!=null)try{e.load(TagValueInput.create(ProblemReporter.DISCARDING,be.getLevel().registryAccess(),saved));}catch(Exception ignored){}state.entities.add(e);}}}
+  for(int i=0;i<state.entities.size();i++){Entity e=state.entities.get(i);e.tickCount=(int)(be.getLevel().getGameTime()+i*9);state.residents.add(dispatcher.extractEntity(e,partial));}
  }
  public void submit(State state,PoseStack pose,SubmitNodeCollector out,CameraRenderState camera){
   float[][] spots={{.32f,.28f},{.68f,.30f},{.50f,.52f},{.30f,.70f},{.70f,.70f}};
