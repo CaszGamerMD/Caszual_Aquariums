@@ -29,7 +29,7 @@ public final class TankBlockEntity extends BlockEntity {
  public List<AABB> collisionBoxes(){
   List<AABB> out=new ArrayList<>();for(var d:decorations){float half=Math.max(.08f,d.scale*.45f);double cx=worldPosition.getX()+d.x,cy=worldPosition.getY()+d.y,cz=worldPosition.getZ()+d.z;out.add(new AABB(cx-half,cy-half,cz-half,cx+half,cy+half,cz+half));}return out;
  }
- public void tick(){migrateLegacy();if(level instanceof ServerLevel server&&(dirty||server.getGameTime()%40==0))updateDisplays(server);}
+ public void tick(){migrateLegacy();if(level instanceof ServerLevel server&&dirty)updateDisplays(server);}
  private String ownerPrefix(){return AquariumMod.ID+":decor:"+worldPosition.getX()+","+worldPosition.getY()+","+worldPosition.getZ()+":";}
  private void updateDisplays(ServerLevel server){
   var existing=server.getEntitiesOfClass(Display.class,new AABB(worldPosition).inflate(3),d->d.entityTags().stream().anyMatch(t->t.startsWith(ownerPrefix())));
