@@ -80,10 +80,10 @@ public final class TankDecorationRenderer implements BlockEntityRenderer<TankBlo
  }
  private void submitItem(Prepared p,State state,PoseStack pose,SubmitNodeCollector out){
   var root=(ItemStackRenderStateAccessor)(Object)p.itemState;int count=root.linkedAquariums$getActiveLayerCount();var layers=root.linkedAquariums$getLayers();
-  for(int i=0;i<count;i++){var layer=layers[i];var a=(LayerRenderStateAccessor)(Object)layer;RenderType rt=a.linkedAquariums$getRenderType();List<BakedQuad> quads=a.linkedAquariums$getQuads();
+  for(int i=0;i<count;i++){var layer=layers[i];var a=(LayerRenderStateAccessor)(Object)layer;List<BakedQuad> quads=a.linkedAquariums$getQuads();
    PoseStack.Pose lp=new PoseStack.Pose();a.linkedAquariums$getTransform().apply(false,lp);Matrix4f transform=new Matrix4f(p.transform).mul(lp.pose());
    if(rt!=null&&!quads.isEmpty()){int[] tints=a.linkedAquariums$getTintLayers();out.submitCustomGeometry(pose,rt,(base,buffer)->{for(BakedQuad q:quads){int color=0xFFFFFFFF;int ti=q.materialInfo().tintIndex();if(ti>=0&&ti<tints.length&&tints[ti]!=-1)color=tints[ti];emitClipped(base,buffer,q,transform,state.clips,color,state.lightCoords);}});}
-   SpecialModelRenderer special=a.linkedAquariums$getSpecialRenderer();if(special!=null&&fullyInside(p.itemState.getModelBoundingBox(),p.transform,state.clips)){pose.pushPose();pose.mulPose(p.transform);a.linkedAquariums$getTransform().apply(false,pose.last());special.submit(a.linkedAquariums$getSpecialArgument(),pose,out,state.lightCoords,OverlayTexture.NO_OVERLAY,a.linkedAquariums$getFoilType()!=ItemStackRenderState.FoilType.NONE,0);pose.popPose();}
+   SpecialModelRenderer special=a.linkedAquariums$getSpecialRenderer();if(special!=null&&fullyInside(p.itemState.getModelBoundingBox(),p.transform,state.clips)){pose.pushPose();pose.mulPose(p.transform);a.linkedAquariums$getItemTransform().apply(false,pose.last());pose.last().mulPose(a.linkedAquariums$getLocalTransform());special.submit(a.linkedAquariums$getSpecialArgument(),pose,out,state.lightCoords,OverlayTexture.NO_OVERLAY,a.linkedAquariums$getFoilType()!=ItemStackRenderState.FoilType.NONE,0);pose.popPose();}
   }
  }
 
