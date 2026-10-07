@@ -30,6 +30,7 @@ import dev.casz.aquarium.mixin.client.LayerRenderStateAccessor;
 public final class TankDecorationRenderer implements BlockEntityRenderer<TankBlockEntity,TankDecorationRenderer.State>{
  private static final float GLASS_INSET=.0325f;
  private final ItemModelResolver itemResolver;
+ private static boolean DEBUG_DIAMOND_LOGGED;
 
  private static final class Prepared{
   final ItemStack stack;final Matrix4f transform;final ItemStackRenderState itemState;final boolean blockItem;
@@ -83,6 +84,9 @@ public final class TankDecorationRenderer implements BlockEntityRenderer<TankBlo
   var root=(ItemStackRenderStateAccessor)(Object)p.itemState;int count=root.linkedAquariums$getActiveLayerCount();var layers=root.linkedAquariums$getLayers();
   for(int i=0;i<count;i++){var layer=layers[i];var a=(LayerRenderStateAccessor)(Object)layer;List<BakedQuad> quads=a.linkedAquariums$getQuads();
    PoseStack.Pose lp=new PoseStack.Pose();a.linkedAquariums$getItemTransform().apply(false,lp);lp.mulPose(a.linkedAquariums$getLocalTransform());Matrix4f transform=new Matrix4f(p.transform).mul(lp.pose());
+   if(!DEBUG_DIAMOND_LOGGED&&p.stack.is(Items.DIAMOND_BLOCK)&&!quads.isEmpty()){
+    DEBUG_DIAMOND_LOGGED=true;System.out.println("[CaszualAquariums debug] bounds="+p.itemState.getModelBoundingBox()+" item="+a.linkedAquariums$getItemTransform()+" local="+a.linkedAquariums$getLocalTransform()+" quad0="+quads.getFirst().position(0)+" quad1="+quads.getFirst().position(1)+" quad2="+quads.getFirst().position(2)+" quad3="+quads.getFirst().position(3)+" combined="+transform);
+   }
    if(!quads.isEmpty()){var tints=a.linkedAquariums$getTintLayers();for(BakedQuad q:quads){var rt=q.materialInfo().itemRenderType();int color=0xFFFFFFFF;int ti=q.materialInfo().tintIndex();if(tints!=null&&ti>=0&&ti<tints.size()){int tint=tints.getInt(ti);if(tint!=-1)color=tint;}final int quadColor=color;out.submitCustomGeometry(pose,rt,(base,buffer)->emitClipped(base,buffer,q,transform,state.clips,quadColor,state.lightCoords));}}
    SpecialModelRenderer special=a.linkedAquariums$getSpecialRenderer();if(special!=null&&fullyInside(p.itemState.getModelBoundingBox(),p.transform,state.clips)){pose.pushPose();pose.mulPose(p.transform);a.linkedAquariums$getItemTransform().apply(false,pose.last());pose.last().mulPose(a.linkedAquariums$getLocalTransform());special.submit(a.linkedAquariums$getSpecialArgument(),pose,out,state.lightCoords,OverlayTexture.NO_OVERLAY,a.linkedAquariums$getFoilType()!=ItemStackRenderState.FoilType.NONE,0);pose.popPose();}
   }
