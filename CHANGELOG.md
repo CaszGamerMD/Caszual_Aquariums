@@ -1,3 +1,9 @@
+## 0.7.1
+- Fixed Mobitat inventory name translation.
+- Assigned stable synthetic IDs to render-only Mobitat preview entities so third-party renderers that require entity IDs no longer crash the client.
+- Added a guarded fallback so an incompatible modded entity renderer can be skipped without crashing the entire game.
+- Applied the same safe render-only ID handling to the Tropical Fish Editor preview.
+
 ## 0.7.0
 - Added a one-block Tropical Fish Editor tank.
 - Insert a Tropical Fish Bucket to load the fish and immediately open the editor; an empty bucket retrieves the modified fish.
