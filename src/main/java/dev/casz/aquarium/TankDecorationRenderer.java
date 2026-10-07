@@ -52,7 +52,7 @@ public final class TankDecorationRenderer implements BlockEntityRenderer<TankBlo
    state.revision=be.revision();state.prepared.clear();int seed=0;
    for(var d:be.decorations){
     ItemStack stack=d.stack.copy();boolean blockItem=stack.getItem() instanceof BlockItem;
-    Matrix4f transform=new Matrix4f().translate(d.x,d.y,d.z).rotateXYZ((float)java.lang.Math.toRadians(d.rotX),(float)java.lang.Math.toRadians(d.rotY),(float)java.lang.Math.toRadians(d.rotZ)).scale(d.scale).translate(-.5f,-.5f,-.5f);
+    Matrix4f transform=new Matrix4f().translate(d.x,d.y,d.z).rotateXYZ((float)java.lang.Math.toRadians(d.rotX),(float)java.lang.Math.toRadians(d.rotY),(float)java.lang.Math.toRadians(d.rotZ)).scale(d.scale);
     ItemStackRenderState item=new ItemStackRenderState();
     itemResolver.updateForTopItem(item,stack,blockItem?ItemDisplayContext.NONE:ItemDisplayContext.FIXED,be.getLevel(),null,be.getBlockPos().hashCode()+seed++);
     if(!blockItem)transform.rotateY((float)java.lang.Math.PI);
@@ -82,7 +82,7 @@ public final class TankDecorationRenderer implements BlockEntityRenderer<TankBlo
  private void submitItem(Prepared p,State state,PoseStack pose,SubmitNodeCollector out){
   var root=(ItemStackRenderStateAccessor)(Object)p.itemState;int count=root.linkedAquariums$getActiveLayerCount();var layers=root.linkedAquariums$getLayers();
   for(int i=0;i<count;i++){var layer=layers[i];var a=(LayerRenderStateAccessor)(Object)layer;List<BakedQuad> quads=a.linkedAquariums$getQuads();
-   PoseStack.Pose lp=new PoseStack.Pose();a.linkedAquariums$getItemTransform().apply(false,lp);lp.mulPose(a.linkedAquariums$getLocalTransform());Matrix4f transform=new Matrix4f(p.transform).mul(lp.pose());
+   PoseStack.Pose lp=new PoseStack.Pose();a.linkedAquariums$getItemTransform().apply(false,lp);lp.mulPose(a.linkedAquariums$getLocalTransform());Matrix4f transform=new Matrix4f(p.transform).mul(lp.pose()).translate(-.5f,-.5f,-.5f);
    if(!quads.isEmpty()){var tints=a.linkedAquariums$getTintLayers();for(BakedQuad q:quads){var rt=q.materialInfo().itemRenderType();int color=0xFFFFFFFF;int ti=q.materialInfo().tintIndex();if(tints!=null&&ti>=0&&ti<tints.size()){int tint=tints.getInt(ti);if(tint!=-1)color=tint;}final int quadColor=color;out.submitCustomGeometry(pose,rt,(base,buffer)->emitClipped(base,buffer,q,transform,state.clips,quadColor,state.lightCoords));}}
    SpecialModelRenderer special=a.linkedAquariums$getSpecialRenderer();if(special!=null&&fullyInside(p.itemState.getModelBoundingBox(),p.transform,state.clips)){pose.pushPose();pose.mulPose(p.transform);a.linkedAquariums$getItemTransform().apply(false,pose.last());pose.last().mulPose(a.linkedAquariums$getLocalTransform());special.submit(a.linkedAquariums$getSpecialArgument(),pose,out,state.lightCoords,OverlayTexture.NO_OVERLAY,a.linkedAquariums$getFoilType()!=ItemStackRenderState.FoilType.NONE,0);pose.popPose();}
   }
