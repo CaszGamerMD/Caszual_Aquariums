@@ -137,7 +137,7 @@ public final class AquariumScreen extends AbstractContainerScreen<AquariumMenu>{
    g.text(font,"Actions",326,58,0xFFEAF4F4);
   }else{
    g.text(font,"Decor items",14,82,0xFFEAF4F4);
-   if(menu.data.get(6)>DECOR_ROWS)g.text(font,(decorPage+1)+"/"+(((menu.data.get(6)-1)/DECOR_ROWS)+1),72,82,0xFFC9DCDD);
+   if(menu.data.get(6)>DECOR_ROWS)g.text(font,(decorPage+1)+"/"+(((menu.data.get(6)-1)/DECOR_ROWS)+1),78,82,0xFFC9DCDD);
    g.text(font,"Preview",152,82,0xFFEAF4F4);
    var item=BuiltInRegistries.ITEM.byId(menu.data.get(9));
    if(item!=null&&menu.data.get(6)>0){String name=new ItemStack(item).getHoverName().getString();g.text(font,font.plainSubstrByWidth(name,70),152,138,0xFFEAF4F4);g.text(font,Math.round(previewYaw)+"°",226,138,0xFFC9DCDD);}
