@@ -19,6 +19,15 @@ jobs:
       - name: Run client visual tests
         if: github.ref == 'refs/heads/feature/editor-polish'
         run: xvfb-run -a ./gradlew runClientGameTest --stacktrace
+      - name: Upload client visual screenshots
+        if: always() && github.ref == 'refs/heads/feature/editor-polish'
+        uses: actions/upload-artifact@v4
+        with:
+          name: editor-polish-screenshots
+          path: |
+            **/screenshots/*.png
+            **/screenshots/**/*.png
+          if-no-files-found: warn
       - uses: actions/upload-artifact@v4
         if: success()
         with:
