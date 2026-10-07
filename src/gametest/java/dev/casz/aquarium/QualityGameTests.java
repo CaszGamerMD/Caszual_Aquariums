@@ -40,4 +40,23 @@ public final class QualityGameTests {
   h.assertTrue(displays.isEmpty(),"Tank decorations must no longer create server-side Display entities");
   h.assertTrue(be.decorations.size()==2&&be.decorations.getFirst().stack.is(Items.DIAMOND_BLOCK),"Decoration data must remain owned by the tank block entity");h.succeed();
  }
+ @GameTest public void decorationAvoidanceKeepsResidentsMoving(GameTestHelper h){
+  h.assertTrue(java.lang.Math.abs(Inhabitants.MOVE_SPEED_MULTIPLIER-.80)<1.0E-9&&java.lang.Math.abs(Terrestrial.MOVE_SPEED_MULTIPLIER-.80)<1.0E-9,"Aquarium and terrarium residents must remain at 80% enclosure movement speed");
+
+  h.setBlock(1,1,1,AquariumMod.TANK);BlockPos waterPos=h.absolutePos(new BlockPos(1,1,1));var waterBe=(TankBlockEntity)h.getLevel().getBlockEntity(waterPos);
+  var waterDecor=waterBe.addDecoration(new net.minecraft.world.item.ItemStack(Items.DIAMOND_BLOCK),EnclosureDecoration.Anchor.BODY);waterDecor.x=.5f;waterDecor.y=.5f;waterDecor.z=.5f;waterDecor.scale=.2f;waterBe.changed();
+  var fish=h.spawn(EntityTypes.TROPICAL_FISH,1.1f,1.5f,1.5f);fish.setPos(waterPos.getX()+.1,waterPos.getY()+.5,waterPos.getZ()+.5);
+  Vec3 waterDesired=new Vec3(.30,0,0),waterStep=Inhabitants.steer(h.getLevel(),fish,waterDesired,true);
+  h.assertTrue(Inhabitants.penalty(h.getLevel(),fish,fish.position().add(waterDesired))>1.0E-8,"Test setup must put the direct aquarium route through decor");
+  h.assertTrue(waterStep!=null&&Inhabitants.penalty(h.getLevel(),fish,fish.position().add(waterStep))<Inhabitants.penalty(h.getLevel(),fish,fish.position().add(waterDesired)),"Aquarium residents must steer around decor instead of stopping");
+
+  h.setBlock(4,1,1,AquariumMod.PASSIVE_TERRARIUM);BlockPos landPos=h.absolutePos(new BlockPos(4,1,1));var landBe=(TankBlockEntity)h.getLevel().getBlockEntity(landPos);
+  var landDecor=landBe.addDecoration(new net.minecraft.world.item.ItemStack(Items.DIAMOND_BLOCK),EnclosureDecoration.Anchor.BODY);landDecor.x=.5f;landDecor.y=.5f;landDecor.z=.5f;landDecor.scale=.2f;landBe.changed();
+  var rabbit=h.spawn(EntityTypes.RABBIT,4.1f,1.18f,1.5f);rabbit.setPos(landPos.getX()+.1,landPos.getY()+.18,landPos.getZ()+.5);
+  Vec3 landDesired=new Vec3(.30,0,0),landStep=Terrestrial.steer(h.getLevel(),rabbit,landDesired,false,h.getLevel().getBlockState(landPos));
+  h.assertTrue(Terrestrial.penalty(h.getLevel(),rabbit,rabbit.position().add(landDesired))>1.0E-8,"Test setup must put the direct terrarium route through decor");
+  h.assertTrue(landStep!=null&&Terrestrial.penalty(h.getLevel(),rabbit,rabbit.position().add(landStep))<Terrestrial.penalty(h.getLevel(),rabbit,rabbit.position().add(landDesired)),"Terrarium residents must steer around decor instead of stopping");
+  h.succeed();
+ }
+
 }
