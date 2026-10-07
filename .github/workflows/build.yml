@@ -1,7 +1,7 @@
 name: build
 on:
   push:
-    branches: [ main, feature/enclosure-editor, feature/tropical-fish-editor ]
+    branches: [ main, feature/enclosure-editor ]
     tags: [ 'v*' ]
   workflow_dispatch:
 jobs:
