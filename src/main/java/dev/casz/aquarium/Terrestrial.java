@@ -20,7 +20,7 @@ import net.minecraft.world.phys.*;
 public final class Terrestrial {
  public static final String MANAGED=AquariumMod.ID+":terrarium_managed",ORIGINAL_SCALE=AquariumMod.ID+":original_scale=";
  public static final TagKey<EntityType<?>> FLYING=TagKey.create(Registries.ENTITY_TYPE,AquariumMod.id("flying"));
- private static final Map<Mob,BlockPos> TARGETS=new WeakHashMap<>(),PREVIOUS=new WeakHashMap<>();
+ private static final Map<Mob,BlockPos> TARGETS=new WeakHashMap<>(),PREVIOUS=new WeakHashMap<>();private static final Map<Mob,Integer> STUCK=new WeakHashMap<>();
  private static ServerLevel activeLevel;
  private static final Map<BlockPos,Chamber> CHAMBERS=new HashMap<>();private static final Map<BlockPos,Network> NETWORKS=new HashMap<>();
  private static Network network(ServerLevel l,BlockPos pos){if(l==activeLevel){var cached=NETWORKS.get(pos);if(cached!=null)return cached;}var net=Network.scan(l,pos);if(l==activeLevel)for(var p:net.cells())NETWORKS.put(p,net);return net;}
@@ -52,7 +52,7 @@ public final class Terrestrial {
  public static ItemStack capture(ServerLevel l,Mob m){
   restore(m);var out=TagValueOutput.createWithContext(ProblemReporter.DISCARDING,l.registryAccess());m.saveWithoutId(out);
   CompoundTag tag=new CompoundTag();tag.putString("terrarium_type",BuiltInRegistries.ENTITY_TYPE.getKey(m.getType()).toString());tag.put("terrarium_entity",out.buildResult());
-  var stack=new ItemStack(AquariumMod.MOB_NET);stack.set(DataComponents.CUSTOM_DATA,CustomData.of(tag));stack.set(DataComponents.CUSTOM_NAME,Component.literal(m.getName().getString()+" in Mob Net"));m.discard();TARGETS.remove(m);PREVIOUS.remove(m);return stack;
+  var stack=new ItemStack(AquariumMod.MOB_NET);stack.set(DataComponents.CUSTOM_DATA,CustomData.of(tag));stack.set(DataComponents.CUSTOM_NAME,Component.literal(m.getName().getString()+" in Mob Net"));m.discard();TARGETS.remove(m);PREVIOUS.remove(m);STUCK.remove(m);return stack;
  }
  public static Mob load(ServerLevel l,ItemStack net){
   var tag=net.getOrDefault(DataComponents.CUSTOM_DATA,CustomData.EMPTY).copyTag();var id=Identifier.tryParse(tag.getString("terrarium_type").orElse(""));var type=id==null?null:BuiltInRegistries.ENTITY_TYPE.getValue(id);
@@ -93,10 +93,43 @@ public final class Terrestrial {
    BlockPos target=TARGETS.get(m);if(target==null||!Enclosures.matches(state,l.getBlockState(target))||!target.equals(current)&&!canStep(l,current,target,air))target=current;
    Vec3 center=Vec3.atLowerCornerOf(target).add(.5,air?.5:.18,.5),delta=center.subtract(m.position());
    if(delta.lengthSqr()<.003){var neighbors=new ArrayList<BlockPos>();for(Direction d:Direction.values()){var p=target.relative(d);if(l.hasChunkAt(p)&&canStep(l,target,p,air))neighbors.add(p);}if(neighbors.size()>1)neighbors.remove(PREVIOUS.get(m));if(!neighbors.isEmpty()){PREVIOUS.put(m,target);target=neighbors.get(l.getRandom().nextInt(neighbors.size()));}center=Vec3.atLowerCornerOf(target).add(.5,air?.5:.18,.5);delta=center.subtract(m.position());}
-   TARGETS.put(m,target);m.setDeltaMovement(Vec3.ZERO);if(delta.lengthSqr()>.0001){Vec3 step=delta.normalize().scale(Math.min(air?.055:.075,delta.length()));if(blocked(l,m,m.position().add(step))) {TARGETS.remove(m);continue;}boolean old=m.noPhysics;try{m.noPhysics=true;m.move(MoverType.SELF,step);}finally{m.noPhysics=old;}float yaw=(float)Math.toDegrees(Math.atan2(-step.x,step.z));m.setYRot(yaw);m.setYBodyRot(yaw);m.setYHeadRot(yaw);m.walkAnimation.update((float)(step.horizontalDistance()*12.0),1.0f,1.0f);}
+   TARGETS.put(m,target);m.setDeltaMovement(Vec3.ZERO);if(delta.lengthSqr()>.0001){
+    double speed=movementSpeed(m,air?.06875:.09375),length=Math.min(speed,delta.length());Vec3 wanted=delta.normalize().scale(length),step=steer(l,m,wanted,air);
+    if(step.lengthSqr()<1.0E-8){int stuck=STUCK.getOrDefault(m,0)+1;STUCK.put(m,stuck);if(stuck>=8){TARGETS.remove(m);PREVIOUS.remove(m);STUCK.put(m,0);}continue;}
+    STUCK.remove(m);boolean old=m.noPhysics;try{m.noPhysics=true;m.move(MoverType.SELF,step);}finally{m.noPhysics=old;}float yaw=(float)Math.toDegrees(Math.atan2(-step.x,step.z));m.setYRot(yaw);m.setYBodyRot(yaw);m.setYHeadRot(yaw);m.walkAnimation.update((float)(step.horizontalDistance()*12.0),1.0f,1.0f);
+   }
   }
-  TARGETS.keySet().removeIf(Entity::isRemoved);PREVIOUS.keySet().removeIf(Entity::isRemoved);
+  TARGETS.keySet().removeIf(Entity::isRemoved);PREVIOUS.keySet().removeIf(Entity::isRemoved);STUCK.keySet().removeIf(Entity::isRemoved);
   }finally{activeLevel=null;CHAMBERS.clear();NETWORKS.clear();}
  }
- private static boolean blocked(ServerLevel l,Mob m,Vec3 next){var net=network(l,m.blockPosition());AABB moved=m.getBoundingBox().move(next.subtract(m.position()));for(var p:net.cells())if(l.getBlockEntity(p) instanceof TankBlockEntity be&&be.collides(moved))return true;return false;}
+ private static double movementSpeed(Mob m,double fallback){
+  var attr=m.getAttribute(Attributes.MOVEMENT_SPEED);double normal=attr==null?fallback/.8:attr.getBaseValue();
+  return Math.max(.005,normal*.8);
+ }
+ private static double penalty(ServerLevel l,Mob m,Vec3 next){
+  var net=network(l,m.blockPosition());AABB moved=m.getBoundingBox().move(next.subtract(m.position()));double total=0;
+  for(var p:net.cells())if(l.getBlockEntity(p) instanceof TankBlockEntity be)total+=be.collisionPenalty(moved);
+  return total;
+ }
+ private static boolean allowed(ServerLevel l,Mob m,Vec3 next,boolean air){
+  BlockPos from=m.blockPosition(),to=BlockPos.containing(next.x,next.y,next.z);if(!l.hasChunkAt(to))return false;
+  var state=l.getBlockState(from);return Enclosures.matches(state,l.getBlockState(to))&&(to.equals(from)||canStep(l,from,to,air));
+ }
+ private static Vec3 steer(ServerLevel l,Mob m,Vec3 wanted,boolean air){
+  Vec3 pos=m.position();double currentPenalty=penalty(l,m,pos),bestPenalty=Double.POSITIVE_INFINITY;Vec3 best=Vec3.ZERO;
+  double[] angles={0,25,-25,50,-50,75,-75,100,-100,135,-135,180};
+  for(double degrees:angles){
+   double a=Math.toRadians(degrees),c=Math.cos(a),s=Math.sin(a);
+   Vec3 candidate=new Vec3(wanted.x*c-wanted.z*s,wanted.y,wanted.x*s+wanted.z*c),next=pos.add(candidate);
+   if(!allowed(l,m,next,air))continue;double p=penalty(l,m,next);
+   if(p<1.0E-7)return candidate;if(currentPenalty>1.0E-7&&p<bestPenalty){bestPenalty=p;best=candidate;}
+  }
+  if(air)for(double sign:new double[]{.65,-.65}){
+   Vec3 candidate=wanted.add(0,wanted.length()*sign,0).normalize().scale(wanted.length()),next=pos.add(candidate);
+   if(!allowed(l,m,next,true))continue;double p=penalty(l,m,next);
+   if(p<1.0E-7)return candidate;if(currentPenalty>1.0E-7&&p<bestPenalty){bestPenalty=p;best=candidate;}
+  }
+  return currentPenalty>1.0E-7&&bestPenalty<currentPenalty?best:Vec3.ZERO;
+ }
+ private static boolean blocked(ServerLevel l,Mob m,Vec3 next){return penalty(l,m,next)>1.0E-7;}
 }
