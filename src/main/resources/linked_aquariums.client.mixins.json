@@ -1,0 +1,12 @@
+{
+  "required": true,
+  "package": "dev.casz.aquarium.mixin",
+  "compatibilityLevel": "JAVA_25",
+  "client": [
+    "ItemStackRenderStateAccessor",
+    "ItemLayerRenderStateAccessor"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
