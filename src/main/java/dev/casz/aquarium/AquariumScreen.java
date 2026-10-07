@@ -50,7 +50,7 @@ public final class AquariumScreen extends AbstractContainerScreen<AquariumMenu>{
     name=font.plainSubstrByWidth(name,126);
     b((index==menu.data.get(2)?"▶ ":"")+name,12,74+i*18,146,16,()->send(100+row));
    }
-   b("Pick up selected",326,78,80,22,()->send(20));
+   b("Pick up",326,78,80,22,()->send(20));
   }else{
    decorPage=menu.data.get(6)>0?menu.data.get(7)/DECOR_ROWS:0;
    b((menu.data.get(8)==0?"▶ ":"")+"Ceiling",124,52,68,18,()->send(200));
@@ -61,13 +61,12 @@ public final class AquariumScreen extends AbstractContainerScreen<AquariumMenu>{
    for(int i=0;i<visible;i++){
     final int n=start+i;int id=menu.data.get(25+i);var item=id<0?null:BuiltInRegistries.ITEM.byId(id);
     String name=item==null?"Item":new ItemStack(item).getHoverName().getString();
-    name=font.plainSubstrByWidth(name,39);
-    int col=i&1,row=i>>1;
-    b((n==menu.data.get(7)?"▶ ":"")+"#"+(n+1)+" "+name,12+col*54,94+row*20,52,18,()->send(300+n));
+    name=font.plainSubstrByWidth(name,106);
+    b((n==menu.data.get(7)?"▶ ":"")+"#"+(n+1)+" "+name,12,91+i*15,126,14,()->send(300+n));
    }
    if(menu.data.get(6)>DECOR_ROWS){
-    b("<",14,134,20,16,()->{int p=Math.max(0,decorPage-1);send(300+p*DECOR_ROWS);});
-    b(">",38,134,20,16,()->{int p=Math.min((menu.data.get(6)-1)/DECOR_ROWS,decorPage+1);send(300+p*DECOR_ROWS);});
+    b("<",102,79,16,14,()->{int p=Math.max(0,decorPage-1);send(300+p*DECOR_ROWS);});
+    b(">",120,79,16,14,()->{int p=Math.min((menu.data.get(6)-1)/DECOR_ROWS,decorPage+1);send(300+p*DECOR_ROWS);});
    }
 
    String[] move={"X-","X+","Y-","Y+","Z-","Z+"};
@@ -91,7 +90,7 @@ public final class AquariumScreen extends AbstractContainerScreen<AquariumMenu>{
 
  public boolean mouseClicked(MouseButtonEvent event,boolean doubleClick){
   double x=event.x(),y=event.y();
-  if(page==Page.DECOR&&event.button()==0&&x>=leftPos+124&&x<leftPos+256&&y>=topPos+76&&y<topPos+150){dragging=true;dragX=x;dragY=y;return true;}
+  if(page==Page.DECOR&&event.button()==0&&x>=leftPos+146&&x<leftPos+258&&y>=topPos+76&&y<topPos+150){dragging=true;dragX=x;dragY=y;return true;}
   return super.mouseClicked(event,doubleClick);
  }
  public boolean mouseDragged(MouseButtonEvent event,double dx,double dy){
@@ -111,8 +110,8 @@ public final class AquariumScreen extends AbstractContainerScreen<AquariumMenu>{
   }else if(page==Page.MOBS){
    panel(g,8,52,154,96);panel(g,166,52,150,96);panel(g,320,52,92,96);
   }else{
-   panel(g,8,76,112,76);panel(g,124,76,132,76);panel(g,260,76,152,76);
-   int cx=leftPos+190,cy=topPos+111;double yaw=Math.toRadians(previewYaw),pitch=Math.toRadians(previewPitch);
+   panel(g,8,76,134,76);panel(g,146,76,112,76);panel(g,262,76,150,76);
+   int cx=leftPos+202,cy=topPos+111;double yaw=Math.toRadians(previewYaw),pitch=Math.toRadians(previewPitch);
    for(int i=-34;i<=34;i+=7){int ox=(int)(Math.cos(yaw)*i),oy=(int)(Math.sin(pitch)*i*.30);g.fill(cx+ox,cy+oy,cx+ox+2,cy+oy+2,0xFFB7D4D9);}
    if(menu.data.get(6)>0){var selected=BuiltInRegistries.ITEM.byId(menu.data.get(9));if(selected!=null){g.pose().pushMatrix();g.pose().translate(cx-18,cy-18);g.pose().scale(2.25f,2.25f);g.item(new ItemStack(selected),0,0);g.pose().popMatrix();g.outline(cx-21,cy-21,42,42,0xFFFFD778);}}
   }
@@ -130,7 +129,7 @@ public final class AquariumScreen extends AbstractContainerScreen<AquariumMenu>{
    g.text(font,"Mobs and containers",78,104,0xFFC9DCDD);g.text(font,"Place and transform items",228,104,0xFFC9DCDD);
   }else if(page==Page.MOBS){
    int pages=Math.max(1,menu.data.get(24)+1);
-   g.text(font,"Residents",14,58,0xFFEAF4F4);g.text(font,(menu.data.get(23)+1)+" / "+pages,70,58,0xFFC9DCDD);
+   g.text(font,"Residents",14,58,0xFFEAF4F4);g.text(font,"Page "+(menu.data.get(23)+1)+" / "+pages,70,58,0xFFC9DCDD);
    int id=menu.data.get(3);var type=id<0?null:BuiltInRegistries.ENTITY_TYPE.byId(id);String selected=type==null?"No resident selected":Component.translatable(type.getDescriptionId()).getString();
    g.text(font,"Selected",172,58,0xFFEAF4F4);g.text(font,font.plainSubstrByWidth(selected,132),172,74,0xFFF1FAFA);
    g.text(font,"Residents: "+menu.data.get(1)+" / "+menu.capacity(),172,90,0xFFC9DCDD);
@@ -138,11 +137,11 @@ public final class AquariumScreen extends AbstractContainerScreen<AquariumMenu>{
    g.text(font,"Actions",326,58,0xFFEAF4F4);
   }else{
    g.text(font,"Decor items",14,82,0xFFEAF4F4);
-   if(menu.data.get(6)>DECOR_ROWS)g.text(font,(decorPage+1)+" / "+(((menu.data.get(6)-1)/DECOR_ROWS)+1),64,138,0xFFC9DCDD);
-   g.text(font,"Preview",130,82,0xFFEAF4F4);
+   if(menu.data.get(6)>DECOR_ROWS)g.text(font,(decorPage+1)+"/"+(((menu.data.get(6)-1)/DECOR_ROWS)+1),72,82,0xFFC9DCDD);
+   g.text(font,"Preview",152,82,0xFFEAF4F4);
    var item=BuiltInRegistries.ITEM.byId(menu.data.get(9));
-   if(item!=null&&menu.data.get(6)>0){String name=new ItemStack(item).getHoverName().getString();g.text(font,font.plainSubstrByWidth(name,82),130,138,0xFFEAF4F4);g.text(font,Math.round(previewYaw)+"°",226,138,0xFFC9DCDD);}
-   g.text(font,"Transform",266,82,0xFFEAF4F4);
+   if(item!=null&&menu.data.get(6)>0){String name=new ItemStack(item).getHoverName().getString();g.text(font,font.plainSubstrByWidth(name,70),152,138,0xFFEAF4F4);g.text(font,Math.round(previewYaw)+"°",226,138,0xFFC9DCDD);}
+   g.text(font,"Transform",268,82,0xFFEAF4F4);
   }
 
   g.text(font,"Transfer",14,158,0xFFD7E7E8);g.text(font,"Input",16,166,0xFFC9DCDD);g.text(font,"Out",48,166,0xFFC9DCDD);
