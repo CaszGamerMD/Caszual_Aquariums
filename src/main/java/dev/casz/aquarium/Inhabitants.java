@@ -19,7 +19,7 @@ import net.minecraft.network.chat.Component;
 
 public final class Inhabitants {
  private static final Map<Mob,BlockPos> TARGETS=new WeakHashMap<>(),PREVIOUS=new WeakHashMap<>();
- private static final Map<Mob,Vec3> LANES=new WeakHashMap<>();
+ private static final Map<Mob,Vec3> LANES=new WeakHashMap<>();private static final Map<Mob,Integer> STUCK=new WeakHashMap<>();
  private static ServerLevel activeLevel;private static final Map<BlockPos,Network> NETWORKS=new HashMap<>();
  private static Network network(ServerLevel level,BlockPos pos){if(level==activeLevel){var cached=NETWORKS.get(pos);if(cached!=null)return cached;}var net=Network.scan(level,pos);if(level==activeLevel)for(var p:net.cells())NETWORKS.put(p,net);return net;}
  public record AddResult(boolean success,ItemStack returned){}
@@ -62,7 +62,7 @@ public final class Inhabitants {
   ItemStack stack;
   if(mob instanceof Bucketable bucketable){stack=bucketable.getBucketItemStack();bucketable.saveToBucketTag(stack);}
   else {stack=new ItemStack(AquariumMod.CREATURE_BUCKET);var out=TagValueOutput.createWithContext(ProblemReporter.DISCARDING,level.registryAccess());mob.saveWithoutId(out);CompoundTag data=new CompoundTag();data.putString("aquarium_type",BuiltInRegistries.ENTITY_TYPE.getKey(mob.getType()).toString());data.put("aquarium_entity",out.buildResult());stack.set(DataComponents.CUSTOM_DATA,CustomData.of(data));stack.set(DataComponents.CUSTOM_NAME,Component.literal("Aquarium "+mob.getName().getString()+" Bucket"));}
-  mob.discard();TARGETS.remove(mob);PREVIOUS.remove(mob);LANES.remove(mob);return stack;
+  mob.discard();TARGETS.remove(mob);PREVIOUS.remove(mob);LANES.remove(mob);STUCK.remove(mob);return stack;
  }
  public static boolean summonDrowned(ServerLevel level,BlockPos pos){
   var net=Network.scan(level,pos);if(!net.complete()||net.residents(level).size()>=net.capacity())return false;
@@ -81,9 +81,15 @@ public final class Inhabitants {
    Vec3 center=center(target,mob,lane),delta=center.subtract(mob.position());
    if(delta.lengthSqr()<.004){ArrayList<BlockPos> neighbors=new ArrayList<>();for(Direction d:Direction.values()){BlockPos n=target.relative(d);if(level.hasChunkAt(n)&&Enclosures.isAquatic(level.getBlockState(n)))neighbors.add(n);}if(neighbors.size()>1)neighbors.remove(PREVIOUS.get(mob));if(!neighbors.isEmpty()){PREVIOUS.put(mob,target);target=neighbors.get(level.getRandom().nextInt(neighbors.size()));LANES.put(mob,laneOffset(level,target));}lane=LANES.getOrDefault(mob,Vec3.ZERO);center=center(target,mob,lane);delta=center.subtract(mob.position());}
    TARGETS.put(mob,target);mob.setDeltaMovement(Vec3.ZERO);
-   if(delta.lengthSqr()>.0001){Vec3 step=delta.normalize().scale(Math.min(mob.getType()==EntityTypes.DROWNED?.015:.035,delta.length()));if(blocked(level,mob,mob.position().add(step))){TARGETS.remove(mob);continue;}boolean previous=mob.noPhysics;try{mob.noPhysics=true;mob.move(MoverType.SELF,step);}finally{mob.noPhysics=previous;}float yaw=(float)Math.toDegrees(Math.atan2(-step.x,step.z));mob.setYRot(yaw);mob.setYBodyRot(yaw);mob.setYHeadRot(yaw);}
+   if(delta.lengthSqr()>.0001){
+    double speed=movementSpeed(mob,mob.getType()==EntityTypes.DROWNED?.01875:.04375);
+    Vec3 wanted=delta.normalize().scale(Math.min(speed,delta.length())),step=steer(level,mob,wanted,true);
+    if(step.lengthSqr()<1.0E-8){int stuck=STUCK.getOrDefault(mob,0)+1;STUCK.put(mob,stuck);if(stuck>=8){TARGETS.remove(mob);LANES.put(mob,laneOffset(level,current));STUCK.put(mob,0);}continue;}
+    STUCK.remove(mob);boolean previous=mob.noPhysics;try{mob.noPhysics=true;mob.move(MoverType.SELF,step);}finally{mob.noPhysics=previous;}
+    float yaw=(float)Math.toDegrees(Math.atan2(-step.x,step.z));mob.setYRot(yaw);mob.setYBodyRot(yaw);mob.setYHeadRot(yaw);
+   }
   }
-  TARGETS.keySet().removeIf(Entity::isRemoved);PREVIOUS.keySet().removeIf(Entity::isRemoved);
+  TARGETS.keySet().removeIf(Entity::isRemoved);PREVIOUS.keySet().removeIf(Entity::isRemoved);STUCK.keySet().removeIf(Entity::isRemoved);
   }finally{activeLevel=null;NETWORKS.clear();}
  }
  private static Vec3 laneOffset(ServerLevel level,BlockPos pos){
@@ -91,5 +97,35 @@ public final class Inhabitants {
   return new Vec3((level.getRandom().nextDouble()*2-1)*spread,(level.getRandom().nextDouble()*2-1)*(tube?.16:.28),(level.getRandom().nextDouble()*2-1)*spread);
  }
  private static Vec3 center(BlockPos target,Mob mob,Vec3 lane){return new Vec3(target.getX()+.5+lane.x,target.getY()+height(mob)+lane.y,target.getZ()+.5+lane.z);}
- private static boolean blocked(ServerLevel l,Mob m,Vec3 next){var net=network(l,m.blockPosition());AABB moved=m.getBoundingBox().move(next.subtract(m.position()));for(var p:net.cells())if(l.getBlockEntity(p) instanceof TankBlockEntity be&&be.collides(moved))return true;return false;}
+ private static double movementSpeed(Mob m,double fallback){
+  var attr=m.getAttribute(Attributes.MOVEMENT_SPEED);double normal=attr==null?fallback/.8:attr.getBaseValue();
+  return Math.max(.005,normal*.8);
+ }
+ private static double penalty(ServerLevel l,Mob m,Vec3 next){
+  var net=network(l,m.blockPosition());AABB moved=m.getBoundingBox().move(next.subtract(m.position()));double total=0;
+  for(var p:net.cells())if(l.getBlockEntity(p) instanceof TankBlockEntity be)total+=be.collisionPenalty(moved);
+  return total;
+ }
+ private static boolean allowed(ServerLevel l,Vec3 next){
+  BlockPos p=BlockPos.containing(next.x,next.y,next.z);return l.hasChunkAt(p)&&Enclosures.isAquatic(l.getBlockState(p));
+ }
+ private static Vec3 steer(ServerLevel l,Mob m,Vec3 wanted,boolean vertical){
+  Vec3 pos=m.position();double currentPenalty=penalty(l,m,pos),bestPenalty=Double.POSITIVE_INFINITY;Vec3 best=Vec3.ZERO;
+  double[] angles={0,25,-25,50,-50,75,-75,100,-100,135,-135,180};
+  for(double degrees:angles){
+   double a=Math.toRadians(degrees),c=Math.cos(a),s=Math.sin(a);
+   Vec3 candidate=new Vec3(wanted.x*c-wanted.z*s,wanted.y,wanted.x*s+wanted.z*c);
+   Vec3 next=pos.add(candidate);if(!allowed(l,next))continue;double p=penalty(l,m,next);
+   if(p<1.0E-7)return candidate;if(currentPenalty>1.0E-7&&p<bestPenalty){bestPenalty=p;best=candidate;}
+  }
+  if(vertical){
+   for(double sign:new double[]{.65,-.65}){
+    Vec3 candidate=wanted.add(0,wanted.length()*sign,0).normalize().scale(wanted.length()),next=pos.add(candidate);
+    if(!allowed(l,next))continue;double p=penalty(l,m,next);
+    if(p<1.0E-7)return candidate;if(currentPenalty>1.0E-7&&p<bestPenalty){bestPenalty=p;best=candidate;}
+   }
+  }
+  return currentPenalty>1.0E-7&&bestPenalty<currentPenalty?best:Vec3.ZERO;
+ }
+ private static boolean blocked(ServerLevel l,Mob m,Vec3 next){return penalty(l,m,next)>1.0E-7;}
 }
