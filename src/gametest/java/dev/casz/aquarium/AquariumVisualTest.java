@@ -34,17 +34,22 @@ public class AquariumVisualTest implements FabricClientGameTest {
     for(var type:new EntityType[]{EntityTypes.COD,EntityTypes.SALMON,EntityTypes.TROPICAL_FISH,EntityTypes.AXOLOTL}){
      var mob=type.create(level,EntitySpawnReason.TRIGGERED);if(mob instanceof Mob m){Inhabitants.configure(m);m.setPos(.5,100.4,.5);level.addFreshEntity(m);}
     }
-    // Isolated clipping specimen: this diamond block deliberately extends through the west glass.
+    // Side-by-side clipping specimen. Left: same diamond pushed ~40% through west glass.
+    // Right: centered reference at the same scale, so the crop is visually obvious.
     level.setBlock(new BlockPos(24,100,6),AquariumMod.TANK.defaultBlockState(),3);
-    var clip=(TankBlockEntity)level.getBlockEntity(new BlockPos(24,100,6));var d=clip.addDecoration(new ItemStack(Items.DIAMOND_BLOCK),EnclosureDecoration.Anchor.BODY);
-    d.x=.14f;d.y=.52f;d.z=.5f;d.scale=1.35f;clip.changed();
+    var clip=(TankBlockEntity)level.getBlockEntity(new BlockPos(24,100,6));var clipped=clip.addDecoration(new ItemStack(Items.DIAMOND_BLOCK),EnclosureDecoration.Anchor.BODY);
+    clipped.x=.10f;clipped.y=.52f;clipped.z=.5f;clipped.scale=.75f;clip.changed();
+    level.setBlock(new BlockPos(27,100,6),AquariumMod.TANK.defaultBlockState(),3);
+    var reference=(TankBlockEntity)level.getBlockEntity(new BlockPos(27,100,6));var centered=reference.addDecoration(new ItemStack(Items.DIAMOND_BLOCK),EnclosureDecoration.Anchor.BODY);
+    centered.x=.5f;centered.y=.52f;centered.z=.5f;centered.scale=.75f;reference.changed();
    });
    server.runCommand("gamemode spectator @a");context.getInput().pressKey(290);
    for(int kind=0;kind<3;kind++){
     int base=kind*9;server.runCommand("tp @a "+(base-2)+" 102 -5");connection.waitForClientboundPackets();context.getInput().lookAt(new BlockPos(base+2,100,0));context.waitTicks(5);connection.waitForChunksRender();context.takeScreenshot("enclosure-"+kind);
    }
    server.runCommand("tp @a 4.0 100.3 -3");connection.waitForClientboundPackets();context.getInput().lookAt(new BlockPos(4,100,0));context.waitTicks(5);connection.waitForChunksRender();context.takeScreenshot("tube-water");
-   server.runCommand("tp @a 22.0 101.5 3.0");connection.waitForClientboundPackets();context.getInput().lookAt(new BlockPos(24,100,6));context.waitTicks(5);connection.waitForChunksRender();context.takeScreenshot("decor-clipping");
+   server.runCommand("tp @a 22.0 101.5 3.0");connection.waitForClientboundPackets();context.getInput().lookAt(new BlockPos(25,100,6));context.waitTicks(5);connection.waitForChunksRender();context.takeScreenshot("decor-clipping-comparison");
+   server.runCommand("tp @a 21.0 100.7 6.5");connection.waitForClientboundPackets();context.getInput().lookAt(new BlockPos(24,100,6));context.waitTicks(4);connection.waitForChunksRender();context.takeScreenshot("decor-clipping-west");
    server.runCommand("gamemode creative @a");server.runCommand("tp @a 1.5 100 -2");connection.waitForClientboundPackets();context.getInput().pressKey(290);
    server.runOnServer(s->{var p=connection.getServerPlayer();p.setItemInHand(InteractionHand.MAIN_HAND,ItemStack.EMPTY);var pos=new BlockPos(1,100,0);net.fabricmc.fabric.api.event.player.UseBlockCallback.EVENT.invoker().interact(p,connection.getServerLevel(),InteractionHand.MAIN_HAND,new BlockHitResult(Vec3.atCenterOf(pos),Direction.NORTH,pos,false));});
    context.waitForScreen(AquariumScreen.class);context.waitTicks(3);context.takeScreenshot("editor-main");
