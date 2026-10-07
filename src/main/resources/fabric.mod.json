@@ -1,9 +1,9 @@
 {
   "schemaVersion": 1,
   "id": "linked_aquariums",
-  "version": "0.6.2",
+  "version": "0.7.0",
   "name": "Linked Aquariums",
-  "description": "Connected aquariums and terrariums with miniature inhabitants, decor, pipes, and Mobitat transport.",
+  "description": "Connected aquariums and terrariums with miniature inhabitants, decor, pipes, Mobitat transport, and a tropical fish customization tank.",
   "authors": [
     "Casz"
   ],
@@ -24,5 +24,6 @@
   },
   "mixins": [
     "linked_aquariums.mixins.json"
-  ]
+  ],
+  "icon": "assets/linked_aquariums/icon.png"
 }

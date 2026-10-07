@@ -2,6 +2,54 @@
   "multipart": [
     {
       "when": {
+        "tank_down": "true"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tank_water_neck_down"
+      }
+    },
+    {
+      "when": {
+        "tank_up": "true"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tank_water_neck_up"
+      }
+    },
+    {
+      "when": {
+        "tank_north": "true"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tank_water_neck_north"
+      }
+    },
+    {
+      "when": {
+        "tank_south": "true"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tank_water_neck_south"
+      }
+    },
+    {
+      "when": {
+        "tank_west": "true"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tank_water_neck_west"
+      }
+    },
+    {
+      "when": {
+        "tank_east": "true"
+      },
+      "apply": {
+        "model": "linked_aquariums:block/tank_water_neck_east"
+      }
+    },
+    {
+      "when": {
         "tank_east": "true"
       },
       "apply": {

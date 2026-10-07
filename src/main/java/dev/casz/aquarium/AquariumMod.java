@@ -31,19 +31,23 @@ public final class AquariumMod implements ModInitializer {
  public static final Block TANK=register("aquarium",false),TUBE=register("swim_tube",true);
  public static final Block PASSIVE_TERRARIUM=registerLand("passive_terrarium",false,false),HOSTILE_TERRARIUM=registerLand("hostile_terrarium",false,true),PASSIVE_PIPE=registerLand("passive_pipe",true,false),HOSTILE_PIPE=registerLand("hostile_pipe",true,true);
  public static final Block MOBITAT=Registry.register(BuiltInRegistries.BLOCK,id("mobitat"),new MobitatBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.GLASS).setId(ResourceKey.create(Registries.BLOCK,id("mobitat"))).noOcclusion()));
+ public static final Block FISH_EDITOR=Registry.register(BuiltInRegistries.BLOCK,id("tropical_fish_editor"),new TropicalFishEditorBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.GLASS).setId(ResourceKey.create(Registries.BLOCK,id("tropical_fish_editor"))).noOcclusion()));
  public static final Item MOBITAT_ITEM=Registry.register(BuiltInRegistries.ITEM,id("mobitat"),new BlockItem(MOBITAT,new Item.Properties().setId(ResourceKey.create(Registries.ITEM,id("mobitat"))).stacksTo(1)));
+ public static final Item FISH_EDITOR_ITEM=Registry.register(BuiltInRegistries.ITEM,id("tropical_fish_editor"),new BlockItem(FISH_EDITOR,new Item.Properties().setId(ResourceKey.create(Registries.ITEM,id("tropical_fish_editor"))).stacksTo(1)));
  public static final Item MOB_NET=Registry.register(BuiltInRegistries.ITEM,id("mob_net"),new Item(new Item.Properties().setId(ResourceKey.create(Registries.ITEM,id("mob_net"))).stacksTo(1)));
  public static final Block DECOR_MODEL=Registry.register(BuiltInRegistries.BLOCK,id("decor_model"),new DecorModelBlock(BlockBehaviour.Properties.of().setId(ResourceKey.create(Registries.BLOCK,id("decor_model"))).noCollision().noOcclusion()));
  public static final BlockEntityType<MobitatBlockEntity> MOBITAT_ENTITY=Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE,id("mobitat"),FabricBlockEntityTypeBuilder.create(MobitatBlockEntity::new,MOBITAT).build());
+ public static final BlockEntityType<TropicalFishEditorBlockEntity> FISH_EDITOR_ENTITY=Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE,id("tropical_fish_editor"),FabricBlockEntityTypeBuilder.create(TropicalFishEditorBlockEntity::new,FISH_EDITOR).build());
  public static final BlockEntityType<TankBlockEntity> TANK_ENTITY=Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE,id("aquarium"),FabricBlockEntityTypeBuilder.create(TankBlockEntity::new,TANK,PASSIVE_TERRARIUM,HOSTILE_TERRARIUM).build());
  public static final MenuType<MobitatMenu> MOBITAT_MENU=Registry.register(BuiltInRegistries.MENU,id("mobitat"),new ExtendedMenuType<>(MobitatMenu::new,BlockPos.STREAM_CODEC));
+ public static final MenuType<TropicalFishEditorMenu> FISH_EDITOR_MENU=Registry.register(BuiltInRegistries.MENU,id("tropical_fish_editor"),new ExtendedMenuType<>(TropicalFishEditorMenu::new,BlockPos.STREAM_CODEC));
  public static final MenuType<AquariumMenu> MENU=Registry.register(BuiltInRegistries.MENU,id("aquarium"),new ExtendedMenuType<>(AquariumMenu::new,BlockPos.STREAM_CODEC));
  public static final Item CREATURE_BUCKET=Registry.register(BuiltInRegistries.ITEM,id("creature_bucket"),new Item(new Item.Properties().setId(ResourceKey.create(Registries.ITEM,id("creature_bucket"))).stacksTo(1)));
  public static Identifier id(String s){return Identifier.fromNamespaceAndPath(ID,s);}
  private static Block register(String name,boolean tube){var id=id(name);var key=ResourceKey.create(Registries.BLOCK,id);var props=BlockBehaviour.Properties.ofFullCopy(Blocks.GLASS).setId(key).noOcclusion().isViewBlocking((s,l,p)->false).isSuffocating((s,l,p)->false);Block block=tube?new TubeBlock(props):new TankBlock(props);Registry.register(BuiltInRegistries.BLOCK,key,block);Registry.register(BuiltInRegistries.ITEM,ResourceKey.create(Registries.ITEM,id),new BlockItem(block,new Item.Properties().setId(ResourceKey.create(Registries.ITEM,id)).useBlockDescriptionPrefix()));return block;}
  private static Block registerLand(String name,boolean pipe,boolean hostile){var id=id(name);var key=ResourceKey.create(Registries.BLOCK,id);var props=BlockBehaviour.Properties.ofFullCopy(Blocks.GLASS).setId(key).noOcclusion().isViewBlocking((s,l,p)->false).isSuffocating((s,l,p)->false);Block block=pipe?new TerrariumPipeBlock(props,hostile):new TerrariumBlock(props,hostile);Registry.register(BuiltInRegistries.BLOCK,key,block);Registry.register(BuiltInRegistries.ITEM,ResourceKey.create(Registries.ITEM,id),new BlockItem(block,new Item.Properties().setId(ResourceKey.create(Registries.ITEM,id)).useBlockDescriptionPrefix()));return block;}
  public void onInitialize(){
-  loadConfig();CreativeModeTabEvents.modifyOutputEvent(CreativeModeTabs.FUNCTIONAL_BLOCKS).register(out->{out.accept(TANK);out.accept(TUBE);out.accept(PASSIVE_TERRARIUM);out.accept(HOSTILE_TERRARIUM);out.accept(PASSIVE_PIPE);out.accept(HOSTILE_PIPE);out.accept(MOB_NET);out.accept(MOBITAT);});
+  loadConfig();CreativeModeTabEvents.modifyOutputEvent(CreativeModeTabs.FUNCTIONAL_BLOCKS).register(out->{out.accept(TANK);out.accept(TUBE);out.accept(PASSIVE_TERRARIUM);out.accept(HOSTILE_TERRARIUM);out.accept(PASSIVE_PIPE);out.accept(HOSTILE_PIPE);out.accept(MOB_NET);out.accept(MOBITAT);out.accept(FISH_EDITOR);});
   UseEntityCallback.EVENT.register((player,level,hand,entity,hit)->{
    var held=player.getItemInHand(hand);if(!held.is(MOB_NET)||player.isSpectator())return InteractionResult.PASS;
    if(!(entity instanceof net.minecraft.world.entity.Mob mob)||!(Terrestrial.supported(mob)||Inhabitants.supported(mob.getType()))||mob.isPassenger()||mob.isVehicle()||!mob.isAlive()||Terrestrial.filled(held))return InteractionResult.FAIL;
@@ -52,6 +56,19 @@ public final class AquariumMod implements ModInitializer {
   UseBlockCallback.EVENT.register((player,level,hand,hit)->{
    if(player.isSpectator())return InteractionResult.PASS;var held=player.getItemInHand(hand);var state=level.getBlockState(hit.getBlockPos());
    if(held.is(MOBITAT_ITEM)&&!player.isShiftKeyDown()&&!level.isClientSide())return useMobitat(player,(ServerLevel)level,hand,hit);
+   if(state.is(FISH_EDITOR)&&level.getBlockEntity(hit.getBlockPos()) instanceof TropicalFishEditorBlockEntity editor){
+    if(level.isClientSide())return InteractionResult.SUCCESS;
+    if(held.is(Items.TROPICAL_FISH_BUCKET)&&!editor.occupied()){
+     if(!editor.insert(held))return InteractionResult.FAIL;
+     if(!player.getAbilities().instabuild){held.shrink(1);ItemStack bucket=new ItemStack(Items.BUCKET);if(held.isEmpty())player.setItemInHand(hand,bucket);else give(player,bucket);}
+     if(player instanceof ServerPlayer sp)openFishEditor(sp,(ServerLevel)level,hit.getBlockPos());return InteractionResult.SUCCESS;
+    }
+    if(held.is(Items.BUCKET)&&editor.occupied()){
+     ItemStack fish=editor.take();if(!player.getAbilities().instabuild){held.shrink(1);if(held.isEmpty())player.setItemInHand(hand,fish);else give(player,fish);}else give(player,fish);return InteractionResult.SUCCESS;
+    }
+    if(held.isEmpty()&&player instanceof ServerPlayer sp){openFishEditor(sp,(ServerLevel)level,hit.getBlockPos());return InteractionResult.SUCCESS;}
+    return InteractionResult.FAIL;
+   }
    if(state.is(MOBITAT)&&level.getBlockEntity(hit.getBlockPos()) instanceof MobitatBlockEntity mb){if(level.isClientSide())return InteractionResult.SUCCESS;if(held.is(MOB_NET)){if(Terrestrial.filled(held)){if(!mb.addNet(held))player.sendOverlayMessage(Component.literal("Mobitat holds up to 5 mobs of one type."));return InteractionResult.SUCCESS;}if(mb.empty())return InteractionResult.FAIL;player.setItemInHand(hand,mb.takeNet(mb.size()-1));return InteractionResult.SUCCESS;}if(held.isEmpty()&&player instanceof ServerPlayer sp){BlockPos mp=hit.getBlockPos();sp.openMenu(new ExtendedMenuProvider<BlockPos>(){public BlockPos getScreenOpeningData(ServerPlayer q){return mp;}public Component getDisplayName(){return Component.literal("Mobitat");}public MobitatMenu createMenu(int id,Inventory inv,Player q){return new MobitatMenu(id,inv,(ServerLevel)level,mp);}});return InteractionResult.SUCCESS;}}
    if(!AquariumBlock.isModule(state)){
     if(!Terrestrial.filled(held))return InteractionResult.PASS;
@@ -60,6 +77,7 @@ public final class AquariumMod implements ModInitializer {
    if(level.isClientSide())return InteractionResult.SUCCESS;return interact(player,(ServerLevel)level,hand,hit);
   });ServerTickEvents.END_LEVEL_TICK.register(l->{List<net.minecraft.world.entity.Entity> entities=new ArrayList<>();l.getAllEntities().forEach(entities::add);Inhabitants.tick(l,entities);Terrestrial.tick(l,entities);});
  }
+ private static void openFishEditor(ServerPlayer player,ServerLevel level,BlockPos pos){player.openMenu(new ExtendedMenuProvider<BlockPos>(){public BlockPos getScreenOpeningData(ServerPlayer q){return pos;}public Component getDisplayName(){return Component.literal("Tropical Fish Editor");}public TropicalFishEditorMenu createMenu(int id,Inventory inv,Player q){return new TropicalFishEditorMenu(id,inv,level,pos);}});}
  private static InteractionResult useMobitat(Player player,ServerLevel level,InteractionHand hand,BlockHitResult hit){
   ItemStack held=player.getItemInHand(hand);MobitatBlockEntity box=new MobitatBlockEntity(BlockPos.ZERO,MOBITAT.defaultBlockState());box.setLevel(level);box.fromItem(held);if(box.empty())return InteractionResult.PASS;
   BlockPos target=hit.getBlockPos();BlockState state=level.getBlockState(target);int moved=0;

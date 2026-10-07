@@ -25,6 +25,12 @@ uv_axes={
  'north':['east','west','up','down'], 'south':['west','east','up','down'],
  'west':['north','south','up','down'], 'east':['south','north','up','down']}
 opposite={'down':'up','up':'down','north':'south','south':'north','west':'east','east':'west'}
+# Keep liquid almost flush with the inside glass surface without coplanar z-fighting.
+TANK_WATER_INSET=.52
+TUBE_WATER_MIN=2.06
+TUBE_WATER_MAX=13.94
+# The floor top stays just inside the block boundary so it cannot poke outside the tank at oblique angles.
+FLOOR_TOP_INSET=.12
 for d,(a,b) in zip(directions,slabs):
  for mask in range(16):
   linked={uv_axes[d][i]:bool(mask&(1<<i)) for i in range(4)}
@@ -36,12 +42,14 @@ for d,(a,b) in zip(directions,slabs):
   model('glass_'+d+'_'+str(mask),[{'from':a,'to':b,'faces':faces}],textures)
   multipart.append({'when':{d:'false',**{k:str(v).lower() for k,v in linked.items()}},'apply':{'model':ID+':block/glass_'+d+'_'+str(mask)}})
  # Aquarium water is inset behind the glass and reaches the whole chamber height.
- water_box=box([.55,.55,.55],[15.45,15.45,15.45],'water')
+ water_box=box([TANK_WATER_INSET]*3,[16-TANK_WATER_INSET]*3,'water')
  water_box['faces']={d:water_box['faces'][d]}
  model('water_'+d,[water_box],water_tex)
  multipart.append({'when':{d:'false'},'apply':{'model':ID+':block/water_'+d}})
 for i,s in enumerate(soils[1:],1):
- model('soil_'+str(i),[box([0,.5,0],[16,2,16],'soil',True)],{'soil':'minecraft:block/'+s,'particle':'minecraft:block/'+s})
+ body=box([.6,.6,.6],[15.4,2,15.4],'soil');body['faces'].pop('up')
+ top={'from':[FLOOR_TOP_INSET,2,FLOOR_TOP_INSET],'to':[16-FLOOR_TOP_INSET,2,16-FLOOR_TOP_INSET],'faces':{'up':{'texture':'#soil','uv':[0,0,16,16]}}}
+ model('soil_'+str(i),[body,top],{'soil':'minecraft:block/'+s,'particle':'minecraft:block/'+s})
  multipart.append({'when':{'soil':str(i),'down':'false'},'apply':{'model':ID+':block/soil_'+str(i)}})
 for i,s in enumerate(decors[1:],1):
  if s.endswith('_button'):
@@ -81,7 +89,7 @@ for mask in range(64):
   elements.append({'from':a,'to':b,'faces':faces})
  water_elements=[]
  for element in elements:
-  a=element['from'];b=element['to'];wa=[2.2 if v==2 else 13.8 if v==14 else v for v in a];wb=[2.2 if v==2 else 13.8 if v==14 else v for v in b]
+  a=element['from'];b=element['to'];wa=[TUBE_WATER_MIN if v==2 else TUBE_WATER_MAX if v==14 else v for v in a];wb=[TUBE_WATER_MIN if v==2 else TUBE_WATER_MAX if v==14 else v for v in b]
   water_elements.append({'from':wa,'to':wb,'faces':{d:{'texture':'#water'} for d in element['faces']}})
  model('tube_'+str(mask),elements,tex)
  model('tube_water_'+str(mask),water_elements,water_tex)

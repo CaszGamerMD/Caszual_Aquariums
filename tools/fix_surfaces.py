@@ -71,11 +71,19 @@ for p in (ROOT/'assets'/ID/'models').rglob('*.json'):
 # Seal water around each narrow pipe entrance, on the INSIDE of the adjoining tank.
 p=ROOT/'assets'/ID/'blockstates/swim_tube.json';state=json.loads(p.read_text())
 for d in directions:
- axis=axes[d];uv=[a for a in range(3) if a!=axis];plane=16.55 if d in positive else -.55;elements=[]
- for u0,v0,u1,v1 in [(.55,.55,2.2,15.45),(13.8,.55,15.45,15.45),(2.2,.55,13.8,2.2),(2.2,13.8,13.8,15.45)]:
+ axis=axes[d];uv=[a for a in range(3) if a!=axis];plane=16+TANK_WATER_INSET if d in positive else -TANK_WATER_INSET;elements=[]
+ outer0=TANK_WATER_INSET;outer1=16-TANK_WATER_INSET;inner0=TUBE_WATER_MIN;inner1=TUBE_WATER_MAX
+ for u0,v0,u1,v1 in [(outer0,outer0,inner0,outer1),(inner1,outer0,outer1,outer1),(inner0,outer0,inner1,inner0),(inner0,inner1,inner1,outer1)]:
   lo=[0]*3;hi=[0]*3;lo[axis]=hi[axis]=plane;lo[uv[0]]=u0;lo[uv[1]]=v0;hi[uv[0]]=u1;hi[uv[1]]=v1
   elements.append({'from':lo,'to':hi,'faces':{opposite[d]:{'texture':'#water'}}})
  model('tank_water_ring_'+d,elements,water_tex)
+ # Bridge the half-block between the tube mouth and the tank's water skin.
+ lo=[inner0,inner0,inner0];hi=[inner1,inner1,inner1]
+ if d in positive:lo[axis]=16;hi[axis]=16+TANK_WATER_INSET
+ else:lo[axis]=-TANK_WATER_INSET;hi[axis]=0
+ neck=box(lo,hi,'water');neck['faces'].pop(d,None);neck['faces'].pop(opposite[d],None)
+ model('tank_water_neck_'+d,[neck],water_tex)
  state['multipart'].insert(0,{'when':{'tank_'+d:'true'},'apply':{'model':ID+':block/tank_water_ring_'+d}})
+ state['multipart'].insert(0,{'when':{'tank_'+d:'true'},'apply':{'model':ID+':block/tank_water_neck_'+d}})
 p.write_text(json.dumps(state,indent=2)+'\n')
 meta=json.loads(metapath.read_text());meta['version']='0.4.1';metapath.write_text(json.dumps(meta,indent=2)+'\n')

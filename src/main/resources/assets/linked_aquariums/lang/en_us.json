@@ -7,5 +7,6 @@
   "block.linked_aquariums.passive_pipe": "Passive Terrarium Pipe",
   "block.linked_aquariums.hostile_pipe": "Hostile Terrarium Pipe",
   "item.linked_aquariums.mob_net": "Mob Net",
-  "block.linked_aquariums.mobitat": "Mobitat"
+  "block.linked_aquariums.mobitat": "Mobitat",
+  "block.linked_aquariums.tropical_fish_editor": "Tropical Fish Editor"
 }

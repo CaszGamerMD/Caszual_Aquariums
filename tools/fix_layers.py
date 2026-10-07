@@ -22,10 +22,9 @@ for p in (ROOT/'assets'/ID/'models').rglob('*.json'):
   if k!='particle' and isinstance(sprite,str) and ':block/' in sprite and 'glass' in sprite:
    m['textures'][k]={'sprite':sprite,'force_translucent':True};changed=True
  if changed:p.write_text(json.dumps(m,indent=2)+'\n')
-# Top faces remain full size for seamless sand; side faces stay behind the
-# glass and cannot share the exterior planes occupied by vertical frame bars.
+# Floor sides stay behind the glass. The top is inset only 0.12 model units: enough to keep it inside the block silhouette at oblique angles while leaving sub-pixel seams between connected tanks.
 for i,s in enumerate(soils[1:],1):
  body=box([.6,.6,.6],[15.4,2,15.4],'soil');body['faces'].pop('up')
- top={'from':[0,2,0],'to':[16,2,16],'faces':{'up':{'texture':'#soil','uv':[0,0,16,16]}}}
+ top={'from':[FLOOR_TOP_INSET,2,FLOOR_TOP_INSET],'to':[16-FLOOR_TOP_INSET,2,16-FLOOR_TOP_INSET],'faces':{'up':{'texture':'#soil','uv':[0,0,16,16]}}}
  model(f'soil_{i}',[body,top],{'soil':'minecraft:block/'+s,'particle':'minecraft:block/'+s})
 meta=json.loads(metapath.read_text());meta['version']='0.4.2';metapath.write_text(json.dumps(meta,indent=2)+'\n')

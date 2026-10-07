@@ -36,7 +36,7 @@ for d,e in combinations(directions,2):
 waterparts=[]
 for d in directions:
  for mask in range(16):
-  linked={uv_axes[d][i]:bool(mask&(1<<i)) for i in range(4)};lo=[.55]*3;hi=[15.45]*3
+  linked={uv_axes[d][i]:bool(mask&(1<<i)) for i in range(4)};lo=[TANK_WATER_INSET]*3;hi=[16-TANK_WATER_INSET]*3
   for edge,connected in linked.items():
    if connected:
     if edge in positive:hi[axes[edge]]=16

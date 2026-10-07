@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "linked_aquariums:block/tropical_fish_editor"
+    }
+  }
+}
