@@ -67,22 +67,21 @@ public final class AquariumScreen extends AbstractContainerScreen<AquariumMenu>{
 
   int pageSize=4,start=Math.min(decorPage*pageSize,Math.max(0,menu.data.get(6)-1));
   if(menu.data.get(6)>0){
-   b("<",50,91,18,18,()->{decorPage=Math.max(0,decorPage-1);send(300+decorPage*pageSize);rebuild();});
-   b(">",70,91,18,18,()->{decorPage=Math.min((menu.data.get(6)-1)/pageSize,decorPage+1);send(300+decorPage*pageSize);rebuild();});
+   b("<",14,103,22,16,()->{decorPage=Math.max(0,decorPage-1);send(300+decorPage*pageSize);rebuild();});
+   b(">",40,103,22,16,()->{decorPage=Math.min((menu.data.get(6)-1)/pageSize,decorPage+1);send(300+decorPage*pageSize);rebuild();});
   }
   for(int i=0;i<Math.min(pageSize,menu.data.get(6)-start);i++){
    final int n=start+i;
-   b((n==menu.data.get(7)?"▶ ":"")+"#"+(n+1),14,116+i*25,72,21,()->send(300+n));
+   b((n==menu.data.get(7)?"▶ ":"")+"#"+(n+1),14,123+i*24,72,20,()->send(300+n));
   }
-  b("Remove",14,218,72,18,()->send(22));
+  b("Remove",14,219,72,17,()->send(22));
 
   b("X−",244,105,48,18,()->send(30));b("X+",298,105,48,18,()->send(31));
   b("Y−",244,126,48,18,()->send(32));b("Y+",298,126,48,18,()->send(33));
   b("Z−",244,147,48,18,()->send(34));b("Z+",298,147,48,18,()->send(35));
-  b("−",244,181,48,18,()->send(36));b("+",298,181,48,18,()->send(37));
-  b("RX−",244,215,32,18,()->send(38));b("RY−",280,215,32,18,()->send(40));b("RZ−",316,215,32,18,()->send(42));
-  b("RX+",244,236,32,18,()->send(39));b("RY+",280,236,32,18,()->send(41));b("RZ+",316,236,32,18,()->send(43));
-  b("Reset",286,259,62,18,()->send(44));
+  b("−",244,177,48,18,()->send(36));b("+",298,177,48,18,()->send(37));
+  b("X−",244,216,17,17,()->send(38));b("X+",263,216,17,17,()->send(39));b("Y−",282,216,17,17,()->send(40));b("Y+",301,216,17,17,()->send(41));b("Z−",320,216,17,17,()->send(42));b("Z+",339,216,17,17,()->send(43));
+  b("Reset",304,197,52,16,()->send(44));
  }
  private void snapshot(){
   uiMobCount=menu.data.get(1);uiDecorCount=menu.data.get(6);uiSelectedMob=menu.data.get(2);uiMobPage=menu.data.get(23);uiSelectedDecor=menu.data.get(7);uiAnchor=menu.data.get(8);
@@ -117,9 +116,9 @@ public final class AquariumScreen extends AbstractContainerScreen<AquariumMenu>{
   g.fill(leftPos,topPos,leftPos+imageWidth,topPos+imageHeight,bg);
   if(page!=Page.MAIN){
    if(page==Page.MOBS){panel(g,8,64,136,168);panel(g,150,64,126,168);panel(g,282,64,78,168);}
-   else{panel(g,8,86,82,154);panel(g,96,86,134,154);panel(g,236,86,124,194);}
-   panel(g,8,246,64,42);panel(g,94,246,172,88);
+   else{panel(g,8,86,82,154);panel(g,96,86,134,154);panel(g,236,86,124,154);}
   }
+  panel(g,8,246,64,42);panel(g,94,246,172,88);
   if(page==Page.DECOR){
    int cx=leftPos+163,cy=topPos+155;double yaw=Math.toRadians(previewYaw),pitch=Math.toRadians(previewPitch);
    for(int i=-39;i<=39;i+=6){int ox=(int)(Math.cos(yaw)*i),oy=(int)(Math.sin(pitch)*i*.34);g.fill(cx+ox,cy+oy,cx+ox+2,cy+oy+2,0xFFB7D4D9);}
@@ -133,7 +132,7 @@ public final class AquariumScreen extends AbstractContainerScreen<AquariumMenu>{
  protected void extractLabels(GuiGraphicsExtractor g,int mx,int my){
   String title=menu.data.get(0)==0?"Aquarium Editor":menu.data.get(0)==1?"Terrarium Editor":"Hostile Terrarium Editor";
   g.text(font,title,60,10,TEXT);
-  if(page==Page.MAIN){g.text(font,"Choose what to edit",132,54,MUTED);g.text(font,"Mobs manage residents. Decorate edits the enclosure.",62,128,MUTED);return;}
+  if(page==Page.MAIN){g.text(font,"Choose what to edit",132,54,MUTED);g.text(font,"Mobs manage residents. Decorate edits the enclosure.",62,128,MUTED);g.text(font,"Input",14,249,MUTED);g.text(font,"Output",43,249,MUTED);g.text(font,"Player Inventory",103,239,MUTED);return;}
   if(page==Page.MOBS){
    int currentPage=menu.data.get(23)+1,totalPages=menu.data.get(24)+1;
    g.text(font,"Residents",14,68,TEXT);g.text(font,"Page "+currentPage+" / "+totalPages,14,211,MUTED);
@@ -151,17 +150,17 @@ public final class AquariumScreen extends AbstractContainerScreen<AquariumMenu>{
    return;
   }
   int count=menu.data.get(6),selectedIndex=menu.data.get(7);
-  g.text(font,"Decorations",14,92,TEXT);
-  g.text(font,count==0?"0 items":"Item "+(selectedIndex+1)+" / "+count,14,97+0,MUTED);
+  g.text(font,"Items",14,92,TEXT);
   g.text(font,"Preview",104,92,TEXT);
-  g.text(font,"Drag to rotate",104,104,MUTED);
+  g.text(font,count==0?"No decorations":"Item "+(selectedIndex+1)+" / "+count,104,104,MUTED);
+  g.text(font,"Drag preview to rotate",104,116,MUTED);
   var item=BuiltInRegistries.ITEM.byId(menu.data.get(9));
   if(item!=null&&count>0)g.text(font,font.plainSubstrByWidth(new ItemStack(item).getHoverName().getString(),120),104,218,TEXT);
   g.text(font,"View "+Math.round(previewYaw)+"°",104,230,MUTED);
 
   g.text(font,"Move",244,92,TEXT);
-  g.text(font,"Scale",244,169,TEXT);
-  g.text(font,"Rotate",244,203,TEXT);
+  g.text(font,"Scale",244,165,TEXT);
+  g.text(font,"Rotate",244,202,TEXT);
   g.text(font,"Input",14,249,MUTED);g.text(font,"Output",43,249,MUTED);
   g.text(font,"Player Inventory",103,239,MUTED);
  }
