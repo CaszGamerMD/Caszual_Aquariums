@@ -124,8 +124,8 @@ public class AquariumGameTests {
   h.setBlock(1,1,1,AquariumMod.TANK.defaultBlockState().setValue(AquariumBlock.DECOR,19));var pos=h.absolutePos(new BlockPos(1,1,1));var be=(TankBlockEntity)h.getLevel().getBlockEntity(pos);be.migrateLegacy();
   h.assertTrue(be.decorations.stream().anyMatch(d->d.stack.is(Items.STONE_BUTTON))&&be.getBlockState().getValue(AquariumBlock.DECOR)==0,"Old rock decoration must migrate once");
   for(var item:new net.minecraft.world.item.Item[]{Items.CACTUS,Items.WITHER_ROSE,Items.OAK_SAPLING,Items.DIAMOND_BLOCK})h.assertTrue(AquariumMod.isDecoration(new net.minecraft.world.item.ItemStack(item)),"All placeable blocks must be harmless decor");
-  be.addDecoration(new net.minecraft.world.item.ItemStack(Items.DIAMOND_BLOCK),EnclosureDecoration.Anchor.FLOOR);be.tick();h.assertTrue(be.decorations.stream().anyMatch(d->d.stack.is(Items.DIAMOND_BLOCK)),"Generic blocks must use their vanilla placed model");
-  h.assertTrue(h.getLevel().getEntitiesOfClass(Display.BlockDisplay.class,new AABB(pos).inflate(2),d->d.getBlockState().is(Blocks.DIAMOND_BLOCK)).size()==1,"Generic decor must create exactly one display");h.succeed();
+  be.addDecoration(new net.minecraft.world.item.ItemStack(Items.DIAMOND_BLOCK),EnclosureDecoration.Anchor.FLOOR);be.tick();h.assertTrue(be.decorations.stream().anyMatch(d->d.stack.is(Items.DIAMOND_BLOCK)),"Generic blocks must remain stored as decoration data");
+  h.assertTrue(h.getLevel().getEntitiesOfClass(Display.class,new AABB(pos).inflate(2),d->true).isEmpty(),"Decor must not create server-side Display entities");h.succeed();
  }
  @GameTest public void chestDecorPersistsWithoutServerDisplay(GameTestHelper h){
   h.setBlock(1,1,1,AquariumMod.TANK);var pos=h.absolutePos(new BlockPos(1,1,1));var be=(TankBlockEntity)h.getLevel().getBlockEntity(pos);be.addDecoration(new net.minecraft.world.item.ItemStack(Items.CHEST),EnclosureDecoration.Anchor.FLOOR);be.decorations.getFirst().rotY=45;be.decorations.getFirst().x=.7f;be.changed();be.tick();
