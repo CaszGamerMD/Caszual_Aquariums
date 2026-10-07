@@ -145,5 +145,13 @@ public class AquariumGameTests {
   var fish=h.spawn(EntityTypes.COD,.5f,1.4f,1.5f);fish.setFromBucket(true);
   h.onEachTick(()->{if(fish.isAlive()&&fish.blockPosition().equals(far))h.succeed();});
  }
+ @GameTest(maxTicks=260) public void fishEscapesDecorationOverlap(GameTestHelper h){
+  for(int x=0;x<3;x++)h.setBlock(x,1,1,AquariumMod.TANK);BlockPos start=h.absolutePos(new BlockPos(0,1,1)),far=h.absolutePos(new BlockPos(2,1,1));
+  var be=(TankBlockEntity)h.getLevel().getBlockEntity(start);var decor=be.addDecoration(new net.minecraft.world.item.ItemStack(Items.DIAMOND_BLOCK),EnclosureDecoration.Anchor.BODY);
+  decor.x=.5f;decor.y=.4f;decor.z=.5f;decor.scale=.45f;be.changed();
+  var fish=h.spawn(EntityTypes.COD,.5f,1.4f,1.5f);fish.setFromBucket(true);
+  h.assertTrue(be.collides(fish.getBoundingBox()),"Regression setup must start the fish intersecting decor");
+  h.onEachTick(()->{if(fish.isAlive()&&!be.collides(fish.getBoundingBox())&&fish.blockPosition().equals(far))h.succeed();});
+ }
 
 }
