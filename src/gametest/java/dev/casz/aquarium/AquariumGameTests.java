@@ -51,7 +51,7 @@ public class AquariumGameTests {
   player.setItemInHand(net.minecraft.world.InteractionHand.MAIN_HAND,stack);click(h,player,new BlockPos(0,1,1));
   var fish=(net.minecraft.world.entity.animal.fish.Salmon)Network.scan(h.getLevel(),h.absolutePos(new BlockPos(0,1,1))).fish(h.getLevel()).getFirst();
   h.assertTrue(fish.getVariant()==net.minecraft.world.entity.animal.fish.Salmon.Variant.LARGE,"Bucket must preserve salmon size");
-  h.runAfterDelay(35,()->{h.assertTrue(h.getLevel().getBlockState(fish.blockPosition()).is(AquariumMod.TUBE),"Large salmon must enter tube without pushing");h.assertTrue(!fish.noPhysics,"Collision bypass must be confined to managed swim steps");h.succeed();});
+  h.runAfterDelay(55,()->{h.assertTrue(h.getLevel().getBlockState(fish.blockPosition()).is(AquariumMod.TUBE),"Large salmon must enter tube without pushing at the enclosure movement rate");h.assertTrue(!fish.noPhysics,"Collision bypass must be confined to managed swim steps");h.succeed();});
  }
  private void line(GameTestHelper h){h.setBlock(0,1,1,AquariumMod.TANK);h.setBlock(1,1,1,AquariumMod.TUBE);h.setBlock(2,1,1,AquariumMod.TANK);}
  @GameTest public void tubesConnectWithoutCapacity(GameTestHelper h){
@@ -81,7 +81,7 @@ public class AquariumGameTests {
  }
  @GameTest(maxTicks=100) public void realFishSwimIntoTube(GameTestHelper h){
   line(h);AbstractFish fish=h.spawn(EntityTypes.SALMON,.5f,1.4f,1.5f);fish.setFromBucket(true);
-  h.runAfterDelay(35,()->{h.assertTrue(fish.isAlive(),"Salmon must stay alive");h.assertTrue(h.getLevel().getBlockState(fish.blockPosition()).is(AquariumMod.TUBE),"Real fish must swim into the tube");h.succeed();});
+  h.runAfterDelay(55,()->{h.assertTrue(fish.isAlive(),"Salmon must stay alive");h.assertTrue(h.getLevel().getBlockState(fish.blockPosition()).is(AquariumMod.TUBE),"Real fish must swim into the tube at the enclosure movement rate");h.succeed();});
  }
  @GameTest(maxTicks=100) public void excessFishBecomeBuckets(GameTestHelper h){
   h.setBlock(1,1,1,AquariumMod.TANK);for(int i=0;i<AquariumMod.fishPerBlock+1;i++)h.spawn(EntityTypes.COD,1.5f,1.4f,1.5f);
