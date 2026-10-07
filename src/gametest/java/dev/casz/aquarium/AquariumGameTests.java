@@ -140,7 +140,7 @@ public class AquariumGameTests {
  @GameTest(maxTicks=240) public void fishSteerAroundBodyDecoration(GameTestHelper h){
   for(int x=0;x<3;x++)h.setBlock(x,1,1,AquariumMod.TANK);
   BlockPos middle=h.absolutePos(new BlockPos(1,1,1)),far=h.absolutePos(new BlockPos(2,1,1));
-  var decor=((TankBlockEntity)h.getLevel().getBlockEntity(middle)).addDecoration(new net.minecraft.world.item.ItemStack(Items.FERN),EnclosureDecoration.Anchor.BODY);
+  var decor=((TankBlockEntity)h.getLevel().getBlockEntity(middle)).addDecoration(new net.minecraft.world.item.ItemStack(Items.SEA_PICKLE),EnclosureDecoration.Anchor.BODY);
   decor.scale=1.0f;((TankBlockEntity)h.getLevel().getBlockEntity(middle)).changed();
   var fish=h.spawn(EntityTypes.COD,.5f,1.4f,1.5f);fish.setFromBucket(true);
   h.onEachTick(()->{if(fish.isAlive()&&fish.blockPosition().equals(far))h.succeed();});
