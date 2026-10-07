@@ -1,6 +1,6 @@
 {
   "model": {
     "type": "minecraft:model",
-    "model": "linked_aquariums:block/mobitat"
+    "model": "linked_aquariums:item/mobitat"
   }
 }
