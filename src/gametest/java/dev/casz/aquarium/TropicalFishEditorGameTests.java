@@ -1,6 +1,7 @@
 package dev.casz.aquarium;
 import net.fabricmc.fabric.api.gametest.v1.GameTest;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.world.entity.animal.fish.TropicalFish;
@@ -28,7 +29,7 @@ public final class TropicalFishEditorGameTests {
  @GameTest public void bucketInteractionRoundTripKeepsEdits(GameTestHelper h){
   h.setBlock(1,1,1,AquariumMod.FISH_EDITOR);BlockPos pos=h.absolutePos(new BlockPos(1,1,1));var player=h.makeMockPlayer(GameType.SURVIVAL);player.setPos(Vec3.atCenterOf(pos));
   ItemStack input=new ItemStack(Items.TROPICAL_FISH_BUCKET);input.set(DataComponents.TROPICAL_FISH_PATTERN,TropicalFish.Pattern.KOB);input.set(DataComponents.TROPICAL_FISH_BASE_COLOR,DyeColor.CYAN);input.set(DataComponents.TROPICAL_FISH_PATTERN_COLOR,DyeColor.PINK);player.setItemInHand(InteractionHand.MAIN_HAND,input);
-  h.assertTrue(click(h,player,new BlockPos(1,1,1)).consumesAction(),"Fish bucket insertion must be handled");h.assertTrue(player.getItemInHand(InteractionHand.MAIN_HAND).is(Items.BUCKET),"Inserting a fish must return the empty bucket");
+  h.assertTrue(click(h,player,new BlockPos(1,1,1)).consumesAction(),"Fish bucket insertion must be handled");h.assertTrue(player.getItemInHand(InteractionHand.MAIN_HAND).is(Items.BUCKET),"Inserting a fish must return the empty bucket");h.assertTrue(player.containerMenu instanceof TropicalFishEditorMenu,"Inserting a fish should immediately open the editor");
   var menu=new TropicalFishEditorMenu(7,player.getInventory(),h.getLevel(),pos);h.assertTrue(menu.clickMenuButton(player,TropicalFish.Pattern.GLITTER.ordinal()),"Pattern edit must succeed");h.assertTrue(menu.clickMenuButton(player,100+DyeColor.LIME.getId()),"Body color edit must succeed");h.assertTrue(menu.clickMenuButton(player,120+DyeColor.BLUE.getId()),"Pattern color edit must succeed");
   h.assertTrue(click(h,player,new BlockPos(1,1,1)).consumesAction(),"Empty bucket retrieval must be handled");ItemStack output=player.getItemInHand(InteractionHand.MAIN_HAND);
   h.assertTrue(output.is(Items.TROPICAL_FISH_BUCKET),"Retrieval must return a tropical fish bucket");h.assertTrue(output.getOrDefault(DataComponents.TROPICAL_FISH_PATTERN,TropicalFish.DEFAULT_VARIANT.pattern())==TropicalFish.Pattern.GLITTER,"Retrieved fish must keep edited pattern");h.assertTrue(output.getOrDefault(DataComponents.TROPICAL_FISH_BASE_COLOR,TropicalFish.DEFAULT_VARIANT.baseColor())==DyeColor.LIME,"Retrieved fish must keep edited body color");h.assertTrue(output.getOrDefault(DataComponents.TROPICAL_FISH_PATTERN_COLOR,TropicalFish.DEFAULT_VARIANT.patternColor())==DyeColor.BLUE,"Retrieved fish must keep edited pattern color");h.succeed();
