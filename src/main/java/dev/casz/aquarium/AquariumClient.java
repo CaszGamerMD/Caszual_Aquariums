@@ -14,7 +14,8 @@ public final class AquariumClient implements ClientModInitializer {
   net.minecraft.client.gui.screens.MenuScreens.register(AquariumMod.MOBITAT_MENU,MobitatScreen::new);
   net.minecraft.client.gui.screens.MenuScreens.register(AquariumMod.FISH_EDITOR_MENU,TropicalFishEditorScreen::new);
   BlockEntityRenderers.register(AquariumMod.MOBITAT_ENTITY,MobitatRenderer::new);
-  BlockEntityRenderers.register(AquariumMod.FISH_EDITOR_ENTITY,TropicalFishEditorRenderer::new);\n  BlockEntityRenderers.register(AquariumMod.TANK_ENTITY,TankDecorationRenderer::new);
+  BlockEntityRenderers.register(AquariumMod.FISH_EDITOR_ENTITY,TropicalFishEditorRenderer::new);
+  BlockEntityRenderers.register(AquariumMod.TANK_ENTITY,TankDecorationRenderer::new);
   BlockColorRegistry.register(List.of(BlockTintSources.constant(0xFF78AD42)),AquariumMod.TANK,AquariumMod.PASSIVE_TERRARIUM,AquariumMod.HOSTILE_TERRARIUM,AquariumMod.DECOR_MODEL);
   Material invisible=new Material(Identifier.fromNamespaceAndPath(AquariumMod.ID,"block/invisible_water"));
   FluidRenderingRegistry.register(AquariumMod.WATER,new FluidModel.Unbaked(invisible,invisible,invisible,BlockTintSources.constant(-1)),
