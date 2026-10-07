@@ -12,7 +12,7 @@ public final class AquariumMenu extends AbstractContainerMenu {
  public final BlockPos anchor;public final ContainerData data=new SimpleContainerData(32);public final SimpleContainer transfer=new SimpleContainer(2);
  private final ServerLevel level;private List<BlockPos> tanks=List.of();private List<Mob> residents=List.of();private int selectedMob,selectedDecor,anchorMode=1,mobPage;private long refreshed=-1;
  public AquariumMenu(int id,Inventory inv,BlockPos p){this(id,inv,null,p);}
- public AquariumMenu(int id,Inventory inv,ServerLevel l,BlockPos p){super(AquariumMod.MENU,id);level=l;anchor=p.immutable();addSlot(new Slot(transfer,0,18,244));addSlot(new Slot(transfer,1,42,244){public boolean mayPlace(ItemStack s){return false;}});for(int r=0;r<3;r++)for(int c=0;c<9;c++)addSlot(new Slot(inv,c+r*9+9,112+c*18,236+r*18));for(int c=0;c<9;c++)addSlot(new Slot(inv,c,112+c*18,290));addDataSlots(data);refresh(true);}
+ public AquariumMenu(int id,Inventory inv,ServerLevel l,BlockPos p){super(AquariumMod.MENU,id);level=l;anchor=p.immutable();addSlot(new Slot(transfer,0,18,246));addSlot(new Slot(transfer,1,42,246){public boolean mayPlace(ItemStack s){return false;}});for(int r=0;r<3;r++)for(int c=0;c<9;c++)addSlot(new Slot(inv,c+r*9+9,112+c*18,244+r*18));for(int c=0;c<9;c++)addSlot(new Slot(inv,c,112+c*18,300));addDataSlots(data);refresh(true);}
  public int capacity(){return (data.get(4)&65535)|(data.get(5)<<16);}
  private TankBlockEntity owner(){
   TankBlockEntity owner=null;for(var p:tanks)if(level.getBlockEntity(p) instanceof TankBlockEntity be){if(owner==null)owner=be;if(!be.decorations.isEmpty()){owner=be;break;}}
