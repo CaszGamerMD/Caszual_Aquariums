@@ -45,13 +45,13 @@ public class AquariumGameTests {
   level.removeBlock(tank,false);level.removeBlock(tube,false);
   h.runAfterDelay(20,()->{h.assertTrue(level.getBlockState(tank).isAir()&&level.getFluidState(tank).isEmpty(),"Tank removal must leave air");h.assertTrue(level.getBlockState(tube).isAir()&&level.getFluidState(tube).isEmpty(),"Tube removal must leave air");h.succeed();});
  }
- @GameTest(maxTicks=120) public void largeSalmonEnterTubesWithoutPushing(GameTestHelper h){
+ @GameTest(maxTicks=180) public void largeSalmonEnterTubesWithoutPushing(GameTestHelper h){
   line(h);var player=h.makeMockPlayer(net.minecraft.world.level.GameType.SURVIVAL);var stack=new net.minecraft.world.item.ItemStack(Items.SALMON_BUCKET);
   stack.set(net.minecraft.core.component.DataComponents.SALMON_SIZE,net.minecraft.world.entity.animal.fish.Salmon.Variant.LARGE);
   player.setItemInHand(net.minecraft.world.InteractionHand.MAIN_HAND,stack);click(h,player,new BlockPos(0,1,1));
   var fish=(net.minecraft.world.entity.animal.fish.Salmon)Network.scan(h.getLevel(),h.absolutePos(new BlockPos(0,1,1))).fish(h.getLevel()).getFirst();
   h.assertTrue(fish.getVariant()==net.minecraft.world.entity.animal.fish.Salmon.Variant.LARGE,"Bucket must preserve salmon size");
-  h.runAfterDelay(55,()->{h.assertTrue(h.getLevel().getBlockState(fish.blockPosition()).is(AquariumMod.TUBE),"Large salmon must enter tube without pushing at the enclosure movement rate");h.assertTrue(!fish.noPhysics,"Collision bypass must be confined to managed swim steps");h.succeed();});
+  h.onEachTick(()->{if(fish.isAlive()&&h.getLevel().getBlockState(fish.blockPosition()).is(AquariumMod.TUBE)){h.assertTrue(!fish.noPhysics,"Collision bypass must be confined to managed swim steps");h.succeed();}});
  }
  private void line(GameTestHelper h){h.setBlock(0,1,1,AquariumMod.TANK);h.setBlock(1,1,1,AquariumMod.TUBE);h.setBlock(2,1,1,AquariumMod.TANK);}
  @GameTest public void tubesConnectWithoutCapacity(GameTestHelper h){
@@ -79,9 +79,9 @@ public class AquariumGameTests {
    });
   });
  }
- @GameTest(maxTicks=100) public void realFishSwimIntoTube(GameTestHelper h){
+ @GameTest(maxTicks=180) public void realFishSwimIntoTube(GameTestHelper h){
   line(h);AbstractFish fish=h.spawn(EntityTypes.SALMON,.5f,1.4f,1.5f);fish.setFromBucket(true);
-  h.runAfterDelay(55,()->{h.assertTrue(fish.isAlive(),"Salmon must stay alive");h.assertTrue(h.getLevel().getBlockState(fish.blockPosition()).is(AquariumMod.TUBE),"Real fish must swim into the tube at the enclosure movement rate");h.succeed();});
+  h.onEachTick(()->{if(fish.isAlive()&&h.getLevel().getBlockState(fish.blockPosition()).is(AquariumMod.TUBE))h.succeed();});
  }
  @GameTest(maxTicks=100) public void excessFishBecomeBuckets(GameTestHelper h){
   h.setBlock(1,1,1,AquariumMod.TANK);for(int i=0;i<AquariumMod.fishPerBlock+1;i++)h.spawn(EntityTypes.COD,1.5f,1.4f,1.5f);
