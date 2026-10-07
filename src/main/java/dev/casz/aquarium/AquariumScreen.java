@@ -193,4 +193,3 @@ public final class AquariumScreen extends AbstractContainerScreen<AquariumMenu>{
  }
  private static String fmt(int hundredths){return String.format(Locale.ROOT,"%.2f",hundredths/100.0);}
 }
-}
