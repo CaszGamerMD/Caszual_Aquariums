@@ -59,6 +59,7 @@ public final class TankDecorationRenderer implements BlockEntityRenderer<TankBlo
     state.prepared.add(new Prepared(stack,transform,item,blockItem));
    }
   }
+  if(state.prepared.isEmpty()){state.clips.clear();state.clipTick=Long.MIN_VALUE;return;}
   long now=be.getLevel().getGameTime();if(state.clipTick==Long.MIN_VALUE||now-state.clipTick>=10){state.clipTick=now;scanClips(be,state.clips);}
  }
 
