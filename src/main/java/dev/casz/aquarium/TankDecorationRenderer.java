@@ -52,7 +52,7 @@ public final class TankDecorationRenderer implements BlockEntityRenderer<TankBlo
   }else{
    for(var d:state.decorations)if(d.item.isAnimated())resolver.updateForTopItem(d.item,d.stack,ItemDisplayContext.FIXED,level,null,d.seed);
   }
-  long tick=level.getGameTime();if(state.clipTick!=tick){state.clipTick=tick;scanClipBoxes(level,be.getBlockPos(),state.clips);}
+  if(state.decorations.isEmpty()){state.clips.clear();state.clipTick=Long.MIN_VALUE;return;}long tick=level.getGameTime();if(state.clipTick==Long.MIN_VALUE||tick-state.clipTick>=20){state.clipTick=tick;scanClipBoxes(level,be.getBlockPos(),state.clips);}
  }
 
  public void submit(State state,PoseStack pose,SubmitNodeCollector out,CameraRenderState camera){
@@ -141,8 +141,8 @@ public final class TankDecorationRenderer implements BlockEntityRenderer<TankBlo
  }
 
  private static void scanClipBoxes(Level level,BlockPos origin,List<ClipBox> out){
-  out.clear();var originState=level.getBlockState(origin);HashSet<BlockPos> network=new HashSet<>(),tanks=new HashSet<>();ArrayDeque<BlockPos> queue=new ArrayDeque<>();queue.add(origin);
-  while(!queue.isEmpty()&&network.size()<4096){BlockPos p=queue.removeFirst();if(!network.add(p)||!level.hasChunkAt(p))continue;var state=level.getBlockState(p);if(!Enclosures.matches(originState,state)){network.remove(p);continue;}if(Enclosures.isTank(state))tanks.add(p.immutable());for(Direction d:Direction.values())if(!network.contains(p.relative(d)))queue.addLast(p.relative(d));}
+  out.clear();var originState=level.getBlockState(origin);HashSet<BlockPos> network=new HashSet<>(),seen=new HashSet<>(),tanks=new HashSet<>();ArrayDeque<BlockPos> queue=new ArrayDeque<>();queue.add(origin);
+  while(!queue.isEmpty()&&network.size()<4096){BlockPos p=queue.removeFirst();if(!seen.add(p)||!level.hasChunkAt(p))continue;var state=level.getBlockState(p);if(!Enclosures.matches(originState,state))continue;network.add(p.immutable());if(Enclosures.isTank(state))tanks.add(p.immutable());for(Direction d:Direction.values()){BlockPos next=p.relative(d);if(!seen.contains(next))queue.addLast(next);}}
   for(BlockPos p:tanks){float x=p.getX()-origin.getX(),y=p.getY()-origin.getY(),z=p.getZ()-origin.getZ();
    float minX=x+(tanks.contains(p.west())?0:GLASS_INSET),maxX=x+1-(tanks.contains(p.east())?0:GLASS_INSET);
    float minY=y+(tanks.contains(p.below())?0:GLASS_INSET),maxY=y+1-(tanks.contains(p.above())?0:GLASS_INSET);
