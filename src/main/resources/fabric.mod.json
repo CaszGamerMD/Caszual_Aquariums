@@ -24,5 +24,6 @@
   },
   "mixins": [
     "linked_aquariums.mixins.json"
-  ]
+  ],
+  "icon": "assets/linked_aquariums/icon.png"
 }
