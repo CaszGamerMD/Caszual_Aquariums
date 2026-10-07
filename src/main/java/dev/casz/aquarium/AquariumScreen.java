@@ -71,8 +71,8 @@ public final class AquariumScreen extends AbstractContainerScreen<AquariumMenu>{
    b(">",40,103,22,16,()->{decorPage=Math.min((menu.data.get(6)-1)/pageSize,decorPage+1);send(300+decorPage*pageSize);rebuild();});
   }
   for(int i=0;i<Math.min(pageSize,menu.data.get(6)-start);i++){
-   final int n=start+i;
-   b((n==menu.data.get(7)?"▶ ":"")+"#"+(n+1),14,123+i*24,72,20,()->send(300+n));
+   final int n=start+i;int itemId=menu.data.get(25+i);var rowItem=itemId<0?null:BuiltInRegistries.ITEM.byId(itemId);String rowName=rowItem==null?"Item "+(n+1):new ItemStack(rowItem).getHoverName().getString();String prefix=n==menu.data.get(7)?"▶ ":"";
+   b(prefix+font.plainSubstrByWidth(rowName,prefix.isEmpty()?62:54),14,123+i*24,72,20,()->send(300+n));
   }
   b("Remove",14,219,72,17,()->send(22));
 
