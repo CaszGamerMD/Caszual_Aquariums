@@ -71,4 +71,12 @@ public class TerrariumGameTests {
   var pig=h.spawn(EntityTypes.PIG,3.5f,1.1f,1.5f);var full=Terrestrial.capture(h.getLevel(),pig);h.assertTrue(Terrestrial.add(h.getLevel(),pos,full)!=null&&Terrestrial.filled(full),"Full terrarium must leave captured mob in its net");h.assertTrue(Network.scan(h.getLevel(),pos).residents(h.getLevel()).size()==AquariumMod.fishPerBlock,"Full terrarium must never spawn excess residents");h.succeed();
  }
 
+ @GameTest(maxTicks=280) public void groundMobSteersAroundBodyDecoration(GameTestHelper h){
+  for(int x=0;x<3;x++)h.setBlock(x,1,1,AquariumMod.PASSIVE_TERRARIUM);
+  BlockPos middle=abs(h,1,1,1),far=abs(h,2,1,1);
+  var be=(TankBlockEntity)h.getLevel().getBlockEntity(middle);var decor=be.addDecoration(new ItemStack(Items.FERN),EnclosureDecoration.Anchor.BODY);decor.scale=.8f;be.changed();
+  var chicken=h.spawn(EntityTypes.CHICKEN,.5f,1.18f,1.5f);Terrestrial.configure(chicken);
+  h.onEachTick(()->{if(chicken.isAlive()&&chicken.blockPosition().equals(far))h.succeed();});
+ }
+
 }
