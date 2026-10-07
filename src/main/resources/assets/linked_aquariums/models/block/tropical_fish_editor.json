@@ -1,8 +1,14 @@
 {
   "textures": {
     "frame": "linked_aquariums:block/frame",
-    "glass": "linked_aquariums:block/aquarium_glass",
-    "water": "linked_aquariums:block/contained_water",
+    "glass": {
+      "sprite": "linked_aquariums:block/aquarium_glass",
+      "force_translucent": true
+    },
+    "water": {
+      "sprite": "linked_aquariums:block/contained_water",
+      "force_translucent": true
+    },
     "particle": "linked_aquariums:block/frame"
   },
   "elements": [
@@ -431,6 +437,134 @@
       "to": [
         14,
         13,
+        14
+      ],
+      "faces": {
+        "down": {
+          "texture": "#water"
+        },
+        "up": {
+          "texture": "#water"
+        },
+        "north": {
+          "texture": "#water"
+        },
+        "south": {
+          "texture": "#water"
+        },
+        "west": {
+          "texture": "#water"
+        },
+        "east": {
+          "texture": "#water"
+        }
+      }
+    },
+    {
+      "from": [
+        2,
+        2.1,
+        1.35
+      ],
+      "to": [
+        14,
+        12.8,
+        1.45
+      ],
+      "faces": {
+        "down": {
+          "texture": "#water"
+        },
+        "up": {
+          "texture": "#water"
+        },
+        "north": {
+          "texture": "#water"
+        },
+        "south": {
+          "texture": "#water"
+        },
+        "west": {
+          "texture": "#water"
+        },
+        "east": {
+          "texture": "#water"
+        }
+      }
+    },
+    {
+      "from": [
+        2,
+        2.1,
+        14.55
+      ],
+      "to": [
+        14,
+        12.8,
+        14.65
+      ],
+      "faces": {
+        "down": {
+          "texture": "#water"
+        },
+        "up": {
+          "texture": "#water"
+        },
+        "north": {
+          "texture": "#water"
+        },
+        "south": {
+          "texture": "#water"
+        },
+        "west": {
+          "texture": "#water"
+        },
+        "east": {
+          "texture": "#water"
+        }
+      }
+    },
+    {
+      "from": [
+        1.35,
+        2.1,
+        2
+      ],
+      "to": [
+        1.45,
+        12.8,
+        14
+      ],
+      "faces": {
+        "down": {
+          "texture": "#water"
+        },
+        "up": {
+          "texture": "#water"
+        },
+        "north": {
+          "texture": "#water"
+        },
+        "south": {
+          "texture": "#water"
+        },
+        "west": {
+          "texture": "#water"
+        },
+        "east": {
+          "texture": "#water"
+        }
+      }
+    },
+    {
+      "from": [
+        14.55,
+        2.1,
+        2
+      ],
+      "to": [
+        14.65,
+        12.8,
         14
       ],
       "faces": {
