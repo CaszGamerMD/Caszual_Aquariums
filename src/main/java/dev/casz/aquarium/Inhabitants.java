@@ -97,9 +97,11 @@ public final class Inhabitants {
   return new Vec3((level.getRandom().nextDouble()*2-1)*spread,(level.getRandom().nextDouble()*2-1)*(tube?.16:.28),(level.getRandom().nextDouble()*2-1)*spread);
  }
  private static Vec3 center(BlockPos target,Mob mob,Vec3 lane){return new Vec3(target.getX()+.5+lane.x,target.getY()+height(mob)+lane.y,target.getZ()+.5+lane.z);}
- private static double movementSpeed(Mob m,double fallback){
-  var attr=m.getAttribute(Attributes.MOVEMENT_SPEED);double normal=attr==null?fallback/.8:attr.getBaseValue();
-  return Math.max(.005,normal*.8);
+ private static double movementSpeed(Mob m,double normalManagedRate){
+  // These rates are the enclosure's established 80% movement pace. Minecraft's
+  // MOVEMENT_SPEED attribute is not measured in blocks/tick, so using it directly
+  // here makes custom no-AI movement wildly too fast for many species.
+  return normalManagedRate*.8;
  }
  private static double penalty(ServerLevel l,Mob m,Vec3 next){
   var net=network(l,m.blockPosition());AABB moved=m.getBoundingBox().move(next.subtract(m.position()));double total=0;
