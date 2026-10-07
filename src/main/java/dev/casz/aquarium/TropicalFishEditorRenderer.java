@@ -14,16 +14,16 @@ import net.minecraft.world.phys.Vec3;
 import org.jspecify.annotations.Nullable;
 
 public final class TropicalFishEditorRenderer implements BlockEntityRenderer<TropicalFishEditorBlockEntity,TropicalFishEditorRenderer.State>{
- public static final class State extends BlockEntityRenderState{int revision=-1;TropicalFish fish;EntityRenderState rendered;}
+ public static final class State extends BlockEntityRenderState{int revision=-1;TropicalFish fish;EntityRenderState rendered;float x=.5f,y=.46f,z=.5f;}
  private final EntityRenderDispatcher dispatcher;
  public TropicalFishEditorRenderer(BlockEntityRendererProvider.Context context){dispatcher=context.entityRenderer();}
  public State createRenderState(){return new State();}
  public void extractRenderState(TropicalFishEditorBlockEntity be,State state,float partial,Vec3 camera,ModelFeatureRenderer.@Nullable CrumblingOverlay breaking){
   BlockEntityRenderer.super.extractRenderState(be,state,partial,camera,breaking);state.rendered=null;if(be.getLevel()==null)return;
   if(state.revision!=be.revision()){state.revision=be.revision();state.fish=null;if(be.occupied()){TropicalFish fish=EntityTypes.TROPICAL_FISH.create(be.getLevel(),EntitySpawnReason.LOAD);if(fish!=null){fish.applyComponentsFromItemStack(be.fish());fish.setNoAi(true);fish.setCustomNameVisible(false);fish.setPos(be.getBlockPos().getX()+.5,be.getBlockPos().getY()+.5,be.getBlockPos().getZ()+.5);state.fish=fish;}}}
-  if(state.fish!=null){state.fish.tickCount=(int)be.getLevel().getGameTime();state.fish.setYRot((float)((be.getLevel().getGameTime()*1.6)%360));state.rendered=dispatcher.extractEntity(state.fish,partial);if(state.rendered instanceof TropicalFishRenderState fishState)fishState.isInWater=true;}
+  if(state.fish!=null){float t=be.getLevel().getGameTime()+partial;state.fish.tickCount=(int)t;state.x=.5f+(float)Math.sin(t*.045f)*.17f;state.z=.5f+(float)Math.sin(t*.027f)*.07f;state.y=.46f+(float)Math.sin(t*.065f)*.035f;float vx=(float)Math.cos(t*.045f)*.045f*.17f,vz=(float)Math.cos(t*.027f)*.027f*.07f;state.fish.setYRot((float)Math.toDegrees(Math.atan2(-vx,vz)));state.rendered=dispatcher.extractEntity(state.fish,partial);if(state.rendered instanceof TropicalFishRenderState fishState)fishState.isInWater=true;}
  }
  public void submit(State state,PoseStack pose,SubmitNodeCollector out,CameraRenderState camera){
-  if(state.rendered==null)return;pose.pushPose();pose.translate(.5,.46,.5);pose.scale(.72f,.72f,.72f);dispatcher.submit(state.rendered,camera,0,0,0,pose,out);pose.popPose();
+  if(state.rendered==null)return;pose.pushPose();pose.translate(state.x,state.y,state.z);pose.scale(.72f,.72f,.72f);dispatcher.submit(state.rendered,camera,0,0,0,pose,out);pose.popPose();
  }
 }
