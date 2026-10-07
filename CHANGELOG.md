@@ -1,3 +1,12 @@
+## 0.8.0
+- Rebuilt the Aquarium/Terrarium editor around a larger organized layout with separate navigation, resident list, selected-mob information, decoration list, preview, transform controls, transfer slots, and player inventory panels.
+- Decoration controls are grouped into Move, Scale, Rotate, and Reset sections with clearer selection and pagination.
+- Enclosure residents now move at 80% of their intended normal enclosure movement speed.
+- Added local obstacle steering so fish, ground mobs, and flying terrarium residents route around decoration collision volumes instead of repeatedly stopping against them.
+- Decoration rendering is now client-side and clips normal block/item model geometry to the connected tank interior, hiding portions that extend through the outer glass while preserving the part inside the enclosure.
+- Removed server-side Display entities for enclosure decorations while keeping decoration data synced through the tank block entity.
+- Added client visual smoke coverage for the reorganized editor and a rotated oversized decoration crossing an aquarium wall.
+
 ## 0.7.1
 - Fixed Mobitat inventory name translation.
 - Assigned stable synthetic IDs to render-only Mobitat preview entities so third-party renderers that require entity IDs no longer crash the client.
