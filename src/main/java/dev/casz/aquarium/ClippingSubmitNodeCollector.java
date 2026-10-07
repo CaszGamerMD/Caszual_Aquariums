@@ -13,6 +13,8 @@ import net.minecraft.client.renderer.feature.ModelFeatureRenderer;
 import net.minecraft.client.renderer.item.ItemStackRenderState;
 import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.state.level.CameraRenderState;
+import net.minecraft.client.renderer.state.level.QuadParticleRenderState;
+import net.minecraft.client.renderer.gizmos.DrawableGizmoPrimitives;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.geometry.BakedQuad;
 import net.minecraft.client.resources.model.sprite.Material;
@@ -22,7 +24,10 @@ import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.phys.*;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import org.joml.*;
+import org.joml.Matrix4f;
+import org.joml.Matrix4fc;
+import org.joml.Quaternionf;
+import org.joml.Vector3f;
 import org.jspecify.annotations.Nullable;
 
 /**
@@ -113,14 +118,15 @@ final class ClippingSubmitNodeCollector implements SubmitNodeCollector {
  }
 
  public void submitShadow(PoseStack p,float r,List<EntityRenderState.ShadowPiece> v){delegate.submitShadow(p,r,v);}
- public void submitNameTag(PoseStack p,@Nullable Vec3 a,int o,Component n,boolean s,int l,double d,CameraRenderState c){delegate.submitNameTag(p,a,o,n,s,l,d,c);}
+ public void submitNameTag(PoseStack p,@Nullable Vec3 a,int o,Component n,boolean s,int l,CameraRenderState c){delegate.submitNameTag(p,a,o,n,s,l,c);}
  public void submitText(PoseStack p,float x,float y,FormattedCharSequence s,boolean sh,Font.DisplayMode m,int l,int c,int b,int o){delegate.submitText(p,x,y,s,sh,m,l,c,b,o);}
  public void submitFlame(PoseStack p,EntityRenderState s,Quaternionf q){delegate.submitFlame(p,s,q);}
  public void submitLeash(PoseStack p,EntityRenderState.LeashState s){delegate.submitLeash(p,s);}
  public <S> void submitModel(Model<? super S> m,S s,PoseStack p,RenderType r,int l,int o,int tint,@Nullable TextureAtlasSprite sprite,int outline,ModelFeatureRenderer.@Nullable CrumblingOverlay breaking){delegate.submitModel(m,s,p,r,l,o,tint,sprite,outline,breaking);}
- public void submitMovingBlock(PoseStack p,MovingBlockRenderState s){delegate.submitMovingBlock(p,s);}
- public void submitBreakingBlockModel(PoseStack p,BlockStateModel m,long seed,int progress){delegate.submitBreakingBlockModel(p,m,seed,progress);}
+ public void submitMovingBlock(PoseStack p,MovingBlockRenderState s,int outline){delegate.submitMovingBlock(p,s,outline);}
+ public void submitBreakingBlockModel(PoseStack p,List<BlockStateModelPart> parts,int progress){delegate.submitBreakingBlockModel(p,parts,progress);}
  public void submitShapeOutline(PoseStack p,VoxelShape s,RenderType r,int c,float w,boolean after){delegate.submitShapeOutline(p,s,r,c,w,after);}
  public void submitCustomGeometry(PoseStack p,RenderType r,SubmitNodeCollector.CustomGeometryRenderer g){delegate.submitCustomGeometry(p,r,g);}
- public void submitParticleGroup(SubmitNodeCollector.ParticleGroupRenderer p){delegate.submitParticleGroup(p);}
+ public void submitQuadParticleGroup(QuadParticleRenderState p){delegate.submitQuadParticleGroup(p);}
+ public void submitGizmoPrimitives(DrawableGizmoPrimitives.Group group,CameraRenderState camera,boolean onTop){delegate.submitGizmoPrimitives(group,camera,onTop);}
 }
