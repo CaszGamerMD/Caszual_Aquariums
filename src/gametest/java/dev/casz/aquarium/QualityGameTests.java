@@ -33,12 +33,12 @@ public final class QualityGameTests {
   BlockPos pos=h.absolutePos(new BlockPos(0,1,1));var player=h.makeMockPlayer(GameType.SURVIVAL);player.setPos(Vec3.atCenterOf(pos));var menu=new AquariumMenu(3,player.getInventory(),h.getLevel(),pos);
   h.assertTrue(menu.data.get(1)==6&&menu.data.get(24)==1,"Six residents must expose a second Mobs page");h.assertTrue(menu.clickMenuButton(player,24)&&menu.data.get(23)==1,"Next page must be selectable");h.assertTrue(menu.clickMenuButton(player,100)&&menu.data.get(2)==5,"First row on page two must select the sixth resident");h.succeed();
  }
- @GameTest public void editingDecorationReusesDisplayEntities(GameTestHelper h){
+ @GameTest public void editingDecorationStaysEntityFree(GameTestHelper h){
   h.setBlock(1,1,1,AquariumMod.TANK);BlockPos pos=h.absolutePos(new BlockPos(1,1,1));var level=h.getLevel();var be=(TankBlockEntity)level.getBlockEntity(pos);
   be.addDecoration(new net.minecraft.world.item.ItemStack(Items.DIAMOND_BLOCK),EnclosureDecoration.Anchor.BODY);be.addDecoration(new net.minecraft.world.item.ItemStack(Items.OAK_FENCE),EnclosureDecoration.Anchor.FLOOR);be.tick();
-  var before=level.getEntitiesOfClass(net.minecraft.world.entity.Display.class,new AABB(pos).inflate(3),e->true).stream().map(net.minecraft.world.entity.Entity::getUUID).collect(java.util.stream.Collectors.toSet());
-  be.decorations.getFirst().x+=.1f;be.changed();be.tick();
-  var after=level.getEntitiesOfClass(net.minecraft.world.entity.Display.class,new AABB(pos).inflate(3),e->true).stream().map(net.minecraft.world.entity.Entity::getUUID).collect(java.util.stream.Collectors.toSet());
-  h.assertTrue(before.size()==2&&before.equals(after),"Editing decor must reuse existing display entities instead of respawning them");h.succeed();
+  h.assertTrue(level.getEntitiesOfClass(net.minecraft.world.entity.Display.class,new AABB(pos).inflate(3),e->true).isEmpty(),"Decor rendering must not create server display entities");
+  int revision=be.revision();be.decorations.getFirst().x+=.1f;be.changed();be.tick();
+  h.assertTrue(be.revision()>revision&&be.decorations.size()==2,"Editing decor must update synced data without losing decorations");
+  h.assertTrue(level.getEntitiesOfClass(net.minecraft.world.entity.Display.class,new AABB(pos).inflate(3),e->true).isEmpty(),"Editing decor must remain entity-free");h.succeed();
  }
 }
