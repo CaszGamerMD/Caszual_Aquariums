@@ -33,6 +33,27 @@ public final class QualityGameTests {
   BlockPos pos=h.absolutePos(new BlockPos(0,1,1));var player=h.makeMockPlayer(GameType.SURVIVAL);player.setPos(Vec3.atCenterOf(pos));var menu=new AquariumMenu(3,player.getInventory(),h.getLevel(),pos);
   h.assertTrue(menu.data.get(1)==6&&menu.data.get(24)==1,"Six residents must expose a second Mobs page");h.assertTrue(menu.clickMenuButton(player,24)&&menu.data.get(23)==1,"Next page must be selectable");h.assertTrue(menu.clickMenuButton(player,100)&&menu.data.get(2)==5,"First row on page two must select the sixth resident");h.succeed();
  }
+ @GameTest public void aquariumMobEscapesDecorationOverlap(GameTestHelper h){
+  h.setBlock(1,1,1,AquariumMod.TANK);h.setBlock(2,1,1,AquariumMod.TANK);
+  BlockPos pos=h.absolutePos(new BlockPos(1,1,1));var level=h.getLevel();var be=(TankBlockEntity)level.getBlockEntity(pos);
+  var d=be.addDecoration(new net.minecraft.world.item.ItemStack(Items.DIAMOND_BLOCK),EnclosureDecoration.Anchor.BODY);d.scale=.7f;be.changed();
+  var fish=h.spawn(EntityTypes.COD,1.5f,1.45f,1.5f);fish.setFromBucket(true);Inhabitants.configure(fish);
+  double before=be.collisionPenalty(fish.getBoundingBox());h.assertTrue(before>0,"Test fish must begin overlapping the decoration");
+  for(int i=0;i<20;i++)Inhabitants.tick(level,java.util.List.of(fish));
+  double after=be.collisionPenalty(fish.getBoundingBox());
+  h.assertTrue(after<before*.5,"Aquarium mob must steer out of decor overlap instead of remaining stuck");h.succeed();
+ }
+ @GameTest public void terrariumMobEscapesDecorationOverlap(GameTestHelper h){
+  h.setBlock(1,1,1,AquariumMod.PASSIVE_TERRARIUM);h.setBlock(2,1,1,AquariumMod.PASSIVE_TERRARIUM);
+  BlockPos pos=h.absolutePos(new BlockPos(1,1,1));var level=h.getLevel();var be=(TankBlockEntity)level.getBlockEntity(pos);
+  var d=be.addDecoration(new net.minecraft.world.item.ItemStack(Items.DIAMOND_BLOCK),EnclosureDecoration.Anchor.FLOOR);d.scale=.55f;d.y=.18f;be.changed();
+  var cow=h.spawn(EntityTypes.COW,1.5f,1.18f,1.5f);Terrestrial.configure(cow);
+  double before=be.collisionPenalty(cow.getBoundingBox());h.assertTrue(before>0,"Test mob must begin overlapping the decoration");
+  for(int i=0;i<20;i++)Terrestrial.tick(level,java.util.List.of(cow));
+  double after=be.collisionPenalty(cow.getBoundingBox());
+  h.assertTrue(after<before*.5,"Terrarium mob must steer out of decor overlap instead of remaining stuck");h.succeed();
+ }
+
  @GameTest public void editingDecorationSyncsWithoutDisplayEntities(GameTestHelper h){
   h.setBlock(1,1,1,AquariumMod.TANK);BlockPos pos=h.absolutePos(new BlockPos(1,1,1));var level=h.getLevel();var be=(TankBlockEntity)level.getBlockEntity(pos);
   be.addDecoration(new net.minecraft.world.item.ItemStack(Items.DIAMOND_BLOCK),EnclosureDecoration.Anchor.BODY);be.addDecoration(new net.minecraft.world.item.ItemStack(Items.OAK_FENCE),EnclosureDecoration.Anchor.FLOOR);int before=be.revision();be.tick();
