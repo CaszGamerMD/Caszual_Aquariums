@@ -105,7 +105,8 @@ public final class Terrestrial {
   double horizontal=Math.sqrt(desired.x*desired.x+desired.z*desired.z),len=desired.length();
   if(horizontal>.00001){double base=Math.atan2(desired.z,desired.x);for(double degrees:new double[]{35,-35,70,-70,105,-105,145,-145,180}){double a=base+Math.toRadians(degrees);Vec3 v=new Vec3(Math.cos(a)*horizontal,flying?desired.y*.35:0,Math.sin(a)*horizontal);if(v.lengthSqr()>.000001)candidates.add(v.normalize().scale(len));}}
   if(flying){candidates.add(new Vec3(desired.x*.45,Math.abs(len),desired.z*.45).normalize().scale(len));candidates.add(new Vec3(desired.x*.45,-Math.abs(len),desired.z*.45).normalize().scale(len));}
-  for(Vec3 candidate:candidates){Vec3 next=origin.add(candidate);BlockPos p=BlockPos.containing(next.x,next.y,next.z);if(!l.hasChunkAt(p)){continue;}var nextState=l.getBlockState(p);if(!Enclosures.isLand(nextState)||!Enclosures.matches(currentState,nextState))continue;double score=penalty(l,m,next);if(score<=1.0E-8)return candidate;if(score<bestPenalty){bestPenalty=score;best=candidate;}}
+  BlockPos current=m.blockPosition();
+  for(Vec3 candidate:candidates){Vec3 next=origin.add(candidate);BlockPos p=BlockPos.containing(next.x,next.y,next.z);if(!l.hasChunkAt(p))continue;var nextState=l.getBlockState(p);if(!Enclosures.isLand(nextState)||!Enclosures.matches(currentState,nextState))continue;if(!p.equals(current)&&!canStep(l,current,p,flying))continue;double score=penalty(l,m,next);if(score<=1.0E-8)return candidate;if(score<bestPenalty){bestPenalty=score;best=candidate;}}
   return best!=null&&bestPenalty+1.0E-8<currentPenalty?best:null;
  }
 }
