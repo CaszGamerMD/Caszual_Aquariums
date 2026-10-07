@@ -26,7 +26,19 @@ public final class TankBlockEntity extends BlockEntity {
  public void changed(){dirty=true;setChanged();}
  public EnclosureDecoration addDecoration(ItemStack stack,EnclosureDecoration.Anchor anchor){var d=new EnclosureDecoration(stack,anchor);decorations.add(d);changed();return d;}
  public ItemStack removeDecoration(int index){if(index<0||index>=decorations.size())return ItemStack.EMPTY;var out=decorations.remove(index).stack.copy();changed();return out;}
- public boolean collides(AABB box){for(var d:decorations){float half=Math.max(.08f,d.scale*.45f);double cx=worldPosition.getX()+d.x,cy=worldPosition.getY()+d.y,cz=worldPosition.getZ()+d.z;if(new AABB(cx-half,cy-half,cz-half,cx+half,cy+half,cz+half).intersects(box))return true;}return false;}
+ public double collisionPenalty(AABB box){
+  double total=0;
+  for(var d:decorations){
+   float half=Math.max(.08f,d.scale*.45f);double cx=worldPosition.getX()+d.x,cy=worldPosition.getY()+d.y,cz=worldPosition.getZ()+d.z;
+   AABB decor=new AABB(cx-half,cy-half,cz-half,cx+half,cy+half,cz+half);
+   double dx=Math.max(0,Math.min(box.maxX,decor.maxX)-Math.max(box.minX,decor.minX));
+   double dy=Math.max(0,Math.min(box.maxY,decor.maxY)-Math.max(box.minY,decor.minY));
+   double dz=Math.max(0,Math.min(box.maxZ,decor.maxZ)-Math.max(box.minZ,decor.minZ));
+   total+=dx*dy*dz;
+  }
+  return total;
+ }
+ public boolean collides(AABB box){return collisionPenalty(box)>1.0E-7;}
  public void tick(){if(!migrated)migrateLegacy();if(level instanceof ServerLevel server&&dirty)updateDisplays(server);}
  private String ownerPrefix(){return AquariumMod.ID+":decor:"+worldPosition.getX()+","+worldPosition.getY()+","+worldPosition.getZ()+":";}
  private void updateDisplays(ServerLevel server){
