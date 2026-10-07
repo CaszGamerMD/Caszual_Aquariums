@@ -60,12 +60,13 @@ public final class AquariumMod implements ModInitializer {
     if(level.isClientSide())return InteractionResult.SUCCESS;
     if(held.is(Items.TROPICAL_FISH_BUCKET)&&!editor.occupied()){
      if(!editor.insert(held))return InteractionResult.FAIL;
-     if(!player.getAbilities().instabuild){held.shrink(1);ItemStack bucket=new ItemStack(Items.BUCKET);if(held.isEmpty())player.setItemInHand(hand,bucket);else give(player,bucket);}return InteractionResult.SUCCESS;
+     if(!player.getAbilities().instabuild){held.shrink(1);ItemStack bucket=new ItemStack(Items.BUCKET);if(held.isEmpty())player.setItemInHand(hand,bucket);else give(player,bucket);}
+     if(player instanceof ServerPlayer sp)openFishEditor(sp,(ServerLevel)level,hit.getBlockPos());return InteractionResult.SUCCESS;
     }
     if(held.is(Items.BUCKET)&&editor.occupied()){
      ItemStack fish=editor.take();if(!player.getAbilities().instabuild){held.shrink(1);if(held.isEmpty())player.setItemInHand(hand,fish);else give(player,fish);}else give(player,fish);return InteractionResult.SUCCESS;
     }
-    if(held.isEmpty()&&player instanceof ServerPlayer sp){BlockPos ep=hit.getBlockPos();sp.openMenu(new ExtendedMenuProvider<BlockPos>(){public BlockPos getScreenOpeningData(ServerPlayer q){return ep;}public Component getDisplayName(){return Component.literal("Tropical Fish Editor");}public TropicalFishEditorMenu createMenu(int id,Inventory inv,Player q){return new TropicalFishEditorMenu(id,inv,(ServerLevel)level,ep);}});return InteractionResult.SUCCESS;}
+    if(held.isEmpty()&&player instanceof ServerPlayer sp){openFishEditor(sp,(ServerLevel)level,hit.getBlockPos());return InteractionResult.SUCCESS;}
     return InteractionResult.FAIL;
    }
    if(state.is(MOBITAT)&&level.getBlockEntity(hit.getBlockPos()) instanceof MobitatBlockEntity mb){if(level.isClientSide())return InteractionResult.SUCCESS;if(held.is(MOB_NET)){if(Terrestrial.filled(held)){if(!mb.addNet(held))player.sendOverlayMessage(Component.literal("Mobitat holds up to 5 mobs of one type."));return InteractionResult.SUCCESS;}if(mb.empty())return InteractionResult.FAIL;player.setItemInHand(hand,mb.takeNet(mb.size()-1));return InteractionResult.SUCCESS;}if(held.isEmpty()&&player instanceof ServerPlayer sp){BlockPos mp=hit.getBlockPos();sp.openMenu(new ExtendedMenuProvider<BlockPos>(){public BlockPos getScreenOpeningData(ServerPlayer q){return mp;}public Component getDisplayName(){return Component.literal("Mobitat");}public MobitatMenu createMenu(int id,Inventory inv,Player q){return new MobitatMenu(id,inv,(ServerLevel)level,mp);}});return InteractionResult.SUCCESS;}}
@@ -76,6 +77,7 @@ public final class AquariumMod implements ModInitializer {
    if(level.isClientSide())return InteractionResult.SUCCESS;return interact(player,(ServerLevel)level,hand,hit);
   });ServerTickEvents.END_LEVEL_TICK.register(l->{List<net.minecraft.world.entity.Entity> entities=new ArrayList<>();l.getAllEntities().forEach(entities::add);Inhabitants.tick(l,entities);Terrestrial.tick(l,entities);});
  }
+ private static void openFishEditor(ServerPlayer player,ServerLevel level,BlockPos pos){player.openMenu(new ExtendedMenuProvider<BlockPos>(){public BlockPos getScreenOpeningData(ServerPlayer q){return pos;}public Component getDisplayName(){return Component.literal("Tropical Fish Editor");}public TropicalFishEditorMenu createMenu(int id,Inventory inv,Player q){return new TropicalFishEditorMenu(id,inv,level,pos);}});}
  private static InteractionResult useMobitat(Player player,ServerLevel level,InteractionHand hand,BlockHitResult hit){
   ItemStack held=player.getItemInHand(hand);MobitatBlockEntity box=new MobitatBlockEntity(BlockPos.ZERO,MOBITAT.defaultBlockState());box.setLevel(level);box.fromItem(held);if(box.empty())return InteractionResult.PASS;
   BlockPos target=hit.getBlockPos();BlockState state=level.getBlockState(target);int moved=0;
