@@ -2,6 +2,7 @@ package dev.casz.aquarium;
 import java.util.*;
 import com.mojang.math.Transformation;
 import org.joml.Matrix4f;
+import org.joml.Vector3f;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
@@ -33,7 +34,33 @@ public final class TankBlockEntity extends BlockEntity {
  public int revision(){return revision;}
  public EnclosureDecoration addDecoration(ItemStack stack,EnclosureDecoration.Anchor anchor){var d=new EnclosureDecoration(stack,anchor);decorations.add(d);changed();return d;}
  public ItemStack removeDecoration(int index){if(index<0||index>=decorations.size())return ItemStack.EMPTY;var out=decorations.remove(index).stack.copy();changed();return out;}
- public boolean collides(AABB box){for(var d:decorations){float base=d.stack.getItem() instanceof BlockItem?.45f:.18f;float half=Math.max(.06f,d.scale*base);double cx=worldPosition.getX()+d.x,cy=worldPosition.getY()+d.y,cz=worldPosition.getZ()+d.z;if(new AABB(cx-half,cy-half,cz-half,cx+half,cy+half,cz+half).intersects(box))return true;}return false;}
+ public boolean collides(AABB box){
+  if(level==null)return false;
+  for(var d:decorations){AABB obstacle=collisionBox(d);if(obstacle!=null&&obstacle.intersects(box))return true;}
+  return false;
+ }
+ private AABB collisionBox(EnclosureDecoration d){
+  AABB local;
+  if(d.stack.getItem() instanceof BlockItem bi){
+   var shape=bi.getBlock().defaultBlockState().getCollisionShape(level,worldPosition);
+   // Plants, flowers and other intentionally non-colliding blocks should not become invisible walls.
+   if(shape.isEmpty())return null;
+   local=shape.bounds();
+  }else{
+   // Loose item models are visual props, not near-full blocks. Keep only a small avoidance core.
+   local=new AABB(.47,.47,.47,.53,.53,.53);
+  }
+  Matrix4f transform=new Matrix4f().translate(d.x,d.y,d.z)
+   .rotateXYZ((float)Math.toRadians(d.rotX),(float)Math.toRadians(d.rotY),(float)Math.toRadians(d.rotZ))
+   .scale(d.scale).translate(-.5f,-.5f,-.5f);
+  double minX=Double.POSITIVE_INFINITY,minY=Double.POSITIVE_INFINITY,minZ=Double.POSITIVE_INFINITY;
+  double maxX=Double.NEGATIVE_INFINITY,maxY=Double.NEGATIVE_INFINITY,maxZ=Double.NEGATIVE_INFINITY;
+  for(int ix=0;ix<2;ix++)for(int iy=0;iy<2;iy++)for(int iz=0;iz<2;iz++){
+   Vector3f p=transform.transformPosition((float)(ix==0?local.minX:local.maxX),(float)(iy==0?local.minY:local.maxY),(float)(iz==0?local.minZ:local.maxZ),new Vector3f());
+   minX=Math.min(minX,p.x);minY=Math.min(minY,p.y);minZ=Math.min(minZ,p.z);maxX=Math.max(maxX,p.x);maxY=Math.max(maxY,p.y);maxZ=Math.max(maxZ,p.z);
+  }
+  return new AABB(worldPosition.getX()+minX,worldPosition.getY()+minY,worldPosition.getZ()+minZ,worldPosition.getX()+maxX,worldPosition.getY()+maxY,worldPosition.getZ()+maxZ);
+ }
  public void tick(){if(!migrated)migrateLegacy();if(level instanceof ServerLevel server&&dirty)updateDisplays(server);}
  private String ownerPrefix(){return AquariumMod.ID+":decor:"+worldPosition.getX()+","+worldPosition.getY()+","+worldPosition.getZ()+":";}
  private void updateDisplays(ServerLevel server){
