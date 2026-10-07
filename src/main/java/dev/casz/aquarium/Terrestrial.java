@@ -116,6 +116,15 @@ public final class Terrestrial {
   return Vec3.ZERO;
  }
  private static Vec3 turnY(Vec3 v,double degrees){double a=Math.toRadians(degrees),c=Math.cos(a),s=Math.sin(a);return new Vec3(v.x*c-v.z*s,v.y,v.x*s+v.z*c);}
- private static boolean validStep(ServerLevel l,Mob m,Vec3 step,boolean air){Vec3 next=m.position().add(step);BlockPos from=m.blockPosition(),to=BlockPos.containing(next.x,next.y,next.z);if(!l.hasChunkAt(to)||!Enclosures.isLand(l.getBlockState(to)))return false;if(!to.equals(from)&&!canStep(l,from,to,air))return false;return !blocked(l,m,next);}
- private static boolean blocked(ServerLevel l,Mob m,Vec3 next){var net=network(l,m.blockPosition());AABB moved=m.getBoundingBox().move(next.subtract(m.position()));for(var p:net.cells())if(l.getBlockEntity(p) instanceof TankBlockEntity be&&be.collides(moved))return true;return false;}
+ private static boolean validStep(ServerLevel l,Mob m,Vec3 step,boolean air){
+  Vec3 next=m.position().add(step);BlockPos from=m.blockPosition(),to=BlockPos.containing(next.x,next.y,next.z);if(!l.hasChunkAt(to)||!Enclosures.isLand(l.getBlockState(to)))return false;if(!to.equals(from)&&!canStep(l,from,to,air))return false;
+  double current=collisionPenalty(l,m,m.position()),after=collisionPenalty(l,m,next);
+  return current>1.0E-9?after<=current+1.0E-9:after<=1.0E-9;
+ }
+ private static boolean blocked(ServerLevel l,Mob m,Vec3 next){return collisionPenalty(l,m,next)>1.0E-9;}
+ private static double collisionPenalty(ServerLevel l,Mob m,Vec3 next){
+  var net=network(l,m.blockPosition());AABB moved=m.getBoundingBox().move(next.subtract(m.position()));double total=0;
+  for(var p:net.cells())if(l.getBlockEntity(p) instanceof TankBlockEntity be)total+=be.collisionPenalty(moved);
+  return total;
+ }
 }
