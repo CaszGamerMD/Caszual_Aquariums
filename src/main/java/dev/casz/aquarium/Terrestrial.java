@@ -18,6 +18,7 @@ import net.minecraft.world.level.storage.*;
 import net.minecraft.world.phys.*;
 
 public final class Terrestrial {
+ private static final double MOVE_FACTOR=.80,NORMAL_GROUND_SPEED=.075,NORMAL_FLY_SPEED=.055;
  public static final String MANAGED=AquariumMod.ID+":terrarium_managed",ORIGINAL_SCALE=AquariumMod.ID+":original_scale=";
  public static final TagKey<EntityType<?>> FLYING=TagKey.create(Registries.ENTITY_TYPE,AquariumMod.id("flying"));
  private static final Map<Mob,BlockPos> TARGETS=new WeakHashMap<>(),PREVIOUS=new WeakHashMap<>();
@@ -93,10 +94,18 @@ public final class Terrestrial {
    BlockPos target=TARGETS.get(m);if(target==null||!Enclosures.matches(state,l.getBlockState(target))||!target.equals(current)&&!canStep(l,current,target,air))target=current;
    Vec3 center=Vec3.atLowerCornerOf(target).add(.5,air?.5:.18,.5),delta=center.subtract(m.position());
    if(delta.lengthSqr()<.003){var neighbors=new ArrayList<BlockPos>();for(Direction d:Direction.values()){var p=target.relative(d);if(l.hasChunkAt(p)&&canStep(l,target,p,air))neighbors.add(p);}if(neighbors.size()>1)neighbors.remove(PREVIOUS.get(m));if(!neighbors.isEmpty()){PREVIOUS.put(m,target);target=neighbors.get(l.getRandom().nextInt(neighbors.size()));}center=Vec3.atLowerCornerOf(target).add(.5,air?.5:.18,.5);delta=center.subtract(m.position());}
-   TARGETS.put(m,target);m.setDeltaMovement(Vec3.ZERO);if(delta.lengthSqr()>.0001){Vec3 step=delta.normalize().scale(Math.min(air?.055:.075,delta.length()));if(blocked(l,m,m.position().add(step))) {TARGETS.remove(m);continue;}boolean old=m.noPhysics;try{m.noPhysics=true;m.move(MoverType.SELF,step);}finally{m.noPhysics=old;}float yaw=(float)Math.toDegrees(Math.atan2(-step.x,step.z));m.setYRot(yaw);m.setYBodyRot(yaw);m.setYHeadRot(yaw);m.walkAnimation.update((float)(step.horizontalDistance()*12.0),1.0f,1.0f);}
+   TARGETS.put(m,target);m.setDeltaMovement(Vec3.ZERO);if(delta.lengthSqr()>.0001){double normal=air?NORMAL_FLY_SPEED:NORMAL_GROUND_SPEED;Vec3 desired=delta.normalize().scale(Math.min(normal*MOVE_FACTOR,delta.length()));Vec3 step=steer(l,m,desired,air);if(step.lengthSqr()<1.0E-8){TARGETS.remove(m);continue;}boolean old=m.noPhysics;try{m.noPhysics=true;m.move(MoverType.SELF,step);}finally{m.noPhysics=old;}float yaw=(float)Math.toDegrees(Math.atan2(-step.x,step.z));m.setYRot(yaw);m.setYBodyRot(yaw);m.setYHeadRot(yaw);m.walkAnimation.update((float)(step.horizontalDistance()*12.0),1.0f,1.0f);}
   }
   TARGETS.keySet().removeIf(Entity::isRemoved);PREVIOUS.keySet().removeIf(Entity::isRemoved);
   }finally{activeLevel=null;CHAMBERS.clear();NETWORKS.clear();}
  }
+ private static Vec3 steer(ServerLevel l,Mob m,Vec3 desired,boolean air){
+  if(validStep(l,m,desired,air))return desired;int side=(m.getUUID().hashCode()&1)==0?1:-1;
+  for(int deg:new int[]{30,60,90,-30,-60,-90}){Vec3 candidate=turnY(desired,deg*side);if(validStep(l,m,candidate,air))return candidate;}
+  if(air){double len=desired.length();for(double rise:new double[]{.65,-.65,1,-1}){Vec3 candidate=new Vec3(desired.x,desired.y+len*rise,desired.z);if(candidate.lengthSqr()>0)candidate=candidate.normalize().scale(len);if(validStep(l,m,candidate,true))return candidate;}}
+  return Vec3.ZERO;
+ }
+ private static Vec3 turnY(Vec3 v,double degrees){double a=Math.toRadians(degrees),c=Math.cos(a),s=Math.sin(a);return new Vec3(v.x*c-v.z*s,v.y,v.x*s+v.z*c);}
+ private static boolean validStep(ServerLevel l,Mob m,Vec3 step,boolean air){Vec3 next=m.position().add(step);BlockPos from=m.blockPosition(),to=BlockPos.containing(next.x,next.y,next.z);if(!l.hasChunkAt(to)||!Enclosures.isLand(l.getBlockState(to)))return false;if(!to.equals(from)&&!canStep(l,from,to,air))return false;return !blocked(l,m,next);}
  private static boolean blocked(ServerLevel l,Mob m,Vec3 next){var net=network(l,m.blockPosition());AABB moved=m.getBoundingBox().move(next.subtract(m.position()));for(var p:net.cells())if(l.getBlockEntity(p) instanceof TankBlockEntity be&&be.collides(moved))return true;return false;}
 }
