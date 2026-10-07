@@ -1,3 +1,12 @@
+## 0.7.0
+- Added a one-block Tropical Fish Editor tank.
+- Insert a Tropical Fish Bucket to load the fish and immediately open the editor; an empty bucket retrieves the modified fish.
+- Edit all 12 vanilla tropical-fish patterns, 16 body colors, and 16 pattern colors using native Minecraft fish data components.
+- Added direct color palettes, pattern selection, body-size feedback, Swap Colors, and Randomize controls.
+- The fish is rendered swimming inside the workstation using its real edited appearance.
+- Breaking the workstation returns the contained fish with its complete bucket data.
+- Added GameTests for variant preservation, editing, interaction round trips, one-fish capacity, and break retention.
+
 ## 0.6.2
 - Optimized enclosure network flood fills and reused network results within each server tick.
 - Aquarium and terrarium movement now share one entity snapshot per level tick instead of scanning the dimension twice.
