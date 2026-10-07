@@ -21,7 +21,7 @@ public final class Terrestrial {
  public static final String MANAGED=AquariumMod.ID+":terrarium_managed",ORIGINAL_SCALE=AquariumMod.ID+":original_scale=";
  public static final TagKey<EntityType<?>> FLYING=TagKey.create(Registries.ENTITY_TYPE,AquariumMod.id("flying"));
  private static final Map<Mob,BlockPos> TARGETS=new WeakHashMap<>(),PREVIOUS=new WeakHashMap<>();
- private static final double MOVE_SPEED_MULTIPLIER=.80,NORMAL_GROUND_STEP=.09375,NORMAL_FLY_STEP=.06875;
+ static final double MOVE_SPEED_MULTIPLIER=.80,NORMAL_GROUND_STEP=.09375,NORMAL_FLY_STEP=.06875;
  private static ServerLevel activeLevel;
  private static final Map<BlockPos,Chamber> CHAMBERS=new HashMap<>();private static final Map<BlockPos,Network> NETWORKS=new HashMap<>();
  private static Network network(ServerLevel l,BlockPos pos){if(l==activeLevel){var cached=NETWORKS.get(pos);if(cached!=null)return cached;}var net=Network.scan(l,pos);if(l==activeLevel)for(var p:net.cells())NETWORKS.put(p,net);return net;}
@@ -99,8 +99,8 @@ public final class Terrestrial {
   TARGETS.keySet().removeIf(Entity::isRemoved);PREVIOUS.keySet().removeIf(Entity::isRemoved);
   }finally{activeLevel=null;CHAMBERS.clear();NETWORKS.clear();}
  }
- private static double penalty(ServerLevel l,Mob m,Vec3 next){var net=network(l,m.blockPosition());AABB moved=m.getBoundingBox().move(next.subtract(m.position()));double total=0;for(var p:net.cells())if(l.getBlockEntity(p) instanceof TankBlockEntity be)total+=be.collisionPenalty(moved);return total;}
- private static Vec3 steer(ServerLevel l,Mob m,Vec3 desired,boolean flying,net.minecraft.world.level.block.state.BlockState currentState){
+ static double penalty(ServerLevel l,Mob m,Vec3 next){var net=network(l,m.blockPosition());AABB moved=m.getBoundingBox().move(next.subtract(m.position()));double total=0;for(var p:net.cells())if(l.getBlockEntity(p) instanceof TankBlockEntity be)total+=be.collisionPenalty(moved);return total;}
+ static Vec3 steer(ServerLevel l,Mob m,Vec3 desired,boolean flying,net.minecraft.world.level.block.state.BlockState currentState){
   Vec3 origin=m.position();double currentPenalty=penalty(l,m,origin),bestPenalty=Double.POSITIVE_INFINITY;Vec3 best=null;ArrayList<Vec3> candidates=new ArrayList<>();candidates.add(desired);
   double horizontal=Math.sqrt(desired.x*desired.x+desired.z*desired.z),len=desired.length();
   if(horizontal>.00001){double base=Math.atan2(desired.z,desired.x);for(double degrees:new double[]{35,-35,70,-70,105,-105,145,-145,180}){double a=base+Math.toRadians(degrees);Vec3 v=new Vec3(Math.cos(a)*horizontal,flying?desired.y*.35:0,Math.sin(a)*horizontal);if(v.lengthSqr()>.000001)candidates.add(v.normalize().scale(len));}}
