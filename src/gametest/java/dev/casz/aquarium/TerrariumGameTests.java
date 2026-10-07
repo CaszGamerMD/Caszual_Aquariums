@@ -78,5 +78,13 @@ public class TerrariumGameTests {
   var chicken=h.spawn(EntityTypes.CHICKEN,.5f,1.18f,1.5f);Terrestrial.configure(chicken);
   h.onEachTick(()->{if(chicken.isAlive()&&chicken.blockPosition().equals(far))h.succeed();});
  }
+ @GameTest(maxTicks=300) public void groundMobEscapesDecorationOverlap(GameTestHelper h){
+  for(int x=0;x<3;x++)h.setBlock(x,1,1,AquariumMod.PASSIVE_TERRARIUM);BlockPos start=abs(h,0,1,1),far=abs(h,2,1,1);
+  var be=(TankBlockEntity)h.getLevel().getBlockEntity(start);var decor=be.addDecoration(new ItemStack(Items.DIAMOND_BLOCK),EnclosureDecoration.Anchor.BODY);
+  decor.x=.5f;decor.y=.18f;decor.z=.5f;decor.scale=.45f;be.changed();
+  var chicken=h.spawn(EntityTypes.CHICKEN,.5f,1.18f,1.5f);Terrestrial.configure(chicken);
+  h.assertTrue(be.collides(chicken.getBoundingBox()),"Regression setup must start the mob intersecting decor");
+  h.onEachTick(()->{if(chicken.isAlive()&&!be.collides(chicken.getBoundingBox())&&chicken.blockPosition().equals(far))h.succeed();});
+ }
 
 }
