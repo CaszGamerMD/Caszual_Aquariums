@@ -2,8 +2,8 @@ package dev.casz.aquarium;
 
 import java.util.*;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.QuadInstance;
 import net.minecraft.client.model.geom.builders.UVPair;
-import net.minecraft.util.LightCoordsUtil;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.resources.model.geometry.BakedQuad;
 import net.minecraft.client.renderer.blockentity.*;
@@ -30,7 +30,6 @@ import dev.casz.aquarium.mixin.client.LayerRenderStateAccessor;
 public final class TankDecorationRenderer implements BlockEntityRenderer<TankBlockEntity,TankDecorationRenderer.State>{
  private static final float GLASS_INSET=.0325f;
  private final ItemModelResolver itemResolver;
- private static boolean DEBUG_DIAMOND_LOGGED;
 
  private static final class Prepared{
   final ItemStack stack;final Matrix4f transform;final ItemStackRenderState itemState;final boolean blockItem;
@@ -84,9 +83,7 @@ public final class TankDecorationRenderer implements BlockEntityRenderer<TankBlo
   var root=(ItemStackRenderStateAccessor)(Object)p.itemState;int count=root.linkedAquariums$getActiveLayerCount();var layers=root.linkedAquariums$getLayers();
   for(int i=0;i<count;i++){var layer=layers[i];var a=(LayerRenderStateAccessor)(Object)layer;List<BakedQuad> quads=a.linkedAquariums$getQuads();
    PoseStack.Pose lp=new PoseStack.Pose();a.linkedAquariums$getItemTransform().apply(false,lp);lp.mulPose(a.linkedAquariums$getLocalTransform());Matrix4f transform=new Matrix4f(p.transform).mul(lp.pose());
-   if(!DEBUG_DIAMOND_LOGGED&&p.stack.is(Items.DIAMOND_BLOCK)&&!quads.isEmpty()){
-    DEBUG_DIAMOND_LOGGED=true;System.out.println("[CaszualAquariums debug] bounds="+p.itemState.getModelBoundingBox()+" item="+a.linkedAquariums$getItemTransform()+" local="+a.linkedAquariums$getLocalTransform()+" quad0="+quads.getFirst().position(0)+" quad1="+quads.getFirst().position(1)+" quad2="+quads.getFirst().position(2)+" quad3="+quads.getFirst().position(3)+" combined="+transform);
-   }
+
    if(!quads.isEmpty()){var tints=a.linkedAquariums$getTintLayers();for(BakedQuad q:quads){var rt=q.materialInfo().itemRenderType();int color=0xFFFFFFFF;int ti=q.materialInfo().tintIndex();if(tints!=null&&ti>=0&&ti<tints.size()){int tint=tints.getInt(ti);if(tint!=-1)color=tint;}final int quadColor=color;out.submitCustomGeometry(pose,rt,(base,buffer)->emitClipped(base,buffer,q,transform,state.clips,quadColor,state.lightCoords));}}
    SpecialModelRenderer special=a.linkedAquariums$getSpecialRenderer();if(special!=null&&fullyInside(p.itemState.getModelBoundingBox(),p.transform,state.clips)){pose.pushPose();pose.mulPose(p.transform);a.linkedAquariums$getItemTransform().apply(false,pose.last());pose.last().mulPose(a.linkedAquariums$getLocalTransform());special.submit(a.linkedAquariums$getSpecialArgument(),pose,out,state.lightCoords,OverlayTexture.NO_OVERLAY,a.linkedAquariums$getFoilType()!=ItemStackRenderState.FoilType.NONE,0);pose.popPose();}
   }
@@ -94,12 +91,18 @@ public final class TankDecorationRenderer implements BlockEntityRenderer<TankBlo
 
  private static void emitClipped(PoseStack.Pose base,com.mojang.blaze3d.vertex.VertexConsumer buffer,BakedQuad quad,Matrix4f transform,List<AABB> clips,int color,int light){
   ArrayList<V> source=new ArrayList<>(4);for(int i=0;i<4;i++){Vector3f pos=transform.transformPosition(quad.position(i),new Vector3f());long uv=quad.packedUV(i);source.add(new V(pos.x,pos.y,pos.z,UVPair.unpackU(uv),UVPair.unpackV(uv)));}
-  Matrix3f normalMatrix=new Matrix3f(transform).invert().transpose();Vector3f normal=normalMatrix.transform(quad.direction().getUnitVec3f(),new Vector3f()).normalize();int lit=LightCoordsUtil.lightCoordsWithEmission(light,quad.materialInfo().lightEmission());
-  for(AABB box:clips){List<V> poly=clipBox(source,box);if(poly.size()<3)continue;V root=poly.getFirst();for(int i=1;i+1<poly.size();i++)emitQuad(base,buffer,root,poly.get(i),poly.get(i+1),poly.get(i+1),color,lit,normal);}
+  Matrix4f inverse=new Matrix4f(transform).invert();PoseStack.Pose renderPose=base.copy();renderPose.mulPose(transform);
+  QuadInstance instance=new QuadInstance();instance.setColor(color);instance.setLightCoords(light);instance.setOverlayCoords(OverlayTexture.NO_OVERLAY);
+  for(AABB box:clips){
+   List<V> poly=clipBox(source,box);if(poly.size()<3)continue;V root=poly.getFirst();
+   for(int i=1;i+1<poly.size();i++)emitTriangle(buffer,renderPose,quad,inverse,root,poly.get(i),poly.get(i+1),instance);
+  }
  }
- private static void emitQuad(PoseStack.Pose pose,com.mojang.blaze3d.vertex.VertexConsumer b,V a,V c,V d,V e,int color,int light,Vector3f n){emit(pose,b,a,color,light,n);emit(pose,b,c,color,light,n);emit(pose,b,d,color,light,n);emit(pose,b,e,color,light,n);}
- private static void emit(PoseStack.Pose pose,com.mojang.blaze3d.vertex.VertexConsumer b,V v,int color,int light,Vector3f n){b.addVertex(pose,v.x,v.y,v.z).setColor(color).setUv(v.u,v.v).setOverlay(OverlayTexture.NO_OVERLAY).setLight(light).setNormal(pose,n.x,n.y,n.z);}
-
+ private static void emitTriangle(com.mojang.blaze3d.vertex.VertexConsumer buffer,PoseStack.Pose renderPose,BakedQuad source,Matrix4f inverse,V a,V b,V c,QuadInstance instance){
+  Vector3f pa=inverse.transformPosition(a.x,a.y,a.z,new Vector3f()),pb=inverse.transformPosition(b.x,b.y,b.z,new Vector3f()),pc=inverse.transformPosition(c.x,c.y,c.z,new Vector3f());
+  BakedQuad clipped=new BakedQuad(pa,pb,pc,new Vector3f(pc),UVPair.pack(a.u,a.v),UVPair.pack(b.u,b.v),UVPair.pack(c.u,c.v),UVPair.pack(c.u,c.v),source.direction(),source.materialInfo());
+  buffer.putBakedQuad(renderPose,clipped,instance);
+ }
  private static List<V> clipBox(List<V> source,AABB b){List<V> p=source;p=clip(p,0,(float)b.minX,true);p=clip(p,0,(float)b.maxX,false);p=clip(p,1,(float)b.minY,true);p=clip(p,1,(float)b.maxY,false);p=clip(p,2,(float)b.minZ,true);return clip(p,2,(float)b.maxZ,false);}
  private static List<V> clip(List<V> in,int axis,float bound,boolean greater){if(in.isEmpty())return List.of();ArrayList<V> out=new ArrayList<>();V prev=in.getLast();boolean prevIn=inside(prev,axis,bound,greater);for(V cur:in){boolean curIn=inside(cur,axis,bound,greater);if(curIn!=prevIn)out.add(intersect(prev,cur,axis,bound));if(curIn)out.add(cur);prev=cur;prevIn=curIn;}return out;}
  private static boolean inside(V v,int axis,float b,boolean greater){float c=axis==0?v.x:axis==1?v.y:v.z;return greater?c>=b-1e-5f:c<=b+1e-5f;}
