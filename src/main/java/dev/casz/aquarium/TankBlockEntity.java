@@ -34,10 +34,18 @@ public final class TankBlockEntity extends BlockEntity {
  public int revision(){return revision;}
  public EnclosureDecoration addDecoration(ItemStack stack,EnclosureDecoration.Anchor anchor){var d=new EnclosureDecoration(stack,anchor);decorations.add(d);changed();return d;}
  public ItemStack removeDecoration(int index){if(index<0||index>=decorations.size())return ItemStack.EMPTY;var out=decorations.remove(index).stack.copy();changed();return out;}
- public boolean collides(AABB box){
-  if(level==null)return false;
-  for(var d:decorations){AABB obstacle=collisionBox(d);if(obstacle!=null&&obstacle.intersects(box))return true;}
-  return false;
+ public boolean collides(AABB box){return collisionPenalty(box)>1.0E-9;}
+ public double collisionPenalty(AABB box){
+  if(level==null)return 0;
+  double total=0;
+  for(var d:decorations){
+   AABB obstacle=collisionBox(d);if(obstacle==null||!obstacle.intersects(box))continue;
+   double x=Math.max(0,Math.min(obstacle.maxX,box.maxX)-Math.max(obstacle.minX,box.minX));
+   double y=Math.max(0,Math.min(obstacle.maxY,box.maxY)-Math.max(obstacle.minY,box.minY));
+   double z=Math.max(0,Math.min(obstacle.maxZ,box.maxZ)-Math.max(obstacle.minZ,box.minZ));
+   total+=x*y*z;
+  }
+  return total;
  }
  private AABB collisionBox(EnclosureDecoration d){
   AABB local;
