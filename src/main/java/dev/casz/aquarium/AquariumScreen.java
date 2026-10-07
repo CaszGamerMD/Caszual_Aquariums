@@ -19,7 +19,7 @@ public final class AquariumScreen extends AbstractContainerScreen<AquariumMenu>{
  private boolean dragging;
  private double dragX,dragY;
 
- public AquariumScreen(AquariumMenu m,Inventory i,Component t){super(m,i,t,390,310);}
+ public AquariumScreen(AquariumMenu m,Inventory i,Component t){super(m,i,t,390,318);}
  private void send(int a){if(minecraft.gameMode!=null)minecraft.gameMode.handleInventoryButtonClick(menu.containerId,a);}
  private Button b(String t,int x,int y,int w,int h,Runnable r){var q=addRenderableWidget(Button.builder(Component.literal(t),z->r.run()).bounds(leftPos+x,topPos+y,w,h).build());pageButtons.add(q);return q;}
  private String title(){return menu.data.get(0)==0?"Aquarium Editor":menu.data.get(0)==1?"Terrarium Editor":"Hostile Terrarium Editor";}
@@ -117,7 +117,7 @@ public final class AquariumScreen extends AbstractContainerScreen<AquariumMenu>{
    if(menu.data.get(6)>0){var selected=BuiltInRegistries.ITEM.byId(menu.data.get(9));if(selected!=null){g.pose().pushMatrix();g.pose().translate(cx-24,cy-24);g.pose().scale(3,3);g.item(new ItemStack(selected),0,0);g.pose().popMatrix();g.outline(cx-27,cy-27,54,54,0xFFFFD778);}}
   }
 
-  panel(g,8,222,92,80);panel(g,106,222,172,80);
+  panel(g,8,222,92,92);panel(g,106,222,172,92);
   for(var slot:menu.slots){g.fill(leftPos+slot.x-1,topPos+slot.y-1,leftPos+slot.x+17,topPos+slot.y+17,0xFF102127);g.fill(leftPos+slot.x,topPos+slot.y,leftPos+slot.x+16,topPos+slot.y+16,0xFF91AEB4);}
  }
 
@@ -147,7 +147,7 @@ public final class AquariumScreen extends AbstractContainerScreen<AquariumMenu>{
   }
 
   g.text(font,page==Page.DECOR?"Decor transfer":"Container transfer",14,228,0xFFD7E7E8);
-  g.text(font,"Input",14,244-12,0xFFC9DCDD);g.text(font,"Out",43,244-12,0xFFC9DCDD);
+  g.text(font,"Input",14,238,0xFFC9DCDD);g.text(font,"Out",43,238,0xFFC9DCDD);
   g.text(font,"Inventory",112,228,0xFFD7E7E8);
  }
 }
