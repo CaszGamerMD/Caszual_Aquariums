@@ -102,9 +102,11 @@ public final class Terrestrial {
   TARGETS.keySet().removeIf(Entity::isRemoved);PREVIOUS.keySet().removeIf(Entity::isRemoved);STUCK.keySet().removeIf(Entity::isRemoved);
   }finally{activeLevel=null;CHAMBERS.clear();NETWORKS.clear();}
  }
- private static double movementSpeed(Mob m,double fallback){
-  var attr=m.getAttribute(Attributes.MOVEMENT_SPEED);double normal=attr==null?fallback/.8:attr.getBaseValue();
-  return Math.max(.005,normal*.8);
+ private static double movementSpeed(Mob m,double normalManagedRate){
+  // These rates are the enclosure's established 80% movement pace. Minecraft's
+  // MOVEMENT_SPEED attribute is not measured in blocks/tick, so using it directly
+  // here makes custom no-AI movement wildly too fast for many species.
+  return normalManagedRate*.8;
  }
  private static double penalty(ServerLevel l,Mob m,Vec3 next){
   var net=network(l,m.blockPosition());AABB moved=m.getBoundingBox().move(next.subtract(m.position()));double total=0;
