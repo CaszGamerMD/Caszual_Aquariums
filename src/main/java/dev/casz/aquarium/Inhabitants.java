@@ -20,7 +20,7 @@ import net.minecraft.network.chat.Component;
 public final class Inhabitants {
  private static final Map<Mob,BlockPos> TARGETS=new WeakHashMap<>(),PREVIOUS=new WeakHashMap<>();
  private static final Map<Mob,Vec3> LANES=new WeakHashMap<>();
- private static final double MOVE_SPEED_MULTIPLIER=.80,NORMAL_SWIM_STEP=.04375,NORMAL_DROWNED_STEP=.01875;
+ static final double MOVE_SPEED_MULTIPLIER=.80,NORMAL_SWIM_STEP=.04375,NORMAL_DROWNED_STEP=.01875;
  private static ServerLevel activeLevel;private static final Map<BlockPos,Network> NETWORKS=new HashMap<>();
  private static Network network(ServerLevel level,BlockPos pos){if(level==activeLevel){var cached=NETWORKS.get(pos);if(cached!=null)return cached;}var net=Network.scan(level,pos);if(level==activeLevel)for(var p:net.cells())NETWORKS.put(p,net);return net;}
  public record AddResult(boolean success,ItemStack returned){}
@@ -87,9 +87,9 @@ public final class Inhabitants {
   TARGETS.keySet().removeIf(Entity::isRemoved);PREVIOUS.keySet().removeIf(Entity::isRemoved);
   }finally{activeLevel=null;NETWORKS.clear();}
  }
- private static double penalty(ServerLevel l,Mob m,Vec3 next){var net=network(l,m.blockPosition());AABB moved=m.getBoundingBox().move(next.subtract(m.position()));double total=0;for(var p:net.cells())if(l.getBlockEntity(p) instanceof TankBlockEntity be)total+=be.collisionPenalty(moved);return total;}
+ static double penalty(ServerLevel l,Mob m,Vec3 next){var net=network(l,m.blockPosition());AABB moved=m.getBoundingBox().move(next.subtract(m.position()));double total=0;for(var p:net.cells())if(l.getBlockEntity(p) instanceof TankBlockEntity be)total+=be.collisionPenalty(moved);return total;}
  private static boolean validAquatic(ServerLevel l,Vec3 next){BlockPos p=BlockPos.containing(next.x,next.y,next.z);return l.hasChunkAt(p)&&Enclosures.isAquatic(l.getBlockState(p));}
- private static Vec3 steer(ServerLevel l,Mob m,Vec3 desired,boolean allowVertical){
+ static Vec3 steer(ServerLevel l,Mob m,Vec3 desired,boolean allowVertical){
   Vec3 origin=m.position();double currentPenalty=penalty(l,m,origin),bestPenalty=Double.POSITIVE_INFINITY;Vec3 best=null;
   ArrayList<Vec3> candidates=new ArrayList<>();candidates.add(desired);
   double horizontal=Math.sqrt(desired.x*desired.x+desired.z*desired.z),len=desired.length();
