@@ -16,6 +16,9 @@ jobs:
       - uses: gradle/actions/setup-gradle@v4
       - run: chmod +x gradlew
       - run: ./gradlew build --stacktrace
+      - name: Run client visual smoke test
+        if: github.ref == 'refs/heads/feature/editor-movement-polish'
+        run: xvfb-run -a ./gradlew runClientGameTest --stacktrace
       - uses: actions/upload-artifact@v4
         if: success()
         with:
