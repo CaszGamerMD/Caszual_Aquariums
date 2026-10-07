@@ -110,7 +110,7 @@ public final class AquariumScreen extends AbstractContainerScreen<AquariumMenu>{
  public boolean mouseReleased(MouseButtonEvent event){dragging=false;return super.mouseReleased(event);}
 
  private void panel(GuiGraphicsExtractor g,int x,int y,int w,int h){g.fill(leftPos+x,topPos+y,leftPos+x+w,topPos+y+h,PANEL);g.outline(leftPos+x,topPos+y,w,h,PANEL_EDGE);}
- protected void extractBackground(GuiGraphicsExtractor g,int mx,int my,float a){
+ public void extractBackground(GuiGraphicsExtractor g,int mx,int my,float a){
   super.extractBackground(g,mx,my,a);
   int kind=menu.data.get(0),bg=kind==0?0xFF163846:kind==1?0xFF29452C:0xFF40283F;
   g.fill(leftPos,topPos,leftPos+imageWidth,topPos+imageHeight,bg);
