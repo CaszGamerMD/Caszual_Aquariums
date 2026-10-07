@@ -16,7 +16,9 @@ import net.minecraft.core.*;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
-import org.joml.*;
+import org.joml.Matrix4f;
+import org.joml.Quaternionf;
+import org.joml.Vector3f;
 import org.jspecify.annotations.Nullable;
 import dev.casz.aquarium.mixin.ItemLayerRenderStateAccessor;
 import dev.casz.aquarium.mixin.ItemStackRenderStateAccessor;
@@ -65,13 +67,13 @@ public final class TankDecorationRenderer implements BlockEntityRenderer<TankBlo
 
  private static void applyDecoration(PoseStack pose,DecorRender d){
   pose.translate(d.x,d.y,d.z);
-  pose.mulPose(new Quaternionf().rotationXYZ((float)Math.toRadians(d.rx),(float)Math.toRadians(d.ry),(float)Math.toRadians(d.rz)));
+  pose.mulPose(new Quaternionf().rotationXYZ((float)java.lang.Math.toRadians(d.rx),(float)java.lang.Math.toRadians(d.ry),(float)java.lang.Math.toRadians(d.rz)));
   pose.scale(d.scale,d.scale,d.scale);
   pose.translate(-.5f,-.5f,-.5f);
  }
  private static void applyDecoration(PoseStack.Pose pose,DecorRender d){
   pose.translate(d.x,d.y,d.z);
-  pose.rotate(new Quaternionf().rotationXYZ((float)Math.toRadians(d.rx),(float)Math.toRadians(d.ry),(float)Math.toRadians(d.rz)));
+  pose.rotate(new Quaternionf().rotationXYZ((float)java.lang.Math.toRadians(d.rx),(float)java.lang.Math.toRadians(d.ry),(float)java.lang.Math.toRadians(d.rz)));
   pose.scale(d.scale,d.scale,d.scale);
   pose.translate(-.5f,-.5f,-.5f);
  }
@@ -128,7 +130,7 @@ public final class TankDecorationRenderer implements BlockEntityRenderer<TankBlo
  }
  private static boolean inside(Vertex v,int axis,float bound,boolean greater){float c=coord(v.p,axis);return greater?c>=bound-1.0E-5f:c<=bound+1.0E-5f;}
  private static Vertex intersection(Vertex a,Vertex b,int axis,float bound){
-  float av=coord(a.p,axis),bv=coord(b.p,axis),den=bv-av,t=Math.abs(den)<1.0E-8f?0:(bound-av)/den;t=Math.clamp(t,0,1);
+  float av=coord(a.p,axis),bv=coord(b.p,axis),den=bv-av,t=java.lang.Math.abs(den)<1.0E-8f?0:(bound-av)/den;t=java.lang.Math.clamp(t,0,1);
   return new Vertex(new Vector3f(a.p).lerp(b.p,t),a.u+(b.u-a.u)*t,a.v+(b.v-a.v)*t);
  }
  private static float coord(Vector3f p,int axis){return axis==0?p.x:axis==1?p.y:p.z;}
