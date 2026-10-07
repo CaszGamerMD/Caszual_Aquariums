@@ -23,7 +23,11 @@
     "fabric-api": ">=0.158.0"
   },
   "mixins": [
-    "linked_aquariums.mixins.json"
+    "linked_aquariums.mixins.json",
+    {
+      "config": "linked_aquariums.client.mixins.json",
+      "environment": "client"
+    }
   ],
   "icon": "assets/linked_aquariums/icon.png"
 }
