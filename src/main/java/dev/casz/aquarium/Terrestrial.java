@@ -100,10 +100,6 @@ public final class Terrestrial {
   }finally{activeLevel=null;CHAMBERS.clear();NETWORKS.clear();}
  }
  private static double penalty(ServerLevel l,Mob m,Vec3 next){var net=network(l,m.blockPosition());AABB moved=m.getBoundingBox().move(next.subtract(m.position()));double total=0;for(var p:net.cells())if(l.getBlockEntity(p) instanceof TankBlockEntity be)total+=be.collisionPenalty(moved);return total;}
- private static boolean validLand(ServerLevel l,BlockStateLike ignored,Vec3 next,boolean flying,BlockState currentState){
-  BlockPos p=BlockPos.containing(next.x,next.y,next.z);if(!l.hasChunkAt(p))return false;var s=l.getBlockState(p);return Enclosures.isLand(s)&&Enclosures.matches(currentState,s);
- }
- private interface BlockStateLike{}
  private static Vec3 steer(ServerLevel l,Mob m,Vec3 desired,boolean flying,net.minecraft.world.level.block.state.BlockState currentState){
   Vec3 origin=m.position();double currentPenalty=penalty(l,m,origin),bestPenalty=Double.POSITIVE_INFINITY;Vec3 best=null;ArrayList<Vec3> candidates=new ArrayList<>();candidates.add(desired);
   double horizontal=Math.sqrt(desired.x*desired.x+desired.z*desired.z),len=desired.length();
@@ -112,5 +108,4 @@ public final class Terrestrial {
   for(Vec3 candidate:candidates){Vec3 next=origin.add(candidate);BlockPos p=BlockPos.containing(next.x,next.y,next.z);if(!l.hasChunkAt(p)){continue;}var nextState=l.getBlockState(p);if(!Enclosures.isLand(nextState)||!Enclosures.matches(currentState,nextState))continue;double score=penalty(l,m,next);if(score<=1.0E-8)return candidate;if(score<bestPenalty){bestPenalty=score;best=candidate;}}
   return best!=null&&bestPenalty+1.0E-8<currentPenalty?best:null;
  }
- private static boolean blocked(ServerLevel l,Mob m,Vec3 next){return penalty(l,m,next)>1.0E-8;}
 }
