@@ -107,8 +107,17 @@ public final class Terrestrial {
   Vec3 dodge=DODGE_DIR.get(m);
   double len=Math.max(.001,desired.length());
   double overlap=collisionPenalty(l,m,m.position());
+
+  // If decor was moved onto a resident, lock one escape direction until overlap is zero.
   if(overlap>1.0E-9){
-   DODGE_DISTANCE.remove(m);DODGE_DIR.remove(m);
+   if(remaining<0&&dodge!=null){
+    Vec3 candidate=dodge.scale(len);
+    if(validStep(l,m,candidate,air)){
+     double after=collisionPenalty(l,m,m.position().add(candidate));
+     if(after+1.0E-10<overlap)return candidate;
+    }
+    DODGE_DISTANCE.remove(m);DODGE_DIR.remove(m);dodge=null;remaining=0;
+   }
    Direction facing=horizontalFacing(desired,m);
    ArrayList<Direction> escape=perpendicularChoices(facing);
    if((m.getUUID().hashCode()&1)!=0)Collections.reverse(escape);
@@ -120,8 +129,15 @@ public final class Terrestrial {
     double after=collisionPenalty(l,m,m.position().add(candidate));
     if(after+1.0E-10<bestPenalty){bestPenalty=after;best=candidate;}
    }
-   if(best.lengthSqr()>1.0E-8)return best;
+   if(best.lengthSqr()>1.0E-8){
+    DODGE_DIR.put(m,best.normalize());DODGE_DISTANCE.put(m,-1.0);
+    return best;
+   }
+   return Vec3.ZERO;
+  }else if(remaining<0){
+   DODGE_DISTANCE.remove(m);DODGE_DIR.remove(m);dodge=null;remaining=0;
   }
+
   if(remaining>0&&dodge!=null){
    Vec3 candidate=dodge.scale(Math.min(len,remaining));
    if(validStep(l,m,candidate,air)){
@@ -136,8 +152,7 @@ public final class Terrestrial {
   Direction facing=horizontalFacing(desired,m);
   ArrayList<Direction> choices=perpendicularChoices(facing);
   if(l.getRandom().nextBoolean())Collections.reverse(choices);
-  Direction reverse=facing.getOpposite();
-  choices.add(reverse);
+  choices.add(facing.getOpposite());
   for(Direction d:choices){
    Vec3 candidate=new Vec3(d.getStepX()*len,0,d.getStepZ()*len);
    if(validStep(l,m,candidate,air)){
