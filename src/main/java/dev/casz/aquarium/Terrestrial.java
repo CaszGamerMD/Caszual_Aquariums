@@ -22,7 +22,8 @@ public final class Terrestrial {
  public static final String MANAGED=AquariumMod.ID+":terrarium_managed",ORIGINAL_SCALE=AquariumMod.ID+":original_scale=";
  public static final TagKey<EntityType<?>> FLYING=TagKey.create(Registries.ENTITY_TYPE,AquariumMod.id("flying"));
  private static final Map<Mob,BlockPos> TARGETS=new WeakHashMap<>(),PREVIOUS=new WeakHashMap<>();
- private static final Map<Mob,Integer> AVOID_TICKS=new WeakHashMap<>(),AVOID_SIDE=new WeakHashMap<>();
+ private static final Map<Mob,Vec3> DODGE_DIR=new WeakHashMap<>();
+ private static final Map<Mob,Integer> DODGE_STEPS=new WeakHashMap<>();
  private static ServerLevel activeLevel;
  private static final Map<BlockPos,Chamber> CHAMBERS=new HashMap<>();private static final Map<BlockPos,Network> NETWORKS=new HashMap<>();
  private static Network network(ServerLevel l,BlockPos pos){if(l==activeLevel){var cached=NETWORKS.get(pos);if(cached!=null)return cached;}var net=Network.scan(l,pos);if(l==activeLevel)for(var p:net.cells())NETWORKS.put(p,net);return net;}
@@ -54,7 +55,7 @@ public final class Terrestrial {
  public static ItemStack capture(ServerLevel l,Mob m){
   restore(m);var out=TagValueOutput.createWithContext(ProblemReporter.DISCARDING,l.registryAccess());m.saveWithoutId(out);
   CompoundTag tag=new CompoundTag();tag.putString("terrarium_type",BuiltInRegistries.ENTITY_TYPE.getKey(m.getType()).toString());tag.put("terrarium_entity",out.buildResult());
-  var stack=new ItemStack(AquariumMod.MOB_NET);stack.set(DataComponents.CUSTOM_DATA,CustomData.of(tag));stack.set(DataComponents.CUSTOM_NAME,Component.literal(m.getName().getString()+" in Mob Net"));m.discard();TARGETS.remove(m);PREVIOUS.remove(m);AVOID_TICKS.remove(m);AVOID_SIDE.remove(m);return stack;
+  var stack=new ItemStack(AquariumMod.MOB_NET);stack.set(DataComponents.CUSTOM_DATA,CustomData.of(tag));stack.set(DataComponents.CUSTOM_NAME,Component.literal(m.getName().getString()+" in Mob Net"));m.discard();TARGETS.remove(m);PREVIOUS.remove(m);DODGE_DIR.remove(m);DODGE_STEPS.remove(m);return stack;
  }
  public static Mob load(ServerLevel l,ItemStack net){
   var tag=net.getOrDefault(DataComponents.CUSTOM_DATA,CustomData.EMPTY).copyTag();var id=Identifier.tryParse(tag.getString("terrarium_type").orElse(""));var type=id==null?null:BuiltInRegistries.ENTITY_TYPE.getValue(id);
@@ -98,24 +99,45 @@ public final class Terrestrial {
    if(reached){var neighbors=new ArrayList<BlockPos>();for(Direction d:Direction.values()){var p=target.relative(d);if(l.hasChunkAt(p)&&canStep(l,target,p,air))neighbors.add(p);}if(neighbors.size()>1)neighbors.remove(PREVIOUS.get(m));if(!neighbors.isEmpty()){PREVIOUS.put(m,target);target=neighbors.get(l.getRandom().nextInt(neighbors.size()));}center=Vec3.atLowerCornerOf(target).add(.5,air?.5:.18,.5);delta=center.subtract(m.position());}
    TARGETS.put(m,target);m.setDeltaMovement(Vec3.ZERO);if(delta.lengthSqr()>.0001){double normal=air?NORMAL_FLY_SPEED:NORMAL_GROUND_SPEED;Vec3 desired=delta.normalize().scale(Math.min(normal*MOVE_FACTOR,delta.length()));Vec3 step=steer(l,m,desired,air);if(step.lengthSqr()<1.0E-8){TARGETS.remove(m);continue;}boolean old=m.noPhysics;try{m.noPhysics=true;m.move(MoverType.SELF,step);}finally{m.noPhysics=old;}float yaw=(float)Math.toDegrees(Math.atan2(-step.x,step.z));m.setYRot(yaw);m.setYBodyRot(yaw);m.setYHeadRot(yaw);m.walkAnimation.update((float)(step.horizontalDistance()*12.0),1.0f,1.0f);}
   }
-  TARGETS.keySet().removeIf(Entity::isRemoved);PREVIOUS.keySet().removeIf(Entity::isRemoved);AVOID_TICKS.keySet().removeIf(Entity::isRemoved);AVOID_SIDE.keySet().removeIf(Entity::isRemoved);
+  TARGETS.keySet().removeIf(Entity::isRemoved);PREVIOUS.keySet().removeIf(Entity::isRemoved);DODGE_DIR.keySet().removeIf(Entity::isRemoved);DODGE_STEPS.keySet().removeIf(Entity::isRemoved);
   }finally{activeLevel=null;CHAMBERS.clear();NETWORKS.clear();}
  }
  private static Vec3 steer(ServerLevel l,Mob m,Vec3 desired,boolean air){
-  int remaining=AVOID_TICKS.getOrDefault(m,0),side=AVOID_SIDE.getOrDefault(m,(m.getUUID().hashCode()&1)==0?1:-1);
-  if(remaining>0){
-   for(int deg:new int[]{90,75,105,120,60,135,150,180}){Vec3 candidate=turnY(desired,deg*side);if(validStep(l,m,candidate,air)){if(remaining<=1){AVOID_TICKS.remove(m);AVOID_SIDE.remove(m);}else AVOID_TICKS.put(m,remaining-1);return candidate;}}
-   if(air){double len=desired.length();for(double rise:new double[]{.85,-.85,1.25,-1.25}){Vec3 candidate=new Vec3(desired.x,desired.y+len*rise,desired.z);if(candidate.lengthSqr()>0)candidate=candidate.normalize().scale(len);if(validStep(l,m,candidate,true)){AVOID_TICKS.put(m,Math.max(0,remaining-1));return candidate;}}}
-   AVOID_TICKS.remove(m);AVOID_SIDE.remove(m);
+  int remaining=DODGE_STEPS.getOrDefault(m,0);
+  Vec3 dodge=DODGE_DIR.get(m);
+  if(remaining>0&&dodge!=null){
+   Vec3 candidate=dodge.scale(Math.max(.001,desired.length()));
+   if(validStep(l,m,candidate,air)){
+    if(remaining<=1){DODGE_STEPS.remove(m);DODGE_DIR.remove(m);}else DODGE_STEPS.put(m,remaining-1);
+    return candidate;
+   }
+   DODGE_STEPS.remove(m);DODGE_DIR.remove(m);
   }
   if(validStep(l,m,desired,air))return desired;
-  int preferred=(m.getUUID().hashCode()&1)==0?1:-1;double len=Math.max(.001,desired.length());int duration=Math.clamp((int)Math.ceil(.32/len),4,12);
-  for(int s:new int[]{preferred,-preferred})for(int deg:new int[]{90,75,105,120,60}){Vec3 candidate=turnY(desired,deg*s);if(validStep(l,m,candidate,air)){AVOID_SIDE.put(m,s);AVOID_TICKS.put(m,duration-1);return candidate;}}
-  if(air){for(double rise:new double[]{.85,-.85,1.25,-1.25}){Vec3 candidate=new Vec3(desired.x,desired.y+len*rise,desired.z);if(candidate.lengthSqr()>0)candidate=candidate.normalize().scale(len);if(validStep(l,m,candidate,true)){AVOID_SIDE.put(m,preferred);AVOID_TICKS.put(m,duration-1);return candidate;}}}
-  for(int deg:new int[]{150,-150,180}){Vec3 candidate=turnY(desired,deg);if(validStep(l,m,candidate,air)){AVOID_SIDE.put(m,deg<0?-1:1);AVOID_TICKS.put(m,Math.max(3,duration/2));return candidate;}}
+
+  double len=Math.max(.001,desired.length());
+  Direction facing=horizontalFacing(desired,m);
+  ArrayList<Direction> choices=new ArrayList<>(List.of(Direction.NORTH,Direction.SOUTH,Direction.WEST,Direction.EAST));
+  choices.remove(facing);
+  int pick=l.getRandom().nextInt(choices.size());
+  for(int i=0;i<choices.size();i++){
+   Direction d=choices.get((pick+i)%choices.size());
+   Vec3 candidate=new Vec3(d.getStepX()*len,0,d.getStepZ()*len);
+   if(validStep(l,m,candidate,air)){
+    DODGE_DIR.put(m,new Vec3(d.getStepX(),0,d.getStepZ()));
+    DODGE_STEPS.put(m,1);
+    return candidate;
+   }
+  }
   return Vec3.ZERO;
  }
- private static Vec3 turnY(Vec3 v,double degrees){double a=Math.toRadians(degrees),c=Math.cos(a),s=Math.sin(a);return new Vec3(v.x*c-v.z*s,v.y,v.x*s+v.z*c);}
+ private static Direction horizontalFacing(Vec3 desired,Mob m){
+  if(Math.abs(desired.x)>1.0E-6||Math.abs(desired.z)>1.0E-6){
+   if(Math.abs(desired.x)>=Math.abs(desired.z))return desired.x>=0?Direction.EAST:Direction.WEST;
+   return desired.z>=0?Direction.SOUTH:Direction.NORTH;
+  }
+  return Direction.fromYRot(m.getYRot());
+ }
  private static boolean validStep(ServerLevel l,Mob m,Vec3 step,boolean air){
   Vec3 next=m.position().add(step);BlockPos from=m.blockPosition(),to=BlockPos.containing(next.x,next.y,next.z);if(!l.hasChunkAt(to)||!Enclosures.isLand(l.getBlockState(to)))return false;if(!to.equals(from)&&!canStep(l,from,to,air))return false;
   double current=collisionPenalty(l,m,m.position()),after=collisionPenalty(l,m,next);
