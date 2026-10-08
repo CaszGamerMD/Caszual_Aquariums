@@ -98,6 +98,22 @@ public final class Inhabitants {
   double remaining=DODGE_DISTANCE.getOrDefault(m,0.0);
   Vec3 dodge=DODGE_DIR.get(m);
   double len=Math.max(.001,desired.length());
+  double overlap=collisionPenalty(l,m,m.position());
+  if(overlap>1.0E-9){
+   DODGE_DISTANCE.remove(m);DODGE_DIR.remove(m);
+   Direction facing=horizontalFacing(desired,m);
+   ArrayList<Direction> escape=perpendicularChoices(facing);
+   if(l.getRandom().nextBoolean())Collections.reverse(escape);
+   escape.add(facing.getOpposite());escape.add(facing);
+   Vec3 best=Vec3.ZERO;double bestPenalty=overlap;
+   for(Direction d:escape){
+    Vec3 candidate=new Vec3(d.getStepX()*len,0,d.getStepZ()*len);
+    if(!validStep(l,m,candidate))continue;
+    double after=collisionPenalty(l,m,m.position().add(candidate));
+    if(after+1.0E-10<bestPenalty){bestPenalty=after;best=candidate;}
+   }
+   if(best.lengthSqr()>1.0E-8)return best;
+  }
   if(remaining>0&&dodge!=null){
    Vec3 candidate=dodge.scale(Math.min(len,remaining));
    if(validStep(l,m,candidate)){
