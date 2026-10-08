@@ -114,7 +114,7 @@ public final class Terrestrial {
     Vec3 candidate=dodge.scale(len);
     if(validStep(l,m,candidate,air)){
      double after=collisionPenalty(l,m,m.position().add(candidate));
-     if(after+1.0E-10<overlap)return candidate;
+     if(after<=overlap+1.0E-9)return candidate;
     }
     DODGE_DISTANCE.remove(m);DODGE_DIR.remove(m);dodge=null;remaining=0;
    }
@@ -127,7 +127,7 @@ public final class Terrestrial {
     Vec3 candidate=new Vec3(d.getStepX()*len,0,d.getStepZ()*len);
     if(!validStep(l,m,candidate,air))continue;
     double after=collisionPenalty(l,m,m.position().add(candidate));
-    if(after+1.0E-10<bestPenalty){bestPenalty=after;best=candidate;}
+    if(after<=overlap+1.0E-9&&(best.lengthSqr()<1.0E-8||after+1.0E-10<bestPenalty)){bestPenalty=after;best=candidate;}
    }
    if(best.lengthSqr()>1.0E-8){
     DODGE_DIR.put(m,best.normalize());DODGE_DISTANCE.put(m,-1.0);
