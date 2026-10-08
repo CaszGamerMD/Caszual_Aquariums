@@ -108,7 +108,7 @@ public final class Terrestrial {
   double len=Math.max(.001,desired.length());
   double overlap=collisionPenalty(l,m,m.position());
 
-  // If decor was moved onto a resident, lock one escape direction until overlap is zero.
+  // Decor can be moved onto a resident. Lock one escape direction until overlap reaches zero.
   if(overlap>1.0E-9){
    if(remaining<0&&dodge!=null){
     Vec3 candidate=dodge.scale(len);
@@ -134,19 +134,30 @@ public final class Terrestrial {
     return best;
    }
    return Vec3.ZERO;
-  }else if(remaining<0){
-   DODGE_DISTANCE.remove(m);DODGE_DIR.remove(m);dodge=null;remaining=0;
+  }else if(remaining<0&&dodge!=null){
+   // Keep the side offset while moving forward past the obstacle instead of diving back into it.
+   remaining=0;DODGE_DISTANCE.put(m,0.0);
   }
 
   if(remaining>0&&dodge!=null){
    Vec3 candidate=dodge.scale(Math.min(len,remaining));
    if(validStep(l,m,candidate,air)){
     remaining-=candidate.length();
-    if(remaining<=1.0E-4){DODGE_DISTANCE.remove(m);DODGE_DIR.remove(m);}else DODGE_DISTANCE.put(m,remaining);
+    DODGE_DISTANCE.put(m,remaining<=1.0E-4?0.0:remaining);
     return candidate;
    }
-   DODGE_DISTANCE.remove(m);DODGE_DIR.remove(m);
+   remaining=0;DODGE_DISTANCE.put(m,0.0);
   }
+
+  // A completed/edge-limited sidestep slides forward until the normal target line is clear.
+  if(dodge!=null&&remaining==0){
+   if(validStep(l,m,desired,air)){DODGE_DISTANCE.remove(m);DODGE_DIR.remove(m);return desired;}
+   Direction facing=horizontalFacing(desired,m);
+   Vec3 forward=new Vec3(facing.getStepX()*len,0,facing.getStepZ()*len);
+   if(validStep(l,m,forward,air))return forward;
+   DODGE_DISTANCE.remove(m);DODGE_DIR.remove(m);dodge=null;
+  }
+
   if(validStep(l,m,desired,air))return desired;
 
   Direction facing=horizontalFacing(desired,m);
@@ -157,7 +168,7 @@ public final class Terrestrial {
    Vec3 candidate=new Vec3(d.getStepX()*len,0,d.getStepZ()*len);
    if(validStep(l,m,candidate,air)){
     DODGE_DIR.put(m,new Vec3(d.getStepX(),0,d.getStepZ()));
-    DODGE_DISTANCE.put(m,.70-candidate.length());
+    DODGE_DISTANCE.put(m,Math.max(0,.70-candidate.length()));
     return candidate;
    }
   }
