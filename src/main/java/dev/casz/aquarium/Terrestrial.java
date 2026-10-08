@@ -111,7 +111,7 @@ public final class Terrestrial {
    DODGE_DISTANCE.remove(m);DODGE_DIR.remove(m);
    Direction facing=horizontalFacing(desired,m);
    ArrayList<Direction> escape=perpendicularChoices(facing);
-   if(l.getRandom().nextBoolean())Collections.reverse(escape);
+   if((m.getUUID().hashCode()&1)!=0)Collections.reverse(escape);
    escape.add(facing.getOpposite());escape.add(facing);
    Vec3 best=Vec3.ZERO;double bestPenalty=overlap;
    for(Direction d:escape){
