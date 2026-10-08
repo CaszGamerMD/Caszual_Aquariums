@@ -84,7 +84,10 @@ public class TerrariumGameTests {
   decor.x=.5f;decor.y=.18f;decor.z=.5f;decor.scale=.45f;be.changed();
   var chicken=h.spawn(EntityTypes.CHICKEN,.5f,1.18f,1.5f);Terrestrial.configure(chicken);
   h.assertTrue(be.collides(chicken.getBoundingBox()),"Regression setup must start the mob intersecting decor");
-  h.onEachTick(()->{if(chicken.isAlive()&&!be.collides(chicken.getBoundingBox())&&chicken.blockPosition().equals(far))h.succeed();});
+  h.onEachTick(()->{
+   if(h.getLevel().getGameTime()%20==0)System.out.println("[terrarium-overlap] pos="+chicken.position()+" block="+chicken.blockPosition()+" penalty="+be.collisionPenalty(chicken.getBoundingBox())+" far="+chicken.blockPosition().equals(far));
+   if(chicken.isAlive()&&!be.collides(chicken.getBoundingBox())&&chicken.blockPosition().equals(far))h.succeed();
+  });
  }
 
 }
