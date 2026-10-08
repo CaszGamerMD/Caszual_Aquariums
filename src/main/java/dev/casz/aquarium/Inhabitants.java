@@ -64,7 +64,7 @@ public final class Inhabitants {
   ItemStack stack;
   if(mob instanceof Bucketable bucketable){stack=bucketable.getBucketItemStack();bucketable.saveToBucketTag(stack);}
   else {stack=new ItemStack(AquariumMod.CREATURE_BUCKET);var out=TagValueOutput.createWithContext(ProblemReporter.DISCARDING,level.registryAccess());mob.saveWithoutId(out);CompoundTag data=new CompoundTag();data.putString("aquarium_type",BuiltInRegistries.ENTITY_TYPE.getKey(mob.getType()).toString());data.put("aquarium_entity",out.buildResult());stack.set(DataComponents.CUSTOM_DATA,CustomData.of(data));stack.set(DataComponents.CUSTOM_NAME,Component.literal("Aquarium "+mob.getName().getString()+" Bucket"));}
-  mob.discard();TARGETS.remove(mob);PREVIOUS.remove(mob);LANES.remove(mob);DODGE_DIR.remove(mob);DODGE_STEPS.remove(mob);return stack;
+  mob.discard();TARGETS.remove(mob);PREVIOUS.remove(mob);LANES.remove(mob);DODGE_DIR.remove(mob);DODGE_DISTANCE.remove(mob);return stack;
  }
  public static boolean summonDrowned(ServerLevel level,BlockPos pos){
   var net=Network.scan(level,pos);if(!net.complete()||net.residents(level).size()>=net.capacity())return false;
