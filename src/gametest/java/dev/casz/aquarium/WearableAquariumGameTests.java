@@ -50,4 +50,26 @@ public final class WearableAquariumGameTests {
    &&WearableAquariumItem.contents(item).size()==3,"Contents must be clamped to the weighted capacity");
   h.succeed();
  }
+ @GameTest public void legacyWearableCosmeticRetainsItsOriginalFish(GameTestHelper h){
+  // 0.8.0 wearables were regular Items containing vanilla fish buckets.
+  // Their stable registry ID and container contents must survive the 0.8.2
+  // change to BlockItem and the place / pick-up round trip.
+  ItemStack oldItem=new ItemStack(AquariumMod.WEARABLE_AQUARIUM);
+  ItemStack edited=new ItemStack(Items.TROPICAL_FISH_BUCKET);
+  edited.set(DataComponents.TROPICAL_FISH_BASE_COLOR,DyeColor.CYAN);
+  edited.set(DataComponents.TROPICAL_FISH_PATTERN_COLOR,DyeColor.BLACK);
+  oldItem.set(DataComponents.CONTAINER,net.minecraft.world.item.component.ItemContainerContents.fromItems(
+    java.util.List.of(new ItemStack(Items.SALMON_BUCKET),edited)));
+  h.assertTrue(WearableAquariumItem.contents(oldItem).size()==2,"Old saved aquarium fish must still be readable");
+  h.assertTrue(oldItem.getItem() instanceof net.minecraft.world.item.BlockItem,"Legacy wearable registry ID must now resolve to the placeable item");
+  var placed=new WearableAquariumBlockEntity(BlockPos.ZERO,AquariumMod.WEARABLE_AQUARIUM_BLOCK.defaultBlockState());
+  placed.fromItem(oldItem);
+  h.assertTrue(placed.usedSlots()==2,"Placing a legacy item must not clear its contents");
+  ItemStack recovered=placed.asItem();
+  var stacks=WearableAquariumItem.contents(recovered);
+  h.assertTrue(stacks.size()==2&&stacks.get(1).get(DataComponents.TROPICAL_FISH_BASE_COLOR)==DyeColor.CYAN
+   &&stacks.get(1).get(DataComponents.TROPICAL_FISH_PATTERN_COLOR)==DyeColor.BLACK,
+   "Old tropical fish variants must survive placement and cosmetic re-equipping");
+  h.succeed();
+ }
 }
