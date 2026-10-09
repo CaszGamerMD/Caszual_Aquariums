@@ -28,7 +28,7 @@
 
 ## Placing decorations
 
-You can add many individual decorations rather than only one per tank. Items and blocks are presented as visual displays. Where possible, block items use their **placed block model**, while non-block items use an item display. You can position them throughout the connected enclosure and slightly beyond its bounds.
+You can add many individual decorations rather than only one per tank. Items and blocks are presented as visual displays. Where possible, block items use their **placed block model**, while non-block items use an item display. You can position them throughout the connected enclosure. Model faces extending beyond the interior of the joined tank volume are clipped away instead of appearing outside the glass.
 
 To place a block/item directly, right-click an aquarium or terrarium with a supported decorative block item or trident. The editor offers finer manipulation. Decorations are **not active world blocks**: they don't grow, tick, damage inhabitants or act as usable inventories. The movement controller checks decoration bounds when moving creatures.
 
@@ -42,8 +42,8 @@ Some early special decorations include stone/polished-blackstone buttons shown a
 
 ## Persistence and multiplayer
 
-Each item's anchor, position, scale, rotations and source item are saved with the enclosure data. Decorations use display entities and are intended to be visible to other nearby players. Breaking a tank returns its retained decor in normal survival loot paths.
+Each item's anchor, position, scale, rotations and source item are saved with the enclosure data. From 0.8.1, decorations are rendered as client-side clipped block/item model geometry; the saved data synchronizes to other players. Previously spawned legacy decoration display entities are automatically cleaned up. Breaking a tank returns its retained decor in normal survival loot paths.
 
-**Rendering limits:** The code does not guarantee perfect clipping/masking of every decoration against glass or full compatibility with model-rendering mods. Check oversized objects manually. See [Troubleshooting](Troubleshooting.md).
+**Rendering limits:** Standard baked block and item geometry is clipped to the tank interiors, including connected cells; special modded item renderers that bypass baked quads may not obey clipping. Check such unusual models manually. See [Troubleshooting](Troubleshooting.md).
 
 Related: [Aquariums](Aquariums-and-Swim-Tubes.md) · [Terrariums](Terrariums-and-Pipes.md)

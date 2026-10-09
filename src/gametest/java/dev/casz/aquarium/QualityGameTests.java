@@ -33,12 +33,34 @@ public final class QualityGameTests {
   BlockPos pos=h.absolutePos(new BlockPos(0,1,1));var player=h.makeMockPlayer(GameType.SURVIVAL);player.setPos(Vec3.atCenterOf(pos));var menu=new AquariumMenu(3,player.getInventory(),h.getLevel(),pos);
   h.assertTrue(menu.data.get(1)==6&&menu.data.get(24)==1,"Six residents must expose a second Mobs page");h.assertTrue(menu.clickMenuButton(player,24)&&menu.data.get(23)==1,"Next page must be selectable");h.assertTrue(menu.clickMenuButton(player,100)&&menu.data.get(2)==5,"First row on page two must select the sixth resident");h.succeed();
  }
- @GameTest public void editingDecorationReusesDisplayEntities(GameTestHelper h){
+ @GameTest public void decorationEditsSynchronizeWithoutDisplayEntities(GameTestHelper h){
   h.setBlock(1,1,1,AquariumMod.TANK);BlockPos pos=h.absolutePos(new BlockPos(1,1,1));var level=h.getLevel();var be=(TankBlockEntity)level.getBlockEntity(pos);
-  be.addDecoration(new net.minecraft.world.item.ItemStack(Items.DIAMOND_BLOCK),EnclosureDecoration.Anchor.BODY);be.addDecoration(new net.minecraft.world.item.ItemStack(Items.OAK_FENCE),EnclosureDecoration.Anchor.FLOOR);be.tick();
-  var before=level.getEntitiesOfClass(net.minecraft.world.entity.Display.class,new AABB(pos).inflate(3),e->true).stream().map(net.minecraft.world.entity.Entity::getUUID).collect(java.util.stream.Collectors.toSet());
-  be.decorations.getFirst().x+=.1f;be.changed();be.tick();
-  var after=level.getEntitiesOfClass(net.minecraft.world.entity.Display.class,new AABB(pos).inflate(3),e->true).stream().map(net.minecraft.world.entity.Entity::getUUID).collect(java.util.stream.Collectors.toSet());
-  h.assertTrue(before.size()==2&&before.equals(after),"Editing decor must reuse existing display entities instead of respawning them");h.succeed();
+  be.addDecoration(new net.minecraft.world.item.ItemStack(Items.DIAMOND_BLOCK),EnclosureDecoration.Anchor.BODY);
+  be.addDecoration(new net.minecraft.world.item.ItemStack(Items.OAK_FENCE),EnclosureDecoration.Anchor.FLOOR);
+  int before=be.revision();be.tick();be.decorations.getFirst().x+=.1f;be.changed();be.tick();
+  var legacy=level.getEntitiesOfClass(net.minecraft.world.entity.Display.class,new AABB(pos).inflate(3),e->true);
+  h.assertTrue(be.revision()>before&&legacy.isEmpty(),"Decoration updates must sync to client without spawning unclipped display entities");
+  h.succeed();
  }
+ @GameTest public void squidSizesRemainAtQuarterScaleAndRestoreOnCapture(GameTestHelper h){
+  h.setBlock(1,1,1,AquariumMod.TANK);
+  h.setBlock(2,1,1,AquariumMod.TANK);
+  var level=h.getLevel();
+  var squid=h.spawn(EntityTypes.SQUID,1.5f,1.4f,1.5f);
+  var glow=h.spawn(EntityTypes.GLOW_SQUID,2.5f,1.4f,1.5f);
+  for(var mob:java.util.List.of(squid,glow)){
+   var scale=mob.getAttribute(net.minecraft.world.entity.ai.attributes.Attributes.SCALE);
+   h.assertTrue(scale!=null,"Squid should support the SCALE attribute");
+   scale.setBaseValue(1.6);
+   // An existing resident may already have the MANAGED tag from an older JAR.
+   mob.addTag(AquariumMod.MANAGED);
+   Inhabitants.configure(mob);Inhabitants.configure(mob);
+   h.assertTrue(Math.abs(scale.getBaseValue()-.4)<.0001,"Managed squid must remain 25% of its original size, even after repeated ticks");
+   var returned=Inhabitants.capture(level,mob);
+   h.assertTrue(returned.is(AquariumMod.CREATURE_BUCKET),"Squid must remain retrievable");
+   h.assertTrue(Math.abs(scale.getBaseValue()-1.6)<.0001,"A retrieved squid must regain its original scale");
+  }
+  h.succeed();
+ }
+
 }

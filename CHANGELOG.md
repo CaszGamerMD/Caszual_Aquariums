@@ -1,3 +1,9 @@
+## 0.8.1
+- Restored 25% scale for squid and glow squid in aquatic tanks, including pre-existing residents; restore their original scale when removed.
+- Replaced unclipped world display entities for decorations with a client block-entity renderer that clips block/item faces against the interiors of linked tank cells.
+- Keep decoration positions, rotations, scales and saved item data. Update decorative geometry on the client when a player edits it; remove legacy display entities.
+- Added regression coverage for both squid species, original-size restoration, and decoration revision syncing.
+
 ## 0.8.0
 - Added a Wearable Aquarium item storing up to four vanilla fish buckets while preserving tropical fish variants and bucket data.
 - Main-hand wearable plus offhand fish bucket inserts a fish; offhand empty bucket retrieves the latest fish.

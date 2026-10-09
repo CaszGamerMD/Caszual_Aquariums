@@ -47,3 +47,7 @@ If a structure is broken/split and no longer holds its previous population, over
 `4 Aquarium blocks + 12 Swim Tubes = 4 residents` with the default `fish-per-tank-block=1` setting. A server can increase the per-tank capacity to 16 in [Configuration](Configuration-and-Limits.md).
 
 See [Decorating and Editor](Decorating-and-Editor.md) for floors, decorative blocks and the network management interface.
+
+## Squid size (0.8.1+)
+
+Ink Sacs and Glow Ink Sacs place squid and glow squid as managed aquarium residents. Both are rendered at **25% of their original scale** while inside the aquarium. Their previous size is restored when retrieved from the tank.

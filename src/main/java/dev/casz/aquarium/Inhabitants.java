@@ -47,17 +47,49 @@ public final class Inhabitants {
   if(!player.getAbilities().instabuild){stack.shrink(1);return new AddResult(true,bucket?new ItemStack(Items.BUCKET):ItemStack.EMPTY);}
   return new AddResult(true,ItemStack.EMPTY);
  }
+ // Original squid size is preserved so an aquarium squid can be released at its original scale.
+ private static final String SQUID_SCALE_TAG=AquariumMod.ID+":original_squid_scale=";
+ private static boolean squid(Mob mob){return mob.getType()==EntityTypes.SQUID||mob.getType()==EntityTypes.GLOW_SQUID;}
+ private static void scaleSquid(Mob mob){
+  if(!squid(mob))return;
+  var attribute=mob.getAttribute(Attributes.SCALE);
+  if(attribute==null)return;
+  double original=attribute.getBaseValue();
+  boolean recorded=false;
+  for(String tag:mob.entityTags())if(tag.startsWith(SQUID_SCALE_TAG)){
+   recorded=true;
+   try{original=Double.parseDouble(tag.substring(SQUID_SCALE_TAG.length()));}
+   catch(NumberFormatException ignored){}
+   break;
+  }
+  if(!recorded)mob.addTag(SQUID_SCALE_TAG+original);
+  double desired=original*.25d;
+  if(Math.abs(attribute.getBaseValue()-desired)>1.0E-6)attribute.setBaseValue(desired);
+ }
+ private static void restoreSquid(Mob mob){
+  if(!squid(mob))return;
+  var attribute=mob.getAttribute(Attributes.SCALE);
+  for(String tag:new ArrayList<>(mob.entityTags()))if(tag.startsWith(SQUID_SCALE_TAG)){
+   try{
+    double original=Double.parseDouble(tag.substring(SQUID_SCALE_TAG.length()));
+    if(attribute!=null)attribute.setBaseValue(original);
+   }catch(NumberFormatException ignored){}
+   mob.removeTag(tag);
+  }
+ }
  public static void configure(Mob mob){
   if(!mob.entityTags().contains(AquariumMod.MANAGED)){
    if(mob.isNoAi())mob.addTag(AquariumMod.ID+":original_no_ai");if(mob.isNoGravity())mob.addTag(AquariumMod.ID+":original_no_gravity");mob.addTag(AquariumMod.MANAGED);
   }
   mob.setNoAi(true);mob.setNoGravity(true);mob.setTarget(null);mob.setPersistenceRequired();mob.setAirSupply(mob.getMaxAirSupply());
   if(mob instanceof Pufferfish puff)puff.setPuffState(0);
+  scaleSquid(mob);
 
   if(mob.getType()==EntityTypes.TURTLE&&mob instanceof AgeableMob ageable)ageable.setAge(-24000);
  }
  private static double height(Mob mob){return mob.getType()==EntityTypes.DROWNED||mob.getType()==EntityTypes.TURTLE?.14:.4;}
  public static ItemStack capture(ServerLevel level,Mob mob){
+  restoreSquid(mob);
   mob.setNoAi(mob.entityTags().contains(AquariumMod.ID+":original_no_ai"));mob.setNoGravity(mob.entityTags().contains(AquariumMod.ID+":original_no_gravity"));
   ItemStack stack;
   if(mob instanceof Bucketable bucketable){stack=bucketable.getBucketItemStack();bucketable.saveToBucketTag(stack);}
