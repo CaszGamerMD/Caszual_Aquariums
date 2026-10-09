@@ -106,7 +106,7 @@ public class AquariumGameTests {
   h.setBlock(1,1,1,AquariumMod.TANK);var pos=h.absolutePos(new BlockPos(1,1,1));var p=h.makeMockPlayer(net.minecraft.world.level.GameType.SURVIVAL);
   var ink=new net.minecraft.world.item.ItemStack(Items.GLOW_INK_SAC);h.assertTrue(Inhabitants.add(h.getLevel(),pos,ink,p).success(),"Glow ink must add a mini squid");
   var mob=Network.scan(h.getLevel(),pos).residents(h.getLevel()).getFirst();h.assertTrue(mob.getType()==EntityTypes.GLOW_SQUID&&mob.isNoAi(),"Mini squid must be peaceful");
-  h.assertTrue(mob.getAttribute(net.minecraft.world.entity.ai.attributes.Attributes.SCALE).getBaseValue()==1.0,"Aquarium mobs must remain full scale");
+  h.assertTrue(Math.abs(mob.getAttribute(net.minecraft.world.entity.ai.attributes.Attributes.SCALE).getBaseValue()-.25)<.0001,"Managed glow squid must be quarter-sized");
   var bucket=Inhabitants.capture(h.getLevel(),mob);h.assertTrue(bucket.is(AquariumMod.CREATURE_BUCKET),"Squid must have a reusable creature bucket");
   h.assertTrue(Inhabitants.add(h.getLevel(),pos,bucket,p).success(),"Creature bucket must restore squid");
   var restored=Network.scan(h.getLevel(),pos).residents(h.getLevel()).getFirst();h.assertTrue(!restored.getUUID().equals(mob.getUUID()),"Restored squid must have a fresh UUID");Inhabitants.capture(h.getLevel(),restored);
@@ -125,13 +125,13 @@ public class AquariumGameTests {
   h.assertTrue(be.decorations.stream().anyMatch(d->d.stack.is(Items.STONE_BUTTON))&&be.getBlockState().getValue(AquariumBlock.DECOR)==0,"Old rock decoration must migrate once");
   for(var item:new net.minecraft.world.item.Item[]{Items.CACTUS,Items.WITHER_ROSE,Items.OAK_SAPLING,Items.DIAMOND_BLOCK})h.assertTrue(AquariumMod.isDecoration(new net.minecraft.world.item.ItemStack(item)),"All placeable blocks must be harmless decor");
   be.addDecoration(new net.minecraft.world.item.ItemStack(Items.DIAMOND_BLOCK),EnclosureDecoration.Anchor.FLOOR);be.tick();h.assertTrue(be.decorations.stream().anyMatch(d->d.stack.is(Items.DIAMOND_BLOCK)),"Generic blocks must use their vanilla placed model");
-  h.assertTrue(h.getLevel().getEntitiesOfClass(Display.BlockDisplay.class,new AABB(pos).inflate(2),d->d.getBlockState().is(Blocks.DIAMOND_BLOCK)).size()==1,"Generic decor must create exactly one display");h.succeed();
+  h.assertTrue(h.getLevel().getEntitiesOfClass(Display.class,new AABB(pos).inflate(2),d->true).isEmpty(),"Clipped decor must not create world display entities");h.assertTrue(be.revision()>0,"Generic decor changes must be marked for client syncing");h.succeed();
  }
  @GameTest(maxTicks=120) public void animatedChestClosesAndDecorPersists(GameTestHelper h){
   h.setBlock(1,1,1,AquariumMod.TANK);var pos=h.absolutePos(new BlockPos(1,1,1));var be=(TankBlockEntity)h.getLevel().getBlockEntity(pos);be.addDecoration(new net.minecraft.world.item.ItemStack(Items.CHEST),EnclosureDecoration.Anchor.FLOOR);be.decorations.getFirst().rotY=45;be.decorations.getFirst().x=.7f;be.tick();
-  var displays=h.getLevel().getEntitiesOfClass(Display.BlockDisplay.class,new AABB(pos).inflate(2),d->d.getBlockState().is(Blocks.CHEST));h.assertTrue(displays.size()==1,"Chest must render using its vanilla placed block model");
+  var displays=h.getLevel().getEntitiesOfClass(Display.class,new AABB(pos).inflate(2),d->true);h.assertTrue(displays.isEmpty()&&be.decorations.getFirst().stack.is(Items.CHEST),"Chest must be saved as a clipped client-rendered placed block model, without display entities");
   var tag=be.saveWithoutMetadata(h.getLevel().registryAccess());var loaded=new TankBlockEntity(pos,be.getBlockState());loaded.loadAdditional(net.minecraft.world.level.storage.TagValueInput.create(net.minecraft.util.ProblemReporter.DISCARDING,h.getLevel().registryAccess(),tag));h.assertTrue(loaded.decorations.size()==1&&loaded.decorations.getFirst().stack.is(Items.CHEST),"Decor item and layout must persist through saving");
-  h.runAfterDelay(79,()->{h.assertTrue(!be.decorations.isEmpty(),"Decoration must remain stored");h.getLevel().removeBlock(pos,false);h.assertTrue(displays.getFirst().isRemoved(),"Removing tank must remove decorative display");h.succeed();});
+  h.runAfterDelay(79,()->{h.assertTrue(!be.decorations.isEmpty(),"Decoration must remain stored");h.getLevel().removeBlock(pos,false);h.assertTrue(h.getLevel().getEntitiesOfClass(Display.class,new AABB(pos).inflate(2),d->true).isEmpty(),"Removing the tank must not leave legacy decoration display entities");h.succeed();});
  }
  @GameTest public void miniDrownedUsesCapacityAndIsPeaceful(GameTestHelper h){
   h.setBlock(1,1,1,AquariumMod.TANK);var pos=h.absolutePos(new BlockPos(1,1,1));h.assertTrue(Inhabitants.summonDrowned(h.getLevel(),pos),"Trident helper must spawn mini drowned with room");var mob=Network.scan(h.getLevel(),pos).residents(h.getLevel()).getFirst();h.assertTrue(mob.getType()==EntityTypes.DROWNED&&mob.isNoAi()&&mob.getAttribute(net.minecraft.world.entity.ai.attributes.Attributes.SCALE).getBaseValue()==1.0,"Aquarium drowned must be full scale and peaceful");
