@@ -1,0 +1,15 @@
+{
+  "replace": false,
+  "values": [
+    "linked_aquariums:aquarium",
+    "linked_aquariums:swim_tube",
+    "linked_aquariums:passive_terrarium",
+    "linked_aquariums:hostile_terrarium",
+    "linked_aquariums:passive_pipe",
+    "linked_aquariums:hostile_pipe",
+    "linked_aquariums:mob_net",
+    "linked_aquariums:mobitat",
+    "linked_aquariums:tropical_fish_editor",
+    "linked_aquariums:wearable_aquarium"
+  ]
+}
