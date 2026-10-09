@@ -1,5 +1,7 @@
 # Linked Aquariums — Fabric Minecraft 26.2
 
+> **Current 0.7.1 documentation:** Visit the [Caszual Aquariums Wiki](docs/wiki/Home.md) for the up-to-date feature guides and all crafting recipes. The older version 0.4.2 text below is retained as historical reference.
+
 Version 0.4.2 (plain glass and deterministic pipe-water fix).
 
 ## Install
