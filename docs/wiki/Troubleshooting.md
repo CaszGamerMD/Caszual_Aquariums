@@ -43,6 +43,6 @@ The current screen contains a **selected-decoration/item preview and angle contr
 - [Wiki index](Home.md)
 - [Changelog](../../CHANGELOG.md)
 - [Testing notes](../../TESTING.md)
-- [GitHub Issues](../../issues)
+- [GitHub Issues](https://github.com/CaszGamerMD/Caszual_Aquariums/issues)
 
 When reporting a bug, include Minecraft/Fabric/mod versions, reproduction steps, and the relevant `latest.log` or crash report.

@@ -26,4 +26,4 @@ These are **all nine shaped recipes** under `src/main/resources/data/linked_aqua
 
 **Filled Mobitat:** Not a separate recipe. Load creatures into an ordinary Mobitat, then preserve them by carrying or breaking it.
 
-All recipes use vanilla Minecraft ingredients. For exact authoritative values see the [recipe files in the repository](../../tree/main/src/main/resources/data/linked_aquariums/recipe).
+All recipes use vanilla Minecraft ingredients. For exact authoritative values see the [recipe files in the repository](https://github.com/CaszGamerMD/Caszual_Aquariums/tree/main/src/main/resources/data/linked_aquariums/recipe).

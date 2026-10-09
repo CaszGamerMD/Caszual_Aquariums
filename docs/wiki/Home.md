@@ -5,7 +5,7 @@
 # Caszual Aquariums / Linked Aquariums Wiki
 
 **Minecraft Java 26.2 · Fabric · Mod version 0.7.1**  
-GitHub source: [Caszual_Aquariums](../../) · [Changelog](../../CHANGELOG.md) · [Report an issue](../../issues)
+GitHub source: [Caszual_Aquariums](../../) · [Changelog](../../CHANGELOG.md) · [Report an issue](https://github.com/CaszGamerMD/Caszual_Aquariums/issues)
 
 Build linked aquatic habitats, passive or hostile terrariums, and decorative displays; move inhabitants through connected chambers, and carry collections of mobs in a Mobitat.
 
