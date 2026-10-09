@@ -49,7 +49,7 @@ public class AquariumVisualTest implements FabricClientGameTest {
     tank.insert(new ItemStack(Items.TROPICAL_FISH_BUCKET));
    });
    server.runCommand("gamemode spectator @a");
-   server.runCommand("tp @a 1.5 101 -1");
+   server.runCommand("tp @a -2 101 6");
    connection.waitForClientboundPackets();
    context.getInput().lookAt(new BlockPos(1,101,6));
    context.waitTicks(8);connection.waitForChunksRender();
