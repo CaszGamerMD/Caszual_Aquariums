@@ -39,6 +39,21 @@ public class AquariumVisualTest implements FabricClientGameTest {
    context.clickScreenButton("Back");context.clickScreenButton("Mobs");context.waitTicks(3);context.takeScreenshot("editor-mobs");
 
    context.setScreen(IconPreview::new);context.waitTicks(3);context.takeScreenshot("inventory-icons");context.setScreen(()->null);
+   // Placed wearables previously sampled unrelated atlas sprites across their
+   // two-block-tall models. Keep a real client screenshot regression for it.
+   server.runOnServer(s->{
+    var level=connection.getServerLevel();var pos=new BlockPos(1,100,6);
+    level.setBlock(pos,AquariumMod.WEARABLE_AQUARIUM_BLOCK.defaultBlockState(),3);
+    var tank=(WearableAquariumBlockEntity)level.getBlockEntity(pos);
+    tank.insert(new ItemStack(Items.COD_BUCKET));
+    tank.insert(new ItemStack(Items.TROPICAL_FISH_BUCKET));
+   });
+   server.runCommand("gamemode spectator @a");
+   server.runCommand("tp @a 1.5 101 -1");
+   connection.waitForClientboundPackets();
+   context.getInput().lookAt(new BlockPos(1,101,6));
+   context.waitTicks(8);context.waitForChunksRender();
+   context.takeScreenshot("wearable-placed");
   }
  }
  private static class IconPreview extends Screen {
