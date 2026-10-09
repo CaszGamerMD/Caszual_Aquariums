@@ -22,6 +22,10 @@ public final class WearableAquariumBlock extends BaseEntityBlock {
  protected void createBlockStateDefinition(StateDefinition.Builder<Block,BlockState> b){b.add(FACING);}
  public BlockState getStateForPlacement(BlockPlaceContext c){return defaultBlockState().setValue(FACING,c.getHorizontalDirection().getOpposite());}
  public RenderShape getRenderShape(BlockState s){return RenderShape.MODEL;}
+ protected net.minecraft.world.phys.shapes.VoxelShape getShape(BlockState s,net.minecraft.world.level.BlockGetter l,BlockPos p,net.minecraft.world.phys.shapes.CollisionContext c){
+  // The placed aquarium is player-height: its visible torso and head should be selectable too.
+  return net.minecraft.world.phys.shapes.Shapes.box(0,0,0,1,2,1);
+ }
  public BlockEntity newBlockEntity(BlockPos p,BlockState s){return new WearableAquariumBlockEntity(p,s);}
  public void setPlacedBy(Level l,BlockPos p,BlockState s,LivingEntity entity,ItemStack stack){
   super.setPlacedBy(l,p,s,entity,stack);if(l.getBlockEntity(p) instanceof WearableAquariumBlockEntity be)be.fromItem(stack);
