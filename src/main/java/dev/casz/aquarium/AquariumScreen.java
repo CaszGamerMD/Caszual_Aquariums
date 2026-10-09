@@ -144,7 +144,7 @@ public final class AquariumScreen extends AbstractContainerScreen<AquariumMenu>{
    g.text(font,"Transform",268,82,0xFFEAF4F4);
   }
 
-  g.text(font,"Transfer",14,158,0xFFD7E7E8);g.text(font,"Input",16,166,0xFFC9DCDD);g.text(font,"Out",48,166,0xFFC9DCDD);
+  g.text(font,"Input",14,158,0xFFD7E7E8);g.text(font,"Output",46,158,0xFFD7E7E8);
   g.text(font,"Inventory",122,158,0xFFD7E7E8);
 
   if(page==Page.DECOR&&menu.data.get(6)>0){
