@@ -1,3 +1,9 @@
+## 0.8.0
+- Added a Wearable Aquarium item storing up to four vanilla fish buckets while preserving tropical fish variants and bucket data.
+- Main-hand wearable plus offhand fish bucket inserts a fish; offhand empty bucket retrieves the latest fish.
+- Integration with Caszual Additions chest cosmetic provides a transparent humanoid aquarium model and animated miniature fish.
+- Added crafting recipe and Wearable Aquarium wiki guide.
+
 ## 0.7.1
 - Fixed Mobitat inventory name translation.
 - Assigned stable synthetic IDs to render-only Mobitat preview entities so third-party renderers that require entity IDs no longer crash the client.

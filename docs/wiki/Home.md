@@ -20,6 +20,7 @@ Build linked aquatic habitats, passive or hostile terrariums, and decorative dis
 | [Terrariums and Pipes](Terrariums-and-Pipes.md) | Passive/hostile habitats, land and flying mobs, movement rules |
 | [Mobitat and Mob Nets](Mobitat-and-Mob-Nets.md) | Capture, portable storage, names, transporting residents |
 | [Decorating and Editor](Decorating-and-Editor.md) | Mobs/Decorate pages, floors, placement, positioning and scaling |
+| [Wearable Aquarium](Wearable-Aquarium.md) | Four saved fish in a full-body cosmetic |
 | [Tropical Fish Editor](Tropical-Fish-Editor.md) | Edit fish patterns, body colors and accent colors |
 | [Crafting Recipes](Crafting-Recipes.md) | All nine crafting recipes defined in the mod |
 | [Configuration and Limits](Configuration-and-Limits.md) | Capacity, multiplayer, no-spill enclosures, compatibility |

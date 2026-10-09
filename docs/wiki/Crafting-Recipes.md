@@ -4,7 +4,7 @@
 
 # Crafting Recipes
 
-These are **all nine shaped recipes** under `src/main/resources/data/linked_aquariums/recipe/` as of **0.7.1**. Rows are shown exactly as in the crafting JSON; `.` means an empty grid cell.
+These are the **ten shaped recipes** under `src/main/resources/data/linked_aquariums/recipe/` as of **0.7.1**. Rows are shown exactly as in the crafting JSON; `.` means an empty grid cell.
 
 | Craftable | Pattern (top / middle / bottom) | Legend | Output |
 |---|---|---|---|
@@ -14,6 +14,7 @@ These are **all nine shaped recipes** under `src/main/resources/data/linked_aqua
 | **Hostile Terrarium** | `GGG / G.G / III` | `G` Glass; `I` Iron Ingot | **4** |
 | **Passive Terrarium Pipe** | `GGG / .T. / GGG` | `G` Glass; `T` Passive Terrarium | **8** |
 | **Hostile Terrarium Pipe** | `GGG / .T. / GGG` | `G` Glass; `T` Hostile Terrarium | **8** |
+| **Wearable Aquarium** | `AGA / GCG / AGA` | `A` Aquarium; `G` Glass; `C` Iron Chestplate | **1** |
 | **Mob Net** | `.SS / .SS / I..` | `S` String; `I` Stick | **1** |
 | **Mobitat** | `IGI / GCG / IGI` | `I` Iron Nugget; `G` Glass; `C` Chest | **1** |
 | **Tropical Fish Editor** | `GIG / GBG / GIG` | `G` Glass; `I` Iron Ingot; `B` Bucket | **1** |
