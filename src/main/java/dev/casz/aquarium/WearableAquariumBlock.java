@@ -12,11 +12,11 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.*;
-import net.minecraft.world.level.block.state.properties.DirectionProperty;
+import net.minecraft.world.level.block.state.properties.EnumProperty;
 
 public final class WearableAquariumBlock extends BaseEntityBlock {
  public static final MapCodec<WearableAquariumBlock> CODEC=simpleCodec(WearableAquariumBlock::new);
- public static final DirectionProperty FACING=HorizontalDirectionalBlock.FACING;
+ public static final EnumProperty<Direction> FACING=HorizontalDirectionalBlock.FACING;
  public WearableAquariumBlock(Properties p){super(p);registerDefaultState(stateDefinition.any().setValue(FACING,Direction.NORTH));}
  protected MapCodec<? extends BaseEntityBlock> codec(){return CODEC;}
  protected void createBlockStateDefinition(StateDefinition.Builder<Block,BlockState> b){b.add(FACING);}
