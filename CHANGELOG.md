@@ -1,3 +1,10 @@
+## 0.8.2
+- The Wearable Aquarium can be placed upright in the world, loaded with fish buckets or Guardians captured in Mob Nets, and picked up with contents preserved.
+- Four weighted fish slots: fish = 1, Guardian = 2. Empty bucket retrieves a fish; empty Mob Net retrieves a Guardian.
+- Fish and Guardian previews in the placed tank use vanilla entity renderers, including tropical variants, with swimming positions reaching the head.
+- Updated item icon to a watery chestplate containing a fish; thinner 0.22-pixel frame in the placed tank.
+- Existing 0.8.0 wearable fish buckets remain readable, with guardian nets added in the same container component.
+
 ## 0.8.1
 - Restored 25% scale for squid and glow squid in aquatic tanks, including pre-existing residents; restore their original scale when removed.
 - Replaced unclipped world display entities for decorations with a client block-entity renderer that clips block/item faces against the interiors of linked tank cells.

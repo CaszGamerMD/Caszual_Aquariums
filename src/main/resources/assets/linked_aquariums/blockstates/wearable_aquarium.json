@@ -1,0 +1,1 @@
+{"variants":{"facing=north":{"model":"linked_aquariums:block/wearable_aquarium"},"facing=east":{"model":"linked_aquariums:block/wearable_aquarium","y":90},"facing=south":{"model":"linked_aquariums:block/wearable_aquarium","y":180},"facing=west":{"model":"linked_aquariums:block/wearable_aquarium","y":270}}}

@@ -34,11 +34,15 @@ public final class AquariumMod implements ModInitializer {
  public static final Block FISH_EDITOR=Registry.register(BuiltInRegistries.BLOCK,id("tropical_fish_editor"),new TropicalFishEditorBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.GLASS).setId(ResourceKey.create(Registries.BLOCK,id("tropical_fish_editor"))).noOcclusion()));
  public static final Item MOBITAT_ITEM=Registry.register(BuiltInRegistries.ITEM,id("mobitat"),new BlockItem(MOBITAT,new Item.Properties().setId(ResourceKey.create(Registries.ITEM,id("mobitat"))).stacksTo(1)));
  public static final Item FISH_EDITOR_ITEM=Registry.register(BuiltInRegistries.ITEM,id("tropical_fish_editor"),new BlockItem(FISH_EDITOR,new Item.Properties().setId(ResourceKey.create(Registries.ITEM,id("tropical_fish_editor"))).stacksTo(1)));
- public static final Item WEARABLE_AQUARIUM=Registry.register(BuiltInRegistries.ITEM,id("wearable_aquarium"),new WearableAquariumItem(new Item.Properties().setId(ResourceKey.create(Registries.ITEM,id("wearable_aquarium")))));
+ public static final Block WEARABLE_AQUARIUM_BLOCK=Registry.register(BuiltInRegistries.BLOCK,id("wearable_aquarium"),
+  new WearableAquariumBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.GLASS)
+   .setId(ResourceKey.create(Registries.BLOCK,id("wearable_aquarium"))).noOcclusion().noCollision()));
+ public static final Item WEARABLE_AQUARIUM=Registry.register(BuiltInRegistries.ITEM,id("wearable_aquarium"),new WearableAquariumItem(WEARABLE_AQUARIUM_BLOCK,new Item.Properties().setId(ResourceKey.create(Registries.ITEM,id("wearable_aquarium")))));
  public static final Item MOB_NET=Registry.register(BuiltInRegistries.ITEM,id("mob_net"),new Item(new Item.Properties().setId(ResourceKey.create(Registries.ITEM,id("mob_net"))).stacksTo(1)));
  public static final Block DECOR_MODEL=Registry.register(BuiltInRegistries.BLOCK,id("decor_model"),new DecorModelBlock(BlockBehaviour.Properties.of().setId(ResourceKey.create(Registries.BLOCK,id("decor_model"))).noCollision().noOcclusion()));
  public static final BlockEntityType<MobitatBlockEntity> MOBITAT_ENTITY=Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE,id("mobitat"),FabricBlockEntityTypeBuilder.create(MobitatBlockEntity::new,MOBITAT).build());
  public static final BlockEntityType<TropicalFishEditorBlockEntity> FISH_EDITOR_ENTITY=Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE,id("tropical_fish_editor"),FabricBlockEntityTypeBuilder.create(TropicalFishEditorBlockEntity::new,FISH_EDITOR).build());
+ public static final BlockEntityType<WearableAquariumBlockEntity> WEARABLE_AQUARIUM_ENTITY=Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE,id("wearable_aquarium"),FabricBlockEntityTypeBuilder.create(WearableAquariumBlockEntity::new,WEARABLE_AQUARIUM_BLOCK).build());
  public static final BlockEntityType<TankBlockEntity> TANK_ENTITY=Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE,id("aquarium"),FabricBlockEntityTypeBuilder.create(TankBlockEntity::new,TANK,PASSIVE_TERRARIUM,HOSTILE_TERRARIUM).build());
  public static final MenuType<MobitatMenu> MOBITAT_MENU=Registry.register(BuiltInRegistries.MENU,id("mobitat"),new ExtendedMenuType<>(MobitatMenu::new,BlockPos.STREAM_CODEC));
  public static final MenuType<TropicalFishEditorMenu> FISH_EDITOR_MENU=Registry.register(BuiltInRegistries.MENU,id("tropical_fish_editor"),new ExtendedMenuType<>(TropicalFishEditorMenu::new,BlockPos.STREAM_CODEC));
@@ -51,11 +55,44 @@ public final class AquariumMod implements ModInitializer {
   loadConfig();CreativeModeTabEvents.modifyOutputEvent(CreativeModeTabs.FUNCTIONAL_BLOCKS).register(out->{out.accept(TANK);out.accept(TUBE);out.accept(PASSIVE_TERRARIUM);out.accept(HOSTILE_TERRARIUM);out.accept(PASSIVE_PIPE);out.accept(HOSTILE_PIPE);out.accept(MOB_NET);out.accept(MOBITAT);out.accept(FISH_EDITOR);out.accept(WEARABLE_AQUARIUM);});
   UseEntityCallback.EVENT.register((player,level,hand,entity,hit)->{
    var held=player.getItemInHand(hand);if(!held.is(MOB_NET)||player.isSpectator())return InteractionResult.PASS;
-   if(!(entity instanceof net.minecraft.world.entity.Mob mob)||!(Terrestrial.supported(mob)||Inhabitants.supported(mob.getType()))||mob.isPassenger()||mob.isVehicle()||!mob.isAlive()||Terrestrial.filled(held))return InteractionResult.FAIL;
+   if(!(entity instanceof net.minecraft.world.entity.Mob mob)||!(Terrestrial.supported(mob)||Inhabitants.supported(mob.getType())||mob.getType()==net.minecraft.world.entity.EntityTypes.GUARDIAN)||mob.isPassenger()||mob.isVehicle()||!mob.isAlive()||Terrestrial.filled(held))return InteractionResult.FAIL;
    if(!level.isClientSide())player.setItemInHand(hand,Terrestrial.capture((ServerLevel)level,mob));return InteractionResult.SUCCESS;
   });
   UseBlockCallback.EVENT.register((player,level,hand,hit)->{
    if(player.isSpectator())return InteractionResult.PASS;var held=player.getItemInHand(hand);var state=level.getBlockState(hit.getBlockPos());
+   if(state.is(WEARABLE_AQUARIUM_BLOCK)&&level.getBlockEntity(hit.getBlockPos()) instanceof WearableAquariumBlockEntity wearable){
+    if(level.isClientSide())return InteractionResult.SUCCESS;
+    if(WearableAquariumItem.valid(held)){
+     if(!wearable.insert(held)){
+      player.sendOverlayMessage(Component.literal("Wearable Aquarium is full: "+wearable.usedSlots()+"/4 slots."));
+      return InteractionResult.FAIL;
+     }
+     if(!player.getAbilities().instabuild){
+      if(WearableAquariumItem.isFishBucket(held)){
+       held.shrink(1);ItemStack empty=new ItemStack(Items.BUCKET);
+       if(held.isEmpty())player.setItemInHand(hand,empty);else give(player,empty);
+      }else{
+       held.set(net.minecraft.core.component.DataComponents.CUSTOM_DATA,net.minecraft.world.item.component.CustomData.EMPTY);
+       held.remove(net.minecraft.core.component.DataComponents.CUSTOM_NAME);
+      }
+     }
+     player.sendOverlayMessage(Component.literal("Wearable Aquarium: "+wearable.usedSlots()+"/4 slots."));
+     return InteractionResult.SUCCESS;
+    }
+    if(held.is(Items.BUCKET)||held.is(MOB_NET)&&!Terrestrial.filled(held)){
+     boolean guardian=held.is(MOB_NET);
+     ItemStack resident=wearable.take(guardian);
+     if(resident.isEmpty())return InteractionResult.FAIL;
+     if(!player.getAbilities().instabuild){held.shrink(1);if(held.isEmpty())player.setItemInHand(hand,resident);else give(player,resident);}
+     else give(player,resident);
+     return InteractionResult.SUCCESS;
+    }
+    if(held.isEmpty()){
+     player.sendOverlayMessage(Component.literal("Wearable Aquarium: "+wearable.usedSlots()+"/4 slots. Fish=1, Guardian=2."));
+     return InteractionResult.SUCCESS;
+    }
+    return InteractionResult.PASS;
+   }
    if(held.is(MOBITAT_ITEM)&&!player.isShiftKeyDown()&&!level.isClientSide())return useMobitat(player,(ServerLevel)level,hand,hit);
    if(state.is(FISH_EDITOR)&&level.getBlockEntity(hit.getBlockPos()) instanceof TropicalFishEditorBlockEntity editor){
     if(level.isClientSide())return InteractionResult.SUCCESS;

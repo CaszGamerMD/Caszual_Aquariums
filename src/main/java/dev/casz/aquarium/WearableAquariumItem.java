@@ -1,80 +1,35 @@
 package dev.casz.aquarium;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import net.minecraft.core.component.DataComponents;
-import net.minecraft.network.chat.Component;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
-import net.minecraft.world.item.component.ItemContainerContents;
-import net.minecraft.world.level.Level;
+import net.minecraft.world.item.*;
+import net.minecraft.world.item.component.*;
 
-/** Fish-only item inventory; Caszual Additions' cosmetic layer renders its contents. */
-public final class WearableAquariumItem extends Item {
-    public static final int CAPACITY = 4;
-
-    public WearableAquariumItem(Properties properties) {
-        super(properties.stacksTo(1));
-    }
-
-    public static boolean isFishBucket(ItemStack stack) {
-        return stack.is(Items.COD_BUCKET) || stack.is(Items.SALMON_BUCKET)
-            || stack.is(Items.TROPICAL_FISH_BUCKET) || stack.is(Items.PUFFERFISH_BUCKET);
-    }
-
-    /** Copies retain fish type, bucket data and custom tropical fish variants. */
-    public static List<ItemStack> fish(ItemStack aquarium) {
-        if (!(aquarium.getItem() instanceof WearableAquariumItem)) return List.of();
-        return aquarium.getOrDefault(DataComponents.CONTAINER, ItemContainerContents.EMPTY)
-            .nonEmptyItemCopyStream().filter(WearableAquariumItem::isFishBucket)
-            .limit(CAPACITY).map(s -> s.copyWithCount(1)).toList();
-    }
-
-    public static void setFish(ItemStack aquarium, List<ItemStack> contents) {
-        if (!(aquarium.getItem() instanceof WearableAquariumItem)) return;
-        var accepted = contents.stream().filter(WearableAquariumItem::isFishBucket)
-            .limit(CAPACITY).map(s -> s.copyWithCount(1)).toList();
-        if (accepted.isEmpty()) aquarium.remove(DataComponents.CONTAINER);
-        else aquarium.set(DataComponents.CONTAINER, ItemContainerContents.fromItems(accepted));
-    }
-
-    /**
-     * Main hand: wearable aquarium. Offhand: a fish bucket to insert, empty bucket
-     * to retrieve the most recently inserted fish. Works in air; saved on the item.
-     */
-    @Override
-    public InteractionResult use(Level level, Player player, InteractionHand hand) {
-        if (hand != InteractionHand.MAIN_HAND) return InteractionResult.PASS;
-        ItemStack aquarium = player.getItemInHand(hand), offhand = player.getOffhandItem();
-        boolean adding = isFishBucket(offhand), removing = offhand.is(Items.BUCKET);
-        if (!adding && !removing) return InteractionResult.PASS;
-        List<ItemStack> saved = new ArrayList<>(fish(aquarium));
-        if (adding && saved.size() >= CAPACITY) {
-            if (!level.isClientSide()) player.sendOverlayMessage(Component.literal("Wearable Aquarium is full (4/4 fish)."));
-            return InteractionResult.FAIL;
-        }
-        if (removing && saved.isEmpty()) {
-            if (!level.isClientSide()) player.sendOverlayMessage(Component.literal("Wearable Aquarium is empty."));
-            return InteractionResult.FAIL;
-        }
-        if (level.isClientSide()) return InteractionResult.SUCCESS;
-
-        ItemStack returned;
-        if (adding) {
-            saved.add(offhand.copyWithCount(1));
-            returned = new ItemStack(Items.BUCKET);
-        } else returned = saved.remove(saved.size() - 1);
-        setFish(aquarium, saved);
-        if (!player.getAbilities().instabuild) {
-            offhand.shrink(1);
-            if (offhand.isEmpty()) player.setItemInHand(InteractionHand.OFF_HAND, returned);
-            else if (!player.getInventory().add(returned)) player.drop(returned, false);
-        } else if (removing && !player.getInventory().add(returned)) player.drop(returned, false);
-        player.sendOverlayMessage(Component.literal("Wearable Aquarium: " + saved.size() + "/" + CAPACITY + " fish."));
-        return InteractionResult.SUCCESS;
-    }
+public final class WearableAquariumItem extends BlockItem {
+ public static final int CAPACITY=4;
+ public WearableAquariumItem(net.minecraft.world.level.block.Block block,Properties p){super(block,p.stacksTo(1));}
+ public static boolean isFishBucket(ItemStack s){return s.is(Items.COD_BUCKET)||s.is(Items.SALMON_BUCKET)||s.is(Items.TROPICAL_FISH_BUCKET)||s.is(Items.PUFFERFISH_BUCKET);}
+ public static boolean isGuardianNet(ItemStack s){
+  if(!s.is(AquariumMod.MOB_NET))return false;
+  return s.getOrDefault(DataComponents.CUSTOM_DATA,CustomData.EMPTY).copyTag().getString("terrarium_type").orElse("").equals("minecraft:guardian");
+ }
+ public static boolean valid(ItemStack s){return isFishBucket(s)||isGuardianNet(s);}
+ public static int cost(ItemStack s){return isGuardianNet(s)?2:isFishBucket(s)?1:0;}
+ public static int usedSlots(List<ItemStack> contents){int total=0;for(var s:contents)total+=cost(s);return total;}
+ public static List<ItemStack> contents(ItemStack aquarium){
+  if(!(aquarium.getItem() instanceof WearableAquariumItem))return List.of();
+  List<ItemStack> out=new ArrayList<>();int used=0;
+  for(var stack:aquarium.getOrDefault(DataComponents.CONTAINER,ItemContainerContents.EMPTY).nonEmptyItemCopyStream().toList()){
+   int n=cost(stack);if(n==0||used+n>CAPACITY)continue;out.add(stack.copyWithCount(1));used+=n;
+  }
+  return out;
+ }
+ public static void setContents(ItemStack item,List<ItemStack> source){
+  if(!(item.getItem() instanceof WearableAquariumItem))return;
+  List<ItemStack> out=new ArrayList<>();int used=0;
+  for(var s:source){int n=cost(s);if(n==0||used+n>CAPACITY)continue;out.add(s.copyWithCount(1));used+=n;}
+  if(out.isEmpty())item.remove(DataComponents.CONTAINER);else item.set(DataComponents.CONTAINER,ItemContainerContents.fromItems(out));
+ }
+ public static List<ItemStack> fish(ItemStack item){return contents(item).stream().filter(WearableAquariumItem::isFishBucket).toList();}
+ public static void setFish(ItemStack item,List<ItemStack> stacks){setContents(item,stacks);}
 }
