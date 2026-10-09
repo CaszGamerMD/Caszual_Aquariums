@@ -54,11 +54,11 @@ public final class WearableAquariumItem extends Item {
         if (!adding && !removing) return InteractionResult.PASS;
         List<ItemStack> saved = new ArrayList<>(fish(aquarium));
         if (adding && saved.size() >= CAPACITY) {
-            if (!level.isClientSide()) player.displayClientMessage(Component.literal("Wearable Aquarium is full (4/4 fish)."), true);
+            if (!level.isClientSide()) player.sendOverlayMessage(Component.literal("Wearable Aquarium is full (4/4 fish)."));
             return InteractionResult.FAIL;
         }
         if (removing && saved.isEmpty()) {
-            if (!level.isClientSide()) player.displayClientMessage(Component.literal("Wearable Aquarium is empty."), true);
+            if (!level.isClientSide()) player.sendOverlayMessage(Component.literal("Wearable Aquarium is empty."));
             return InteractionResult.FAIL;
         }
         if (level.isClientSide()) return InteractionResult.SUCCESS;
@@ -74,7 +74,7 @@ public final class WearableAquariumItem extends Item {
             if (offhand.isEmpty()) player.setItemInHand(InteractionHand.OFF_HAND, returned);
             else if (!player.getInventory().add(returned)) player.drop(returned, false);
         } else if (removing && !player.getInventory().add(returned)) player.drop(returned, false);
-        player.displayClientMessage(Component.literal("Wearable Aquarium: " + saved.size() + "/" + CAPACITY + " fish."), true);
+        player.sendOverlayMessage(Component.literal("Wearable Aquarium: " + saved.size() + "/" + CAPACITY + " fish."));
         return InteractionResult.SUCCESS;
     }
 }
