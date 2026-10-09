@@ -52,7 +52,7 @@ public class AquariumVisualTest implements FabricClientGameTest {
    server.runCommand("tp @a 1.5 101 -1");
    connection.waitForClientboundPackets();
    context.getInput().lookAt(new BlockPos(1,101,6));
-   context.waitTicks(8);context.getInput().waitForChunksRender();
+   context.waitTicks(8);connection.waitForChunksRender();
    context.takeScreenshot("wearable-placed");
   }
  }
