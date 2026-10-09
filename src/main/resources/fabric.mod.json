@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "linked_aquariums",
-  "version": "0.8.2",
+  "version": "0.8.3",
   "name": "Linked Aquariums",
   "description": "Connected aquariums and terrariums with miniature inhabitants, decor, pipes, Mobitat transport, and a tropical fish customization tank.",
   "authors": [
@@ -23,7 +23,11 @@
     "fabric-api": ">=0.158.0"
   },
   "mixins": [
-    "linked_aquariums.mixins.json"
+    "linked_aquariums.mixins.json",
+    {
+      "config": "linked_aquariums.client.mixins.json",
+      "environment": "client"
+    }
   ],
   "icon": "assets/linked_aquariums/icon.png"
 }

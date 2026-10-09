@@ -1,3 +1,10 @@
+## 0.8.3
+- Restored the wider Aquarium/Terrarium editor UI and tank-wide decoration preview from the editor-polish work, along with matching menu slot positions and decoration-page sync.
+- Reinstated baked-quads decoration rendering and clipping to the interiors of connected tank blocks. Off-tank faces remain hidden rather than leaking through the glass.
+- Corrected explicit UVs on every face of the human-shaped placed aquarium so textures do not bleed from neighboring atlas sprites.
+- Smoothed the placed aquarium's resident motion and slowed animation for render-only fish. Existing fish and Guardians remain safely stored.
+- Retained the wearable aquarium's saved fish and weighted Guardian capacity.
+
 ## 0.8.2
 - The Wearable Aquarium can be placed upright in the world, loaded with fish buckets or Guardians captured in Mob Nets, and picked up with contents preserved.
 - Four weighted fish slots: fish = 1, Guardian = 2. Empty bucket retrieves a fish; empty Mob Net retrieves a Guardian.

@@ -44,7 +44,10 @@ public final class WearableAquariumRenderer implements BlockEntityRenderer<Weara
   long hash=be.getBlockPos().asLong()^(0x9e3779b97f4a7c15L*(slot+1L));
   entity.setId(-1-Math.floorMod((int)(hash^(hash>>>32)),Integer.MAX_VALUE-1));
   entity.setPos(be.getBlockPos().getX()+.5,be.getBlockPos().getY()+1,be.getBlockPos().getZ()+.5);
-  entity.setCustomNameVisible(false);return entity;
+  entity.setCustomNameVisible(false);
+  entity.setNoGravity(true);
+  entity.setDeltaMovement(Vec3.ZERO);
+  return entity;
  }
  public void extractRenderState(WearableAquariumBlockEntity be,State state,float partial,Vec3 camera,ModelFeatureRenderer.@Nullable CrumblingOverlay breaking){
   BlockEntityRenderer.super.extractRenderState(be,state,partial,camera,breaking);state.renderings.clear();state.guardians.clear();
@@ -55,7 +58,8 @@ public final class WearableAquariumRenderer implements BlockEntityRenderer<Weara
   }
   state.time=be.getLevel().getGameTime()+partial;
   for(int i=0;i<state.entities.size();i++){
-   var e=state.entities.get(i);e.tickCount=(int)state.time+i*7;
+   var e=state.entities.get(i);e.tickCount=(int)(state.time*.45f)+i*7;
+   e.setDeltaMovement(Vec3.ZERO);
    float yaw=(float)Math.sin(state.time*.035+i*1.8)*110;e.setYRot(yaw);e.yRotO=yaw;
    if(e instanceof Mob mob){mob.setYBodyRot(yaw);mob.setYHeadRot(yaw);}
    try{EntityRenderState render=dispatcher.extractEntity(e,partial);
@@ -67,9 +71,11 @@ public final class WearableAquariumRenderer implements BlockEntityRenderer<Weara
  public void submit(State state,PoseStack pose,SubmitNodeCollector out,CameraRenderState camera){
   for(int i=0;i<state.renderings.size();i++){
    boolean guardian=state.guardians.get(i);float t=state.time;
-   float y=guardian?1.02f:(i%3==0?1.72f:i%3==1?1.16f:.83f);
-   float x=.5f+(float)Math.sin(t*.033+i*2.4f)*.08f;
-   float z=.5f+(float)Math.cos(t*.036+i*1.4f)*.036f;
+   float phase=i*2.17f;
+   // Swim continuously, not by jumping between fixed body/head positions.
+   float y=guardian?1.02f:1.19f+(float)Math.sin(t*.010f+phase)*.40f;
+   float x=.5f+(float)Math.sin(t*.017f+phase)*.075f;
+   float z=.5f+(float)Math.cos(t*.013f+phase)*.038f;
    pose.pushPose();pose.translate(x,y,z);float size=guardian?.24f:.30f;
    pose.scale(size,size,size);dispatcher.submit(state.renderings.get(i),camera,0,0,0,pose,out);pose.popPose();
   }

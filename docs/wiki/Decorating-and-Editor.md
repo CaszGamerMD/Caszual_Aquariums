@@ -47,3 +47,7 @@ Each item's anchor, position, scale, rotations and source item are saved with th
 **Rendering limits:** Standard baked block and item geometry is clipped to the tank interiors, including connected cells; special modded item renderers that bypass baked quads may not obey clipping. Check such unusual models manually. See [Troubleshooting](Troubleshooting.md).
 
 Related: [Aquariums](Aquariums-and-Swim-Tubes.md) · [Terrariums](Terrariums-and-Pipes.md)
+
+## 0.8.3 editor and clipping restoration
+
+The editor uses the wider Mobs/Decorate screen with a live network preview, independent transform controls, and readable inventory slots. Decoration geometry is submitted from item baked quads, with every triangle clipped to the interior of the connected enclosure; normal Minecraft block and item graphics are visible when inside the tank, but discarded or cropped where outside the walls. Special-rendered modded items that cannot be reduced to baked quads can only be shown when fully contained.
