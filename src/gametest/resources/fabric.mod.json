@@ -6,7 +6,8 @@
   "entrypoints": {
     "fabric-gametest": [
       "dev.casz.aquarium.AquariumGameTests",
-      "dev.casz.aquarium.TerrariumGameTests"
+      "dev.casz.aquarium.TerrariumGameTests",
+      "dev.casz.aquarium.WearableAquariumGameTests"
     ],
     "fabric-client-gametest": [
       "dev.casz.aquarium.AquariumVisualTest"
