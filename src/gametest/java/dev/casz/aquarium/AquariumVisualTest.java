@@ -54,6 +54,34 @@ public class AquariumVisualTest implements FabricClientGameTest {
    context.getInput().lookAt(new BlockPos(1,101,6));
    context.waitTicks(8);connection.waitForChunksRender();
    context.takeScreenshot("wearable-placed");
+   // Verify one Guardian in the head and a symmetric two-Guardian pair from
+   // the front of the placed wearable. Both nets use the real saved item data.
+   server.runOnServer(test->{
+    var level=connection.getServerLevel();
+    for(int guardianCount=1;guardianCount<=2;guardianCount++){
+     int x=guardianCount==1?4:7;
+     var p=new BlockPos(x,100,6);
+     level.setBlock(p,AquariumMod.WEARABLE_AQUARIUM_BLOCK.defaultBlockState(),3);
+     var wearable=(WearableAquariumBlockEntity)level.getBlockEntity(p);
+     for(int i=0;i<guardianCount;i++){
+      var net=new ItemStack(AquariumMod.MOB_NET);
+      var tag=new net.minecraft.nbt.CompoundTag();
+      tag.putString("terrarium_type","minecraft:guardian");
+      tag.put("terrarium_entity",new net.minecraft.nbt.CompoundTag());
+      net.set(net.minecraft.core.component.DataComponents.CUSTOM_DATA,
+       net.minecraft.world.item.component.CustomData.of(tag));
+      wearable.insert(net);
+     }
+    }
+   });
+   for(int guardianCount=1;guardianCount<=2;guardianCount++){
+    int x=guardianCount==1?4:7;
+    server.runCommand("tp @a "+(x-2)+" 101 6");
+    connection.waitForClientboundPackets();
+    context.getInput().lookAt(new BlockPos(x,101,6));
+    context.waitTicks(8);connection.waitForChunksRender();
+    context.takeScreenshot("wearable-guardians-"+guardianCount);
+   }
   }
  }
  private static class IconPreview extends Screen {
