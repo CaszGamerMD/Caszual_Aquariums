@@ -82,6 +82,30 @@ public class AquariumVisualTest implements FabricClientGameTest {
     context.waitTicks(8);connection.waitForChunksRender();
     context.takeScreenshot("wearable-guardians-"+guardianCount);
    }
+   // A filled Mobitat should show residents genuinely roaming at 10% scale,
+   // with no snapping between fixed preview slots.
+   server.runOnServer(test->{
+    var level=connection.getServerLevel();
+    var pos=new BlockPos(12,100,6);
+    level.setBlock(pos,AquariumMod.MOBITAT.defaultBlockState(),3);
+    var mobitat=(MobitatBlockEntity)level.getBlockEntity(pos);
+    for(int slot=0;slot<4;slot++){
+     var captured=new ItemStack(AquariumMod.MOB_NET);
+     var tag=new net.minecraft.nbt.CompoundTag();
+     tag.putString("terrarium_type","minecraft:cow");
+     tag.put("terrarium_entity",new net.minecraft.nbt.CompoundTag());
+     captured.set(net.minecraft.core.component.DataComponents.CUSTOM_DATA,
+         net.minecraft.world.item.component.CustomData.of(tag));
+     mobitat.addNet(captured);
+    }
+   });
+   server.runCommand("tp @a 12 101 2");
+   connection.waitForClientboundPackets();
+   context.getInput().lookAt(new BlockPos(12,100,6));
+   context.waitTicks(8);connection.waitForChunksRender();
+   context.takeScreenshot("mobitat-wandering-start");
+   context.waitTicks(120);
+   context.takeScreenshot("mobitat-wandering-later");
   }
  }
  private static class IconPreview extends Screen {

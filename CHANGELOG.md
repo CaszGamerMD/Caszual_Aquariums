@@ -1,3 +1,10 @@
+## 0.8.5
+- Mobitat residents now follow slow, smooth, independent roaming paths within the glass block instead of twitching at fixed positions.
+- Resident movement is deliberately scaled down for their 10% miniature display size, with facing and walking animations following their motion.
+- Ground mobs stay near the floor; flying and aquatic residents can explore the interior vertically; large previews have narrower bounds.
+- Render-only entities remain outside the world simulation, do not run AI, and retain their stored identity, variants and equipment.
+- Added deterministic movement/bounds regression tests and client screenshot checks showing a filled Mobitat at two animation times.
+
 ## 0.8.4
 - A single Guardian in the Wearable Aquarium now remains centered in the head; two Guardians sit symmetrically left and right like eyes.
 - Placed and worn Guardians no longer roam or spin through the torso. Placed layout rotates with the tank's facing direction.

@@ -7,7 +7,8 @@
     "fabric-gametest": [
       "dev.casz.aquarium.AquariumGameTests",
       "dev.casz.aquarium.TerrariumGameTests",
-      "dev.casz.aquarium.WearableAquariumGameTests"
+      "dev.casz.aquarium.WearableAquariumGameTests",
+      "dev.casz.aquarium.MobitatMotionGameTests"
     ],
     "fabric-client-gametest": [
       "dev.casz.aquarium.AquariumVisualTest"

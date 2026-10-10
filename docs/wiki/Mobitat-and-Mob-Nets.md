@@ -14,7 +14,7 @@ Captured mobs retain their individual saved data, including names, variants, age
 
 The **Mobitat** is a placeable, portable block that stores **up to five inhabitants of exactly one mob type**. Mix variants of that type, but not different entity types. It is crafted using a chest, glass and iron nuggets ([recipe](Crafting-Recipes.md)).
 
-Its model has **four small legs, a front door and a carry handle**. When placed, its saved residents appear as animated miniature previews at approximately **10% scale**. Their entity variants are preserved in preview.
+Its model has **four small legs, a front door and a carry handle**. When placed, its saved residents appear as animated miniature previews at approximately **10% scale**. **Since 0.8.5, the miniatures slowly roam freely inside the block**, with movement scaled to match their tiny appearance. Ground mobs walk along the interior floor; flying and swimming residents can drift vertically. Residents turn and animate along their actual path rather than twitching in fixed positions. Their movement is only visual and never changes the stored mobs or uses world entity AI. Their entity variants are preserved in preview.
 
 ## Using a placed Mobitat
 

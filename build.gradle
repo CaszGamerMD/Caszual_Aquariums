@@ -1,5 +1,5 @@
 plugins { id 'net.fabricmc.fabric-loom' version '1.17.21' }
-version = '0.8.4'
+version = '0.8.5'
 group = 'dev.casz'
 base { archivesName = 'linked-aquariums' }
 repositories { mavenCentral() }
