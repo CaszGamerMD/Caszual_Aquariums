@@ -50,6 +50,27 @@ public final class WearableAquariumGameTests {
    &&WearableAquariumItem.contents(item).size()==3,"Contents must be clamped to the weighted capacity");
   h.succeed();
  }
+ @GameTest public void oneOrTwoGuardiansStayInSymmetricHeadPositions(GameTestHelper h){
+  h.assertTrue(WearableAquariumItem.guardianHeadOffset(0,1)==0f,
+   "A single guardian should sit directly at the center of the head");
+  float left=WearableAquariumItem.guardianHeadOffset(0,2);
+  float right=WearableAquariumItem.guardianHeadOffset(1,2);
+  h.assertTrue(left<0&&right>0&&Math.abs(left+right)<.00001f,
+   "Two guardians must be spaced equally on opposite sides of the head");
+  h.setBlock(1,1,1,AquariumMod.WEARABLE_AQUARIUM_BLOCK);
+  var be=(WearableAquariumBlockEntity)h.getLevel().getBlockEntity(h.absolutePos(new BlockPos(1,1,1)));
+  h.assertTrue(be.insert(guardian()),"First Guardian should fit");
+  h.assertTrue(be.insert(guardian()),"Second Guardian should fit");
+  h.assertTrue(be.contents().size()==2&&be.usedSlots()==4,
+   "A pair of Guardians must consume all four slots but remain distinct occupants");
+  h.assertTrue(!be.insert(guardian())&&!be.insert(new ItemStack(Items.COD_BUCKET)),
+   "The head layout must not change the four-slot capacity");
+  var recovered=be.asItem();
+  h.assertTrue(WearableAquariumItem.contents(recovered).stream()
+   .filter(WearableAquariumItem::isGuardianNet).count()==2,
+   "Both Guardians must persist through pickup");
+  h.succeed();
+ }
  @GameTest public void legacyWearableCosmeticRetainsItsOriginalFish(GameTestHelper h){
   // 0.8.0 wearables were regular Items containing vanilla fish buckets.
   // Their stable registry ID and container contents must survive the 0.8.2
