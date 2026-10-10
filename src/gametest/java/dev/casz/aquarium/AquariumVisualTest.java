@@ -64,13 +64,13 @@ public class AquariumVisualTest implements FabricClientGameTest {
      level.setBlock(p,AquariumMod.WEARABLE_AQUARIUM_BLOCK.defaultBlockState(),3);
      var wearable=(WearableAquariumBlockEntity)level.getBlockEntity(p);
      for(int i=0;i<guardianCount;i++){
-      var net=new ItemStack(AquariumMod.MOB_NET);
+      var captured=new ItemStack(AquariumMod.MOB_NET);
       var tag=new net.minecraft.nbt.CompoundTag();
       tag.putString("terrarium_type","minecraft:guardian");
       tag.put("terrarium_entity",new net.minecraft.nbt.CompoundTag());
-      net.set(net.minecraft.core.component.DataComponents.CUSTOM_DATA,
+      captured.set(net.minecraft.core.component.DataComponents.CUSTOM_DATA,
        net.minecraft.world.item.component.CustomData.of(tag));
-      wearable.insert(net);
+      wearable.insert(captured);
      }
     }
    });
