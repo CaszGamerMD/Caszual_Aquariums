@@ -76,7 +76,7 @@ public class AquariumVisualTest implements FabricClientGameTest {
    });
    for(int guardianCount=1;guardianCount<=2;guardianCount++){
     int x=guardianCount==1?4:7;
-    server.runCommand("tp @a "+(x-2)+" 101 6");
+    server.runCommand("tp @a "+x+" 101 1");
     connection.waitForClientboundPackets();
     context.getInput().lookAt(new BlockPos(x,101,6));
     context.waitTicks(8);connection.waitForChunksRender();
