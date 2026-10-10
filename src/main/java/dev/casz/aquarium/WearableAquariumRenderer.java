@@ -87,7 +87,7 @@ public final class WearableAquariumRenderer implements BlockEntityRenderer<Weara
     x=.5f-offset*state.facing.getStepZ()+state.facing.getStepX()*.065f;
     z=.5f+offset*state.facing.getStepX()+state.facing.getStepZ()*.065f;
     y=1.75f;
-    size=guardianCount==1?.28f:.18f;
+    size=guardianCount==1?.22f:.13f;
    }else{
     float phase=i*2.17f;
     y=1.19f+(float)Math.sin(t*.010f+phase)*.40f;
