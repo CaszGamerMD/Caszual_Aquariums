@@ -1,3 +1,9 @@
+## 0.8.6
+- Prevented dripping-water particles from sealed aquarium and swim-tube fluid without removing the real contained water.
+- Suppressed false splash particles/sounds when an outside mob merely brushes a sealed tank/tube through its glass. Actual world water and entities inside enclosures still retain normal behavior.
+- Kept the original water height, fish oxygen, pipe connectivity, aquatic movement, capture and collision behavior unchanged.
+- Added server GameTests for drip suppression, false exterior splashes, genuine water splashes and live aquarium fluid/capacity.
+
 ## 0.8.5
 - Mobitat residents now follow slow, smooth, independent roaming paths within the glass block instead of twitching at fixed positions.
 - Resident movement is deliberately scaled down for their 10% miniature display size, with facing and walking animations following their motion.

@@ -51,3 +51,7 @@ See [Decorating and Editor](Decorating-and-Editor.md) for floors, decorative blo
 ## Squid size (0.8.1+)
 
 Ink Sacs and Glow Ink Sacs place squid and glow squid as managed aquarium residents. Both are rendered at **25% of their original scale** while inside the aquarium. Their previous size is restored when retrieved from the tank.
+
+## Sealed water effects (0.8.6+)
+
+Tank and swim-tube water is still a **real full-height contained fluid** so aquarium inhabitants can breathe, navigate, and swim through pipes. This update disables unwanted vanilla **drip particles** below sealed pipes and stops nearby outside mobs from making **false water-entry splashes** when their collision box briefly overlaps a pipe or tank. Genuine open water still behaves normally, and the fish/water simulation is unchanged.
