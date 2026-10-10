@@ -15,6 +15,11 @@ public final class WearableAquariumItem extends BlockItem {
  }
  public static boolean valid(ItemStack s){return isFishBucket(s)||isGuardianNet(s);}
  public static int cost(ItemStack s){return isGuardianNet(s)?2:isFishBucket(s)?1:0;}
+ /** Center a single guardian; arrange two symmetrically like eyes inside the head. */
+ public static float guardianHeadOffset(int index,int count){
+  if(count<=1)return 0f;
+  return index==0?-.1125f:.1125f;
+ }
  public static int usedSlots(List<ItemStack> contents){int total=0;for(var s:contents)total+=cost(s);return total;}
  public static List<ItemStack> contents(ItemStack aquarium){
   if(!(aquarium.getItem() instanceof WearableAquariumItem))return List.of();
