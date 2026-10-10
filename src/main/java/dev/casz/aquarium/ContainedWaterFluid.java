@@ -16,7 +16,7 @@ public final class ContainedWaterFluid extends WaterFluid.Source {
   * ClientLevel independently requests drip particles from a fluid, even when
   * animateTick does nothing, so disable that separate particle source.
   */
- @Override protected net.minecraft.core.particles.ParticleOptions getDripParticle(){return null;}
+ @Override public net.minecraft.core.particles.ParticleOptions getDripParticle(){return null;}
  @Override public void animateTick(net.minecraft.world.level.Level level,BlockPos pos,FluidState state,net.minecraft.util.RandomSource random){}
  @Override public void tick(ServerLevel level,BlockPos pos,net.minecraft.world.level.block.state.BlockState block,FluidState state){}
 }
