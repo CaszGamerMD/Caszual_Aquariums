@@ -1,4 +1,4 @@
-# Wearable Aquarium (0.8.2)
+# Wearable Aquarium (0.8.4)
 
 **Placed-first loading:** Craft the Wearable Aquarium, place it on the ground like a block and add residents by right-clicking its standing humanoid glass model. **Do not fill it while holding it** anymore.
 
@@ -7,7 +7,8 @@
 - A regular empty bucket removes the most recently inserted **fish**. An empty Mob Net removes the most recently inserted **Guardian**.
 - Break the placed tank to pick up the Wearable Aquarium **with all occupants saved** (including in Creative).
 - Equip the recovered item into Caszual Additions' **chest cosmetic slot** to wear it. The placed form and worn form share the same resident data.
-- The placed tank displays small animated vanilla fish/Guardian models, swimming through the body and up into the head; the frame is thinner.
+- Regular fish continue swimming inside the model, including into the head.
+- **Guardians stay inside the head** in both placed and worn forms. One Guardian is centered; two Guardians sit evenly spaced side by side, like eyes, and face outward. They no longer wander through the torso. The narrow frame and saved fish data are unchanged.
 
 **Capacity examples:** four fish; two fish and one Guardian; or two Guardians. Custom tropical fish colors and Guardian Mob Net entity data persist through placement, pickup and use. Guardian data is stored on the item and does not spawn Guardians in the world.
 

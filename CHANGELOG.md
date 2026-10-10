@@ -1,3 +1,9 @@
+## 0.8.4
+- A single Guardian in the Wearable Aquarium now remains centered in the head; two Guardians sit symmetrically left and right like eyes.
+- Placed and worn Guardians no longer roam or spin through the torso. Placed layout rotates with the tank's facing direction.
+- Caszual Additions companion: corrected the Minecraft 26.2 Guardian skin resource to textures/entity/guardian/guardian.png.
+- Added GameTests for weighted Guardian capacity, symmetric head positioning and persistence, plus client screenshots of both layouts.
+
 ## 0.8.3
 - Restored the wider Aquarium/Terrarium editor UI and tank-wide decoration preview from the editor-polish work, along with matching menu slot positions and decoration-page sync.
 - Reinstated baked-quads decoration rendering and clipping to the interiors of connected tank blocks. Off-tank faces remain hidden rather than leaking through the glass.
